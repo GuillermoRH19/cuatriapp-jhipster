@@ -1,13 +1,13 @@
 # ===========================
-# Etapa 1: Build frontend
+# Etapa 1: Build frontend Angular
 # ===========================
 FROM node:20 AS frontend-build
 
 WORKDIR /app
 
-# Copia solo el frontend
+# Copia solo la carpeta del frontend
 COPY src/main/webapp/package*.json ./ 
-COPY src/main/webapp/ .
+COPY src/main/webapp/ ./
 
 # Instala dependencias Angular
 RUN npm install
@@ -16,7 +16,7 @@ RUN npm install
 RUN npm run build
 
 # ===========================
-# Etapa 2: Build backend
+# Etapa 2: Build backend Spring Boot
 # ===========================
 FROM eclipse-temurin:17-jdk-jammy AS backend-build
 
@@ -25,7 +25,7 @@ WORKDIR /app
 # Copia todo el proyecto
 COPY . .
 
-# Copia los archivos compilados del frontend al backend
+# Copia los archivos compilados del frontend a su carpeta correspondiente
 COPY --from=frontend-build /app/dist ./src/main/webapp/dist
 
 # Compila backend Spring Boot
