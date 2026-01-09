@@ -33,7 +33,7 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:sqlserver://localhost:1433;database=CuatrimestreApp;encrypt=false
+    url: ${SPRING_DATASOURCE_URL:}  #jdbc:sqlserver://localhost:1433;database=CuatrimestreApp;encrypt=false
     username: SA
     password: yourStrong(!)Password
     hikari:
