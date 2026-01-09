@@ -1,23 +1,18 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:cuatrimestre;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:sqlserver://HOST:1433;database=CuatrimestreApp;encrypt=true;trustServerCertificate=true
+    username: SA
+    password: 123456789
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     open-in-view: false
 
   liquibase:
     enabled: false
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
 
 server:
   port: 8080
