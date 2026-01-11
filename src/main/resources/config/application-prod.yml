@@ -1,12 +1,11 @@
 spring:
   datasource:
-    url: jdbc:sqlserver://HOST:1433;database=CuatrimestreApp;encrypt=true;trustServerCertificate=true
+    url: jdbc:sqlserver://HOST:1433;databaseName=CuatrimestreApp;encrypt=true;trustServerCertificate=true
     username: SA
     password: 123456789
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
-    database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:
       ddl-auto: none
     open-in-view: false
@@ -14,10 +13,23 @@ spring:
   liquibase:
     enabled: false
 
+  mail:
+    host: ""
+    port: 0
+    username: ""
+    password: ""
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+
 server:
   port: 8080
 
 jhipster:
+  mail:
+    from: noreply@localhost
+    base-url: http://localhost
+
   security:
     authentication:
       jwt:
