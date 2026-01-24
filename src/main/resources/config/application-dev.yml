@@ -39,44 +39,51 @@ spring:
   # 👇👇👇 CONFIGURACIÓN CORREGIDA PARA SOMEE.COM 👇👇👇
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    # URL de conexión directa a tu servidor en Somee
-    url: jdbc:sqlserver://CuatrimestreApp.mssql.somee.com;databaseName=CuatrimestreApp;encrypt=false;trustServerCertificate=true;
+    # Agregamos loginTimeout=60 para esperar a que la BD despierte
+    url: jdbc:sqlserver://CuatrimestreApp.mssql.somee.com;databaseName=CuatrimestreApp;encrypt=false;trustServerCertificate=true;loginTimeout=60;
     
-    # Usuario extraído de tu captura de pantalla
     username: JGRH_SQLLogin_1
-    
-    # ⚠️ IMPORTANTE: BORRA ESTO Y PON LA CONTRASEÑA REAL DE SOMEE ⚠️
     password: '7xzhrkntc8'
     
     hikari:
       poolName: Hikari
       auto-commit: false
-      # Aumentamos un poco el timeout porque Somee a veces es lento en despertar
-      connection-timeout: 30000 
+      # 60 segundos de espera para conectar (vital para Render + Somee)
+      connection-timeout: 60000 
+      # Limitamos conexiones para no saturar el plan gratis
+      maximum-pool-size: 5
 
   # Configuración para que Java entienda SQL Server
   jpa:
-    # Somee usa SQL Server 2022, pero el dialecto 2012 funciona bien y es compatible
     database-platform: org.hibernate.dialect.SQLServer2012Dialect
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-  # Desactivamos H2 porque usaremos SQL Server real
+  # Desactivamos H2
   h2:
     console:
       enabled: false
-  # 👆👆👆 FIN DE LA CORRECCIÓN 👆👆👆
 
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
+
+  # 👇👇👇 CONFIGURACIÓN DUMMY DE CORREO (CRÍTICO PARA RENDER) 👇👇👇
+  # Usamos datos genéricos para que Spring Boot arranque sin error de Bean
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.gmail.com
+    port: 587
+    username: user@example.com
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
