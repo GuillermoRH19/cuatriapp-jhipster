@@ -1,0 +1,57 @@
+/* Degradado principal (Columna Izquierda) */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decoración de círculos en el fondo azul */
+.bg-circle-1, .bg-circle-2 {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.bg-circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -50px;
+  left: -50px;
+}
+
+.bg-circle-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -30px;
+  right: -30px;
+}
+
+.z-index-1 {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ajustes de tipografía pequeña */
+.x-small {
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+/* Efecto Hover en enlaces */
+.hover-link:hover {
+  text-decoration: underline !important;
+}
+
+/* Animación de botones */
+.transition-btn {
+  transition: all 0.3s ease;
+}
+.transition-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* Borde punteado para la zona de pruebas */
+.border-dashed {
+  border: 1px dashed #dee2e6;
+}

@@ -1,0 +1,45 @@
+// Centrado y Fondo
+:host {
+  display: block;
+}
+
+// Círculo del ícono
+.icon-circle {
+  width: 120px;
+  height: 120px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 3.5rem;
+  
+  // Animación suave de flotación
+  animation: float 3s ease-in-out infinite;
+}
+
+// Tipografía
+h1 {
+  letter-spacing: -2px;
+  // Un degradado sutil en el texto "Ups"
+  background: -webkit-linear-gradient(45deg, #0d6efd, #0a58ca);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+// Animación de flotación
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+// Efectos de botones
+.transition-btn {
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+}

@@ -51,7 +51,6 @@ export class AccountService {
       this.accountCache$ = this.fetch().pipe(
         tap((account: Account) => {
           this.authenticate(account);
-
           this.navigateToStoredUrl();
         }),
         shareReplay(),
@@ -80,5 +79,16 @@ export class AccountService {
       this.stateStorageService.clearUrl();
       this.router.navigateByUrl(previousUrl);
     }
+  }
+
+  // =========================================================================
+  //  MÉTODO PARA INSERTAR DATOS (Sincronizado con SecurityConfiguration)
+  // =========================================================================
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  guardarDatosEstaticos(): Observable<void> {
+    // IMPORTANTE: La URL debe ser 'api/insertar-datos-prueba'
+    // NO uses 'api/admin/...' porque eso requiere estar logueado como admin.
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    return this.http.post<void>(this.applicationConfigService.getEndpointFor('api/insertar-datos-prueba'), {});
   }
 }

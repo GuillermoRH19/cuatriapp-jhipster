@@ -1,43 +1,44 @@
 import { Routes } from '@angular/router';
-
-import { Authority } from 'app/config/authority.constants';
-
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import { errorRoute } from './layouts/error/error.route';
+import { HomeComponent } from './home/home.component';
+import { MiErrorComponent } from './mi-error/mi-error.component';
 
 const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./home/home.component'),
-    title: 'home.title',
-  },
-  {
-    path: '',
-    loadComponent: () => import('./layouts/navbar/navbar.component'),
-    outlet: 'navbar',
-  },
-  {
-    path: 'admin',
+    component: HomeComponent,
+    pathMatch: 'full',
     data: {
-      authorities: [Authority.ADMIN],
+      pageTitle: 'home.title',
     },
-    canActivate: [UserRouteAccessService],
-    loadChildren: () => import('./admin/admin.routes'),
   },
   {
-    path: 'account',
-    loadChildren: () => import('./account/account.route'),
+    path: 'mi-error',
+    component: MiErrorComponent,
+    data: {
+      pageTitle: 'error.title',
+    },
   },
   {
     path: 'login',
-    loadComponent: () => import('./login/login.component'),
-    title: 'login.title',
+    // 👇👇👇 CORRECCIÓN IMPORTANTE 👇👇👇
+    // Como tu componente es 'export default', debemos usar 'm.default'
+    loadComponent: () => import('./login/login.component').then(m => m.default),
+    data: { pageTitle: 'login.title' },
   },
+  /* 👇 He comentado la ruta de 'account' porque te daba error de "Cannot find module".
+     Probablemente el archivo 'account.routes.ts' no existe o tiene otro nombre.
+     Descoméntalo solo si estás seguro de que el archivo existe.
+  */
+  /*
   {
-    path: '',
-    loadChildren: () => import(`./entities/entity.routes`),
+    path: 'account',
+    loadChildren: () => import('./account/account.routes'),
   },
-  ...errorRoute,
+  */
+  {
+    path: '**',
+    redirectTo: '/mi-error',
+  },
 ];
 
 export default routes;

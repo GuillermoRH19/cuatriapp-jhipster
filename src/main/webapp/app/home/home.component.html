@@ -1,4 +1,140 @@
-<div style="text-align:center; margin-top:50px;">
-  <h1>Hola Mundo </h1>
-  <p>Mi sistema empresarial de empleados está funcionando correctamente.</p>
+<div class="hero-header p-5 mb-4 rounded-3 text-white bg-gradient-dark">
+  <div class="container-fluid py-3 text-center">
+    <h1 class="display-4 fw-bold">Sistema Empresarial</h1>
+    <p class="fs-4">Plataforma de Gestión Integral</p>
+  </div>
 </div>
+
+<div class="container-fluid px-4">
+  <div class="row g-4">
+    
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 h-100 overflow-hidden rounded-4 position-relative">
+        
+        <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true" [showNavigationIndicators]="true">
+          
+          @for (img of images(); track img.src) {
+            <ng-template ngbSlide>
+              <div class="picsum-img-wrapper position-relative">
+                <img [src]="img.src" [alt]="img.title" class="d-block w-100 carousel-img-fit" />
+                
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+                  <h3 class="fw-bold">{{ img.title }}</h3>
+                  <p class="fs-5 mb-0">{{ img.desc }}</p>
+                </div>
+              </div>
+            </ng-template>
+          }
+
+          @if (images().length === 0) {
+            <ng-template ngbSlide>
+              <div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height: 500px;">
+                <div class="text-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-images mb-3 opacity-50" viewBox="0 0 16 16">
+                    <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10"/>
+                  </svg>
+                  <h3>Galería Vacía</h3>
+                  <p>Sube tu primera imagen ahora.</p>
+                </div>
+              </div>
+            </ng-template>
+          }
+
+        </ngb-carousel>
+
+        <div class="position-absolute top-0 end-0 p-4" style="z-index: 1050;">
+          <input 
+            #fileInput 
+            type="file" 
+            accept="image/*" 
+            style="display: none;" 
+            (change)="onFileSelected($event)"
+          >
+          <button 
+            class="btn btn-primary btn-lg rounded-circle shadow-lg d-flex align-items-center justify-content-center upload-btn" 
+            style="width: 60px; height: 60px;"
+            (click)="fileInput.click()"
+            title="Añadir nueva imagen al carrusel">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      
+      <div class="card shadow-lg border-0 rounded-4 mb-4">
+        <div class="card-body p-4 text-center">
+          <div class="mb-3">
+             <span style="font-size: 3rem;"></span>
+          </div>
+          <h3 class="card-title mb-2">Acceso Seguro</h3>
+          <p class="text-muted small mb-4">Verifica tu identidad para continuar</p>
+
+          <div class="d-flex justify-content-center mb-3">
+            <ng-hcaptcha 
+              [siteKey]="siteKey"
+              (verify)="onCaptchaVerify()" 
+              (expired)="onCaptchaExpired()">
+            </ng-hcaptcha>
+          </div>
+
+          <button 
+            class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm transition-btn" 
+            [disabled]="!captchaResuelto" 
+            (click)="login()">
+            @if (!captchaResuelto) {
+              <span>Resuelve el Captcha</span>
+            } @else {
+              <span> Iniciar Sesión</span>
+            }
+          </button>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 bg-light rounded-4">
+        <div class="card-body">
+          <h6 class="text-uppercase text-muted fw-bold mb-3 small">
+            <i class="fa fa-cogs"></i> Herramientas de Prueba
+          </h6>
+          <div class="d-grid gap-2">
+            <button class="btn btn-outline-dark btn-sm text-start" (click)="abrirNuevaPestana()">
+               Abrir nueva pestaña
+            </button>
+            <button class="btn btn-outline-danger btn-sm text-start" (click)="provocarError()">
+               Provocar error forzado
+            </button>
+            <button class="btn btn-outline-success btn-sm text-start" (click)="enviarDatosBD()">
+               Insertar Datos SQL (Test)
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="mt-5 text-center text-muted pb-4">
+  <small>&copy; 2026 Sistema Empresarial - Versión 1.0.0</small>
+</div>
+
+<ng-template #infoModal let-modal>
+  <div class="modal-header" [ngClass]="{'bg-success text-white': modalType === 'success', 'bg-danger text-white': modalType === 'error'}">
+    <h4 class="modal-title">
+      <i class="fa" [ngClass]="{'fa-check-circle': modalType === 'success', 'fa-exclamation-triangle': modalType === 'error'}"></i>
+      {{ modalTitle }}
+    </h4>
+    <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body text-center p-4">
+    <p class="fs-5">{{ modalMessage }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>

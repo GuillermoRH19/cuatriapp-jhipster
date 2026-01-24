@@ -1,4 +1,4 @@
-@import 'bootstrap-variables';
+@use 'bootstrap-variables' as *;
 @import 'bootstrap/scss/functions';
 @import 'bootswatch/dist/flatly/variables';
 @import 'bootstrap/scss/variables';

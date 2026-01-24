@@ -33,30 +33,9 @@ import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing users.
- * <p>
- * This class accesses the {@link com.cuatrimestre.app.domain.User} entity, and needs to fetch its collection of authorities.
- * <p>
- * For a normal use-case, it would be better to have an eager relationship between User and Authority,
- * and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join
- * which would be good for performance.
- * <p>
- * We use a View Model and a DTO for 3 reasons:
- * <ul>
- * <li>We want to keep a lazy association between the user and the authorities, because people will
- * quite often do relationships with the user, and we don't want them to get the authorities all
- * the time for nothing (for performance reasons). This is the #1 goal: we should not impact our users'
- * application because of this use-case.</li>
- * <li> Not having an outer join causes n+1 requests to the database. This is not a real issue as
- * we have by default a second-level cache. This means on the first HTTP call we do the n+1 requests,
- * but then all authorities come from the cache, so in fact it's much better than doing an outer join
- * (which will get lots of data from the database, for each HTTP call).</li>
- * <li> As this manages users, for security reasons, we'd rather have a DTO layer.</li>
- * </ul>
- * <p>
- * Another option would be to have a specific JPA entity graph to handle this case.
  */
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin") // <--- OJO: Esto significa que todas las rutas empiezan con /api/admin
 public class UserResource {
 
     private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(
@@ -94,15 +73,6 @@ public class UserResource {
 
     /**
      * {@code POST  /admin/users}  : Creates a new user.
-     * <p>
-     * Creates a new user if the login and email are not already used, and sends a
-     * mail with an activation link.
-     * The user needs to be activated on creation.
-     *
-     * @param userDTO the user to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
      */
     @PostMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -111,7 +81,6 @@ public class UserResource {
 
         if (userDTO.getId() != null) {
             throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
-            // Lowercase the user login before comparing with database
         } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
             throw new LoginAlreadyUsedException();
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
@@ -129,11 +98,6 @@ public class UserResource {
 
     /**
      * {@code PUT /admin/users} : Updates an existing User.
-     *
-     * @param userDTO the user to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated user.
-     * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
-     * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already in use.
      */
     @PutMapping({ "/users", "/users/{login}" })
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -159,10 +123,7 @@ public class UserResource {
     }
 
     /**
-     * {@code GET /admin/users} : get all users with all the details - calling this are only allowed for the administrators.
-     *
-     * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
+     * {@code GET /admin/users} : get all users.
      */
     @GetMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -183,9 +144,6 @@ public class UserResource {
 
     /**
      * {@code GET /admin/users/:login} : get the "login" user.
-     *
-     * @param login the login of the user to find.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -196,9 +154,6 @@ public class UserResource {
 
     /**
      * {@code DELETE /admin/users/:login} : delete the "login" User.
-     *
-     * @param login the login of the user to delete.
-     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/users/{login}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -208,5 +163,37 @@ public class UserResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
             .build();
+    }
+
+    // =========================================================================
+    //  NUEVO MÉTODO AGREGADO PARA TU BOTÓN
+    // =========================================================================
+
+    /**
+     * Endpoint personalizado para insertar un usuario de prueba.
+     * URL FINAL: POST /api/admin/insertar-datos-estaticos
+     */
+    @PostMapping("/insertar-datos-estaticos")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<String> insertarDatosEstaticos() {
+        AdminUserDTO userDTO = new AdminUserDTO();
+        
+        // Generamos un sufijo aleatorio para que no se repita el usuario
+        String randomSuffix = UUID.randomUUID().toString().substring(0, 5);
+        
+        userDTO.setLogin("juan_" + randomSuffix); // Ejemplo: juan_a1b2c
+        userDTO.setFirstName("Juan");
+        userDTO.setLastName("Perez");
+        userDTO.setEmail("juan_" + randomSuffix + "@prueba.com");
+        userDTO.setImageUrl("");
+        userDTO.setActivated(true);
+        userDTO.setLangKey("es");
+        userDTO.setCreatedBy("system");
+        userDTO.setLastModifiedBy("system");
+        userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        userService.createUser(userDTO);
+
+        return ResponseEntity.ok("¡Éxito! Usuario creado: juan_" + randomSuffix);
     }
 }
