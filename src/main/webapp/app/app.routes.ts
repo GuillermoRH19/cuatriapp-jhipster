@@ -1,14 +1,28 @@
-import { Routes } from '@angular/router';
+import { Routes, RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 import { HomeComponent } from './home/home.component';
 import { MiErrorComponent } from './mi-error/mi-error.component';
 
-const routes: Routes = [
+// 👇 COMPONENTE AUXILIAR (INVISIBLE)
+// Este componente actúa como "Padre" para agrupar Login y Términos.
+// Gracias a esto, el Breadcrumb entenderá la jerarquía: Home > Login > Hijos
+@Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'app-login-layout',
+  standalone: true,
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`,
+})
+class LoginLayoutComponent {}
+
+export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
     pathMatch: 'full',
     data: {
       pageTitle: 'home.title',
+      breadcrumb: 'Inicio', // NIVEL 1
     },
   },
   {
@@ -18,18 +32,32 @@ const routes: Routes = [
       pageTitle: 'error.title',
     },
   },
+
+  // 👇 AQUÍ ESTÁ LA MAGIA DE LOS 3 NIVELES
   {
     path: 'login',
-    // 👇👇👇 CORRECCIÓN IMPORTANTE 👇👇👇
-    // Como tu componente es 'export default', debemos usar 'm.default'
-    loadComponent: () => import('./login/login.component').then(m => m.default),
-    data: { pageTitle: 'login.title' },
+    component: LoginLayoutComponent, // Usamos el contenedor padre
+    data: {
+      breadcrumb: 'Login', // NIVEL 2: El padre define el nombre "Login"
+    },
+    children: [
+      {
+        path: '', // Cuando la ruta es exactamente '/login'
+        loadComponent: () => import('./login/login.component').then(m => m.default),
+        data: { pageTitle: 'login.title' },
+      },
+      {
+        path: 'terms', // Cuando la ruta es '/login/terms'
+        loadComponent: () => import('./login/terms/terms.component').then(m => m.TermsComponent),
+        data: {
+          pageTitle: 'Términos y Condiciones',
+          breadcrumb: 'Términos', // NIVEL 3: El hijo define "Términos"
+        },
+      },
+    ],
   },
-  /* 👇 He comentado la ruta de 'account' porque te daba error de "Cannot find module".
-     Probablemente el archivo 'account.routes.ts' no existe o tiene otro nombre.
-     Descoméntalo solo si estás seguro de que el archivo existe.
-  */
-  /*
+
+  /* Rutas de cuenta (descomentar si las usas)
   {
     path: 'account',
     loadChildren: () => import('./account/account.routes'),

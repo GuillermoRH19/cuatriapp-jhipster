@@ -71,8 +71,17 @@
                       <div class="col-md-6">
                         <label class="form-label small text-muted" for="field_nacimiento">Fecha de Nacimiento</label>
                         <input type="date" id="field_nacimiento" class="form-control" formControlName="fechaNacimiento">
+                        
                         @if (loginForm.get('fechaNacimiento')?.invalid && (loginForm.get('fechaNacimiento')?.dirty || loginForm.get('fechaNacimiento')?.touched)) {
-                          <div class="text-danger x-small">Campo obligatorio.</div>
+                          @if (loginForm.get('fechaNacimiento')?.hasError('required')) {
+                            <div class="text-danger x-small">Campo obligatorio.</div>
+                          }
+                          @if (loginForm.get('fechaNacimiento')?.hasError('fechaFutura')) {
+                            <div class="text-danger x-small">No puedes haber nacido en el futuro.</div>
+                          }
+                          @if (loginForm.get('fechaNacimiento')?.hasError('menorDeEdad')) {
+                            <div class="text-danger x-small">Debes ser mayor de 18 años.</div>
+                          }
                         }
                       </div>
 
@@ -96,6 +105,15 @@
                             oninput="if(this.value.length > 10) this.value = this.value.slice(0, 10);"
                           >
                         </div>
+
+                        @if (loginForm.get('salario')?.invalid && (loginForm.get('salario')?.dirty || loginForm.get('salario')?.touched)) {
+                          @if (loginForm.get('salario')?.hasError('required')) {
+                             <div class="text-danger x-small">Campo obligatorio.</div>
+                          }
+                          @if (loginForm.get('salario')?.hasError('max')) {
+                            <div class="text-danger x-small">Máximo permitido: $15,000.</div>
+                          }
+                        }
                       </div>
 
                       <div class="col-md-6 mt-3">
@@ -104,7 +122,7 @@
                           type="email" id="field_email" class="form-control" 
                           formControlName="contactoEmail" placeholder="nombre@ejemplo.com"
                           maxlength="100"
-                        >
+                        />
                         @if (loginForm.get('contactoEmail')?.hasError('email') && loginForm.get('contactoEmail')?.touched) {
                           <div class="text-danger x-small">Formato inválido.</div>
                         }
@@ -129,6 +147,9 @@
 
                   <div class="text-center d-flex justify-content-between small">
                     <a routerLink="/account/reset/request" class="text-decoration-none text-muted hover-link">¿Olvidaste tu contraseña?</a>
+                    
+                    <a routerLink="/login/terms" class="text-decoration-none text-info fw-bold hover-link">Ver Términos</a>
+
                     <a routerLink="/account/register" class="text-decoration-none fw-bold text-primary hover-link">Crear cuenta nueva</a>
                   </div>
 
