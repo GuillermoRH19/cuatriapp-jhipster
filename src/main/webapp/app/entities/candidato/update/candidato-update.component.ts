@@ -71,11 +71,9 @@ export class CandidatoUpdateComponent implements OnInit {
   }
 
   cerrarSesion(): void {
-    // 1. Limpiamos los tokens de sesión de JHipster
     localStorage.removeItem('jhi-authenticationToken');
     sessionStorage.removeItem('jhi-authenticationToken');
 
-    // 2. Redirigimos y forzamos recarga para limpiar memoria
     this.router.navigate(['/login']).then(() => {
       window.location.reload();
     });
@@ -92,9 +90,7 @@ export class CandidatoUpdateComponent implements OnInit {
     const sMax = this.filtroSalarioMax.value;
 
     resultado = resultado.filter(c => {
-      const coincideTexto =
-        (!texto || (c.nombre?.toLowerCase().includes(texto) ?? c.email?.toLowerCase().includes(texto))) ??
-        c.departamento?.toLowerCase().includes(texto);
+      const coincideTexto = !texto || c.nombre?.toLowerCase().includes(texto);
 
       const coincideDepto = !deptoFiltro || c.departamento?.toLowerCase() === deptoFiltro;
 

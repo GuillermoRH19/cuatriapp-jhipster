@@ -1,11 +1,11 @@
 // Paleta de colores empresarial
-$primary: #0f172a;       // Slate oscuro corporativo
+$primary: #0f172a;
 $primary-hover: #1e293b;
-$secondary: #3b82f6;     // Azul vibrante para acentos
-$success: #10b981;       // Verde profesional
-$danger: #ef4444;        // Rojo suave
-$danger-hover: #dc2626;  // Rojo más oscuro para hover
-$bg-body: #f8fafc;       // Fondo general
+$secondary: #3b82f6;
+$success: #10b981;
+$danger: #ef4444;
+$danger-hover: #dc2626;
+$bg-body: #f8fafc;
 $card-bg: #ffffff;
 $text-main: #334155;
 $text-muted: #64748b;
@@ -18,7 +18,6 @@ $border-light: #e2e8f0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-// Tarjetas Estilo Dashboard
 .corp-card {
   background: $card-bg;
   border-radius: 12px;
@@ -33,7 +32,6 @@ $border-light: #e2e8f0;
   }
 }
 
-// Títulos y Textos
 .corp-title {
   color: $primary;
   font-weight: 700;
@@ -44,7 +42,6 @@ $border-light: #e2e8f0;
   font-size: 0.95rem;
 }
 
-// Botones Corporativos
 .btn-corp-primary {
   background-color: $primary;
   color: white;
@@ -76,7 +73,6 @@ $border-light: #e2e8f0;
   }
 }
 
-// Botón de salir (Cerrar sesión)
 .btn-corp-danger {
   background-color: transparent;
   color: $danger;
@@ -93,7 +89,6 @@ $border-light: #e2e8f0;
   }
 }
 
-// Controles de Formulario y Filtros
 .corp-input {
   border: 1px solid $border-light;
   border-radius: 8px;
@@ -120,7 +115,6 @@ $border-light: #e2e8f0;
   margin-bottom: 0.4rem;
 }
 
-// Tabla Empresarial
 .corp-table {
   width: 100%;
   border-collapse: separate;
@@ -152,7 +146,6 @@ $border-light: #e2e8f0;
     }
   }
 
-  // Avatar circular
   .avatar-circle {
     width: 36px;
     height: 36px;
@@ -178,7 +171,6 @@ $border-light: #e2e8f0;
   }
 }
 
-// Acciones de tabla
 .action-btn {
   background: none;
   border: none;
@@ -195,7 +187,6 @@ $border-light: #e2e8f0;
   &.delete:hover { color: $danger; background-color: #fef2f2; }
 }
 
-// Paginación
 .corp-pagination {
   .page-link {
     border: none;
