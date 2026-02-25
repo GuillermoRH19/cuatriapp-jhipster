@@ -1,0 +1,45 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div *ngIf="successMessage" class="alert alert-success">
+      <strong>¡Registro exitoso!</strong> Tus datos han sido enviados correctamente.
+    </div>
+
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm" *ngIf="!successMessage">
+      <h3 class="card-title text-center mb-4">Postúlate como Candidato</h3>
+
+      <div class="mb-3">
+        <label class="form-label" for="field_nombre">Nombre Completo</label>
+        <input type="text" class="form-control" name="nombre" id="field_nombre" formControlName="nombre" placeholder="Ej. Juan Pérez" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="field_email">Correo Electrónico</label>
+        <input type="email" class="form-control" name="email" id="field_email" formControlName="email" placeholder="ejemplo@correo.com" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="field_fechaNacimiento">Fecha de Nacimiento</label>
+        <input type="date" class="form-control" name="fechaNacimiento" id="field_fechaNacimiento" formControlName="fechaNacimiento" />
+        <div *ngIf="editForm.get('fechaNacimiento')!.invalid && (editForm.get('fechaNacimiento')!.dirty || editForm.get('fechaNacimiento')!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get('fechaNacimiento')?.errors?.['menorDeEdad']">El candidato debe ser mayor de edad.</small>
+          <small class="form-text text-danger" *ngIf="editForm.get('fechaNacimiento')?.errors?.['required']">Este campo es obligatorio.</small>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="field_departamento">Departamento</label>
+        <input type="text" class="form-control" name="departamento" id="field_departamento" formControlName="departamento" placeholder="Ej. Sistemas" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="field_salario">Salario Esperado</label>
+        <input type="number" class="form-control" name="salario" id="field_salario" formControlName="salario" placeholder="Ej. 10000" />
+      </div>
+
+      <button type="submit" [disabled]="editForm.invalid || isSaving" class="btn btn-success w-100 btn-lg mt-3">
+        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+        {{ isSaving ? 'Enviando...' : 'Enviar Registro' }}
+      </button>
+    </form>
+  </div>
+</div>

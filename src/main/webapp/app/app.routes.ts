@@ -1,14 +1,13 @@
-import { Routes, RouterOutlet } from '@angular/router';
+import { Routes } from '@angular/router';
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
 import { HomeComponent } from './home/home.component';
 import { MiErrorComponent } from './mi-error/mi-error.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 
-// 👇 COMPONENTE AUXILIAR (INVISIBLE)
-// Este componente actúa como "Padre" para agrupar Login y Términos.
-// Gracias a esto, el Breadcrumb entenderá la jerarquía: Home > Login > Hijos
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'app-login-layout',
+  selector: 'jhi-login-layout',
   standalone: true,
   imports: [RouterOutlet],
   template: `<router-outlet></router-outlet>`,
@@ -19,50 +18,52 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    pathMatch: 'full',
-    data: {
-      pageTitle: 'home.title',
-      breadcrumb: 'Inicio', // NIVEL 1
-    },
+    title: 'Inicio',
+    data: { pageTitle: 'home.title' },
   },
   {
     path: 'mi-error',
     component: MiErrorComponent,
-    data: {
-      pageTitle: 'error.title',
-    },
+    title: 'Error',
+    data: { pageTitle: 'error.title' },
   },
-
-  // 👇 AQUÍ ESTÁ LA MAGIA DE LOS 3 NIVELES
   {
     path: 'login',
-    component: LoginLayoutComponent, // Usamos el contenedor padre
-    data: {
-      breadcrumb: 'Login', // NIVEL 2: El padre define el nombre "Login"
-    },
+    component: LoginLayoutComponent,
     children: [
       {
-        path: '', // Cuando la ruta es exactamente '/login'
+        path: '',
         loadComponent: () => import('./login/login.component').then(m => m.default),
+        title: 'Iniciar Sesión',
         data: { pageTitle: 'login.title' },
       },
       {
-        path: 'terms', // Cuando la ruta es '/login/terms'
+        path: 'terms',
         loadComponent: () => import('./login/terms/terms.component').then(m => m.TermsComponent),
-        data: {
-          pageTitle: 'Términos y Condiciones',
-          breadcrumb: 'Términos', // NIVEL 3: El hijo define "Términos"
-        },
+        title: 'Términos y Condiciones',
+        data: { pageTitle: 'login.terms' },
       },
     ],
   },
 
-  /* Rutas de cuenta (descomentar si las usas)
+  // 👇 RUTA DE LA VISTA PRIVADA (Protegida por login)
   {
-    path: 'account',
-    loadChildren: () => import('./account/account.routes'),
+    path: 'registro-candidato',
+    loadComponent: () => import('./entities/candidato/update/candidato-update.component').then(m => m.CandidatoUpdateComponent),
+    title: 'Gestión de Candidatos', // Nombre actualizado para reflejar su nueva función
+    data: {
+      pageTitle: 'Gestión de Candidatos',
+      authorities: ['ROLE_USER', 'ROLE_ADMIN'], // Permisos requeridos
+    },
+    canActivate: [UserRouteAccessService], // Asegura que bloquee a usuarios no logueados
   },
-  */
+
+  {
+    path: 'entities',
+    data: { pageTitle: 'global.menu.entities.main' },
+    loadChildren: () => import('./entities/entity.routes'),
+  },
+
   {
     path: '**',
     redirectTo: '/mi-error',

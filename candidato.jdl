@@ -1,0 +1,12 @@
+entity Candidato {
+    nombre String required,
+    email String required,
+    fechaNacimiento LocalDate required,
+    departamento String required,
+    salario BigDecimal required min(0) max(15000),
+    tokenAcceso String
+}
+
+// Esto crea el servicio y la paginación automáticamente
+service Candidato with serviceClass
+paginate Candidato with pagination

@@ -1,57 +1,155 @@
-/* Degradado principal (Columna Izquierda) */
-.bg-gradient-primary {
-  background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
-  position: relative;
-  overflow: hidden;
+/* 1. CONTENEDOR DE LA PÁGINA */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
 }
 
-/* Decoración de círculos en el fondo azul */
-.bg-circle-1, .bg-circle-2 {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
+/* 2. TARJETA DE LOGIN */
+.login-container {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 450px;
 }
 
-.bg-circle-1 {
-  width: 300px;
-  height: 300px;
-  top: -50px;
-  left: -50px;
+/* 3. MODAL BACKDROP (FONDO OSCURO) */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.bg-circle-2 {
-  width: 200px;
-  height: 200px;
-  bottom: -30px;
-  right: -30px;
+/* 4. MODAL CONTENT (TARJETA BLANCA FLOTANTE) */
+.modal-content-custom {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.z-index-1 {
-  position: relative;
-  z-index: 1;
+@keyframes popUp {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-/* Ajustes de tipografía pequeña */
-.x-small {
-  font-size: 0.75rem;
-  margin-top: 2px;
+/* 5. ANIMACIÓN DEL CHECK (CÍRCULO VERDE) */
+.success-checkmark {
+  width: 80px;
+  height: 115px;
+  margin: 0 auto;
+  
+  .check-icon {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    border-radius: 50%;
+    box-sizing: content-box;
+    border: 4px solid #4CAF50;
+    
+    &::before {
+      top: 3px;
+      left: -2px;
+      width: 30px;
+      transform-origin: 100% 50%;
+      border-radius: 100px 0 0 100px;
+    }
+    
+    &::after {
+      top: 0;
+      left: 30px;
+      width: 60px;
+      transform-origin: 0 50%;
+      border-radius: 0 100px 100px 0;
+      animation: rotate-circle 4.25s ease-in;
+    }
+    
+    &::before, &::after {
+      content: '';
+      height: 100px;
+      position: absolute;
+      background: #FFFFFF; /* Debe coincidir con el fondo del modal */
+      transform: rotate(-45deg);
+    }
+    
+    .icon-line {
+      height: 5px;
+      background-color: #4CAF50;
+      display: block;
+      border-radius: 2px;
+      position: absolute;
+      z-index: 10;
+      
+      &.line-tip {
+        top: 46px;
+        left: 14px;
+        width: 25px;
+        transform: rotate(45deg);
+        animation: icon-line-tip 0.75s;
+      }
+      
+      &.line-long {
+        top: 38px;
+        right: 8px;
+        width: 47px;
+        transform: rotate(-45deg);
+        animation: icon-line-long 0.75s;
+      }
+    }
+    
+    .icon-circle {
+      top: -4px;
+      left: -4px;
+      z-index: 10;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      position: absolute;
+      box-sizing: content-box;
+      border: 4px solid rgba(76, 175, 80, .5);
+    }
+    
+    .icon-fix {
+      top: 8px;
+      width: 5px;
+      height: 85px;
+      position: absolute;
+      left: 28px;
+      transform: rotate(-45deg);
+      z-index: 1;
+      background-color: #FFFFFF;
+    }
+  }
 }
 
-/* Efecto Hover en enlaces */
-.hover-link:hover {
-  text-decoration: underline !important;
+@keyframes icon-line-tip {
+  0% { width: 0; left: 1px; top: 19px; }
+  54% { width: 0; left: 1px; top: 19px; }
+  70% { width: 50px; left: -8px; top: 37px; }
+  84% { width: 17px; left: 21px; top: 48px; }
+  100% { width: 25px; left: 14px; top: 46px; }
 }
 
-/* Animación de botones */
-.transition-btn {
-  transition: all 0.3s ease;
-}
-.transition-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
-}
-
-/* Borde punteado para la zona de pruebas */
-.border-dashed {
-  border: 1px dashed #dee2e6;
+@keyframes icon-line-long {
+  0% { width: 0; right: 46px; top: 54px; }
+  65% { width: 0; right: 46px; top: 54px; }
+  84% { width: 55px; right: 0px; top: 35px; }
+  100% { width: 47px; right: 8px; top: 38px; }
 }

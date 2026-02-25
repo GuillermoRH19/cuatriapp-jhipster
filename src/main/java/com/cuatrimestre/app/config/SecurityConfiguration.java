@@ -55,10 +55,8 @@ public class SecurityConfiguration {
                         "default-src 'self'; " +
                         "frame-src 'self' data: https://hcaptcha.com https://*.hcaptcha.com; " +
                         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://hcaptcha.com https://*.hcaptcha.com; " +
-                        // CORRECCIÓN CSP: Se agregaron dominios de fuentes de Google para evitar errores de estilo
                         "style-src 'self' 'unsafe-inline' https://hcaptcha.com https://*.hcaptcha.com https://fonts.googleapis.com; " +
                         "img-src 'self' data: https:; " +
-                        // CORRECCIÓN CSP: Se permite cargar archivos de fuentes (iconos/texto)
                         "font-src 'self' data: https://fonts.gstatic.com; " +
                         "connect-src 'self' https://hcaptcha.com https://*.hcaptcha.com;"
                     ))
@@ -73,30 +71,27 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authz ->
                 // prettier-ignore
                 authz
-                    .requestMatchers(mvc.pattern("/api/insertar-datos-prueba")).permitAll()
+                    .requestMatchers(mvc.pattern("/")).permitAll()
                     .requestMatchers(mvc.pattern("/index.html"), mvc.pattern("/*.js"), mvc.pattern("/*.txt"), mvc.pattern("/*.json"), mvc.pattern("/*.map"), mvc.pattern("/*.css")).permitAll()
                     .requestMatchers(mvc.pattern("/*.ico"), mvc.pattern("/*.png"), mvc.pattern("/*.svg"), mvc.pattern("/*.webapp")).permitAll()
                     .requestMatchers(mvc.pattern("/app/**")).permitAll()
                     .requestMatchers(mvc.pattern("/i18n/**")).permitAll()
                     .requestMatchers(mvc.pattern("/content/**")).permitAll()
                     .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
-                    .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/authenticate")).permitAll()
-                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/authenticate")).permitAll()
+                    
+                    // 👇👇👇 ZONA DE API PÚBLICA CORREGIDA 👇👇👇
+                    // SOLO permitimos el método POST (Guardar). 
+                    // GET, PUT y DELETE quedan bloqueados para usuarios sin sesión.
+                    .requestMatchers(antMatcher(HttpMethod.POST, "/api/candidatoes")).permitAll()
+                    // 👆👆👆 FIN ZONA PÚBLICA 👆👆👆
+
+                    .requestMatchers(mvc.pattern("/api/authenticate")).permitAll()
                     .requestMatchers(mvc.pattern("/api/register")).permitAll()
                     .requestMatchers(mvc.pattern("/api/activate")).permitAll()
                     .requestMatchers(mvc.pattern("/api/account/reset-password/init")).permitAll()
                     .requestMatchers(mvc.pattern("/api/account/reset-password/finish")).permitAll()
-                    
-                    // 👇👇👇 CORRECCIÓN IMPORTANTE: PERMITE SUBIR Y VER IMÁGENES SIN LOGIN 👇👇👇
-                    .requestMatchers(mvc.pattern("/api/images/**")).permitAll() 
-                    
                     .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
-                    .requestMatchers(mvc.pattern("/api/**")).authenticated()
-                    .requestMatchers(mvc.pattern("/v3/api-docs/**")).hasAuthority(AuthoritiesConstants.ADMIN)
-                    .requestMatchers(mvc.pattern("/management/health")).permitAll()
-                    .requestMatchers(mvc.pattern("/management/health/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/management/info")).permitAll()
-                    .requestMatchers(mvc.pattern("/management/prometheus")).permitAll()
+                    .requestMatchers(mvc.pattern("/api/**")).authenticated() // El resto sigue seguro
                     .requestMatchers(mvc.pattern("/management/**")).hasAuthority(AuthoritiesConstants.ADMIN)
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -106,9 +101,7 @@ public class SecurityConfiguration {
                     .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
-        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
-            http.authorizeHttpRequests(authz -> authz.requestMatchers(antMatcher("/h2-console/**")).permitAll());
-        }
+            
         return http.build();
     }
 

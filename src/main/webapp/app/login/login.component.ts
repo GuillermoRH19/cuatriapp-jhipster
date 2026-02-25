@@ -1,93 +1,75 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, inject, signal } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+/* eslint-disable @typescript-eslint/member-ordering */
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, inject } from '@angular/core';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LoginService } from 'app/login/login.service';
 import { AccountService } from 'app/core/auth/account.service';
-import SharedModule from 'app/shared/shared.module';
-import dayjs from 'dayjs/esm';
+import { CommonModule } from '@angular/common';
 
-// Función para validar edad fuera de la clase
-function validarEdad(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) return null;
-  const fechaNacimiento = dayjs(control.value);
-  const hoy = dayjs();
-
-  if (fechaNacimiento.isAfter(hoy)) return { fechaFutura: true };
-  if (hoy.diff(fechaNacimiento, 'year') < 18) return { menorDeEdad: true };
-  return null;
-}
+// 👇 IMPORTA TU NUEVO COMPONENTE (Ajusta la ruta según dónde lo creaste)
+import { RegistroPublicoComponent } from './registro-publico/registro-publico.component';
 
 @Component({
-  standalone: true,
   selector: 'jhi-login',
-  imports: [SharedModule, ReactiveFormsModule, RouterModule],
+  standalone: true,
+  // 👇 AGREGAMOS RegistroPublicoComponent AQUÍ
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, RegistroPublicoComponent],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
 })
 export default class LoginComponent implements OnInit, AfterViewInit {
-  @ViewChild('username', { static: false }) username?: ElementRef;
+  @ViewChild('username', { static: false }) username!: ElementRef;
 
-  authenticationError = signal(false);
-  showSuccessModal = signal(false);
+  private loginService = inject(LoginService);
+  private accountService = inject(AccountService);
+  private router = inject(Router);
+
+  authenticationError = false;
+  isLoadingFetch = false;
 
   loginForm = new FormGroup({
-    // Campos básicos
-    username: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-    password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-    rememberMe: new FormControl(false, { nonNullable: true, validators: [Validators.required] }),
-
-    // Campos adicionales con validaciones
-    fechaNacimiento: new FormControl('', [Validators.required, validarEdad]),
-
-    // Sueldo: Mínimo 0 (no negativos), Máximo 15000
-    salario: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(15000)]),
-
-    contactoEmail: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(100)]),
-    departamento: new FormControl(null, [Validators.required]),
+    username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    rememberMe: new FormControl(false, { nonNullable: true }),
   });
 
-  private readonly loginService = inject(LoginService);
-  private readonly accountService = inject(AccountService);
-  private readonly router = inject(Router);
-
   ngOnInit(): void {
-    this.authenticationError.set(false);
+    this.accountService.identity().subscribe(() => {
+      if (this.accountService.isAuthenticated()) {
+        this.router.navigate(['/registro-candidato']);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
-    this.username?.nativeElement?.focus();
-  }
-
-  login(): void {
-    const rawData = this.loginForm.getRawValue();
-    this.loginService
-      .login({
-        username: rawData.username,
-        password: rawData.password,
-        rememberMe: rawData.rememberMe,
-      })
-      .subscribe({
-        next: () => {
-          this.authenticationError.set(false);
-          this.showSuccessModal.set(true); // Mostrar modal en lugar de redirigir directo
-        },
-        error: () => this.authenticationError.set(true),
-      });
-  }
-
-  cerrarModalYRedirigir(): void {
-    this.showSuccessModal.set(false);
-    // Redirigir al home si no hay navegación pendiente
-    if (!this.router.getCurrentNavigation()) {
-      this.router.navigate(['']);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (this.username) {
+      this.username.nativeElement.focus();
     }
   }
 
-  enviarDatosBD(): void {
-    this.accountService.guardarDatosEstaticos().subscribe({
-      next: () => alert('✅ Datos insertados correctamente en la BD.'),
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      error: err => alert('❌ Error al insertar: ' + err.status),
+  login(): void {
+    this.authenticationError = false;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    this.isLoadingFetch = true;
+    const { username, password, rememberMe } = this.loginForm.getRawValue();
+
+    this.loginService.login({ username, password, rememberMe }).subscribe({
+      next: account => {
+        this.isLoadingFetch = false;
+        if (account !== null) {
+          this.authenticationError = false;
+          this.router.navigate(['/registro-candidato']);
+        } else {
+          this.authenticationError = true;
+        }
+      },
+      error: () => {
+        this.authenticationError = true;
+        this.isLoadingFetch = false;
+      },
     });
   }
 }
