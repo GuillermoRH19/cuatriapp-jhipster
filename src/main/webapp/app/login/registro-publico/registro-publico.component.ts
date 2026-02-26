@@ -28,7 +28,15 @@ export class RegistroPublicoComponent {
   protected candidatoService = inject(CandidatoService);
 
   save(): void {
+    // 1. Validar específicamente si el salario se pasa de 15,000 para lanzar la alerta
+    if (this.editForm.get('salario')?.hasError('max')) {
+      alert('⚠️ No puedes postularte con un salario mayor a $15,000. Por favor, ajusta la cantidad.');
+      return; // Detiene el guardado
+    }
+
     this.isSaving = true;
+
+    // 2. Validar si hay otros campos vacíos o incorrectos
     if (this.editForm.invalid) {
       this.isSaving = false;
       this.editForm.markAllAsTouched();
@@ -42,7 +50,8 @@ export class RegistroPublicoComponent {
         this.isSaving = false;
         this.successMessage = true;
         this.editForm.reset();
-        setTimeout(() => (this.successMessage = false), 5000); // Oculta el mensaje después de 5 segundos
+        // Oculta el mensaje después de 5 segundos
+        setTimeout(() => (this.successMessage = false), 5000);
       },
       error: () => {
         this.isSaving = false;

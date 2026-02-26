@@ -37,6 +37,8 @@ export class CandidatoUpdateComponent implements OnInit {
   filtroSalarioMax = new FormControl<number | null>(null);
 
   departamentosUnicos: string[] = [];
+
+  // Variable que controla el cambio de "ventana" (vista)
   mostrarFormulario = false;
 
   editForm = new FormGroup({
@@ -91,7 +93,6 @@ export class CandidatoUpdateComponent implements OnInit {
 
     resultado = resultado.filter(c => {
       const coincideTexto = !texto || c.nombre?.toLowerCase().includes(texto);
-
       const coincideDepto = !deptoFiltro || c.departamento?.toLowerCase() === deptoFiltro;
 
       const edadResult = this.calcularEdad(c.fechaNacimiento);
@@ -111,7 +112,6 @@ export class CandidatoUpdateComponent implements OnInit {
     });
 
     this.candidatosFiltrados = resultado;
-
     this.totalPaginas = Math.ceil(this.candidatosFiltrados.length / this.itemsPorPagina) || 1;
     this.paginaActual = 1;
     this.actualizarPaginacion();
@@ -181,32 +181,25 @@ export class CandidatoUpdateComponent implements OnInit {
     }
   }
 
-  previousState(): void {
-    window.history.back();
-  }
-
+  // CAMBIA A LA VISTA DEL FORMULARIO
   crearNuevo(): void {
-    this.mostrarFormulario = true;
     this.editForm.reset();
-    setTimeout(() => {
-      const formElement = document.getElementById('formulario-candidato');
-      if (formElement) formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }
-
-  editarDeTabla(candidato: ICandidato): void {
     this.mostrarFormulario = true;
-    this.updateForm(candidato);
-    setTimeout(() => {
-      const formElement = document.getElementById('formulario-candidato');
-      if (formElement) formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // CAMBIA A LA VISTA DEL FORMULARIO CON DATOS
+  editarDeTabla(candidato: ICandidato): void {
+    this.updateForm(candidato);
+    this.mostrarFormulario = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // REGRESA A LA VENTANA PRINCIPAL SIN GUARDAR
   cancelarEdicion(): void {
     this.mostrarFormulario = false;
     this.editForm.reset();
-    window.scroll({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   eliminar(id: number): void {
@@ -229,11 +222,12 @@ export class CandidatoUpdateComponent implements OnInit {
     });
   }
 
+  // REGRESA A LA VENTANA PRINCIPAL TRAS GUARDAR
   protected onSaveSuccess(): void {
     this.mostrarFormulario = false;
     this.editForm.reset();
     this.cargarCandidatos();
-    window.scroll({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   protected onSaveError(): void {

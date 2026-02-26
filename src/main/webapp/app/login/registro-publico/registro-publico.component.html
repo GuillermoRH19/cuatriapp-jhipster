@@ -28,12 +28,24 @@
 
       <div class="mb-3">
         <label class="form-label" for="field_departamento">Departamento</label>
-        <input type="text" class="form-control" name="departamento" id="field_departamento" formControlName="departamento" placeholder="Ej. Sistemas" />
+        <select class="form-select" name="departamento" id="field_departamento" formControlName="departamento">
+          <option value="" disabled selected>Seleccione un área...</option>
+          <option value="IT">IT</option>
+          <option value="RH">RH</option>
+        </select>
+        <div *ngIf="editForm.get('departamento')!.invalid && (editForm.get('departamento')!.dirty || editForm.get('departamento')!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get('departamento')?.errors?.['required']">Debes seleccionar un departamento.</small>
+        </div>
       </div>
 
       <div class="mb-3">
         <label class="form-label" for="field_salario">Salario Esperado</label>
         <input type="number" class="form-control" name="salario" id="field_salario" formControlName="salario" placeholder="Ej. 10000" />
+        <div *ngIf="editForm.get('salario')!.invalid && (editForm.get('salario')!.dirty || editForm.get('salario')!.touched)">
+          <small class="form-text text-danger fw-bold" *ngIf="editForm.get('salario')?.errors?.['max']">⚠️ El salario máximo permitido es de $15,000.</small>
+          <small class="form-text text-danger" *ngIf="editForm.get('salario')?.errors?.['min']">El salario no puede ser negativo.</small>
+          <small class="form-text text-danger" *ngIf="editForm.get('salario')?.errors?.['required']">Este campo es obligatorio.</small>
+        </div>
       </div>
 
       <button type="submit" [disabled]="editForm.invalid || isSaving" class="btn btn-success w-100 btn-lg mt-3">

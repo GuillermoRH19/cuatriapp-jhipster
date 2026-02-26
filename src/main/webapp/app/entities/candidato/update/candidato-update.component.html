@@ -1,210 +1,226 @@
 <div class="dashboard-wrapper pt-4">
   <div class="container-xl">
     
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
-      <div>
-        <h2 class="corp-title mb-1">Directorio de Candidatos</h2>
-        <p class="corp-subtitle mb-0">Gestione la información, perfiles y expectativas salariales del talento.</p>
-      </div>
-      
-      <div class="d-flex flex-wrap gap-2 gap-md-3 align-items-center">
-        <button type="button" class="btn-corp-danger d-flex align-items-center gap-2" (click)="cerrarSesion()" title="Salir al Login">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-          <span class="d-none d-sm-inline">Cerrar Sesión</span>
-        </button>
+    <ng-container *ngIf="!mostrarFormulario">
+      <div class="vista-animada">
+        
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
+          <div>
+            <h2 class="corp-title mb-1">Directorio de Candidatos</h2>
+            <p class="corp-subtitle mb-0">Gestione la información, perfiles y expectativas salariales del talento.</p>
+          </div>
+          
+          <div class="d-flex flex-wrap gap-2 gap-md-3 align-items-center">
+            <button type="button" class="btn-corp-danger d-flex align-items-center gap-2" (click)="cerrarSesion()" title="Salir al Login">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+              <span class="d-none d-sm-inline">Cerrar Sesión</span>
+            </button>
 
-        <button type="button" class="btn-corp-secondary d-flex align-items-center gap-2" (click)="cargarCandidatos()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-          <span class="d-none d-sm-inline">Sincronizar</span>
-        </button>
+            <button type="button" class="btn-corp-secondary d-flex align-items-center gap-2" (click)="cargarCandidatos()">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              <span class="d-none d-sm-inline">Sincronizar</span>
+            </button>
 
-        <button type="button" class="btn-corp-primary d-flex align-items-center gap-2" (click)="crearNuevo()">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          Nuevo Registro
-        </button>
-      </div>
-    </div>
-
-    <div class="corp-card p-4">
-      <div class="row g-4 align-items-end">
-        <div class="col-12 col-xl-4">
-          <label class="corp-label" for="filtro_busqueda">Búsqueda Inteligente</label>
-          <div class="position-relative">
-            <svg class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="text" id="filtro_busqueda" class="form-control corp-input ps-5" placeholder="Buscar por nombre..." [formControl]="filtroBusqueda">
+            <button type="button" class="btn-corp-primary d-flex align-items-center gap-2" (click)="crearNuevo()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              Nuevo Registro
+            </button>
           </div>
         </div>
 
-        <div class="col-12 col-md-4 col-xl-2">
-          <label class="corp-label" for="filtro_departamento">Departamento</label>
-          <select id="filtro_departamento" class="form-select corp-input" [formControl]="filtroDepartamento">
-            <option value="">Todos</option>
-            <option *ngFor="let depto of departamentosUnicos" [value]="depto.toLowerCase()">{{ depto }}</option>
-          </select>
-        </div>
+        <div class="corp-card p-4">
+          <div class="row g-4 align-items-end">
+            <div class="col-12 col-xl-4">
+              <label class="corp-label" for="filtro_busqueda">Búsqueda Inteligente</label>
+              <div class="position-relative">
+                <svg class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="filtro_busqueda" class="form-control corp-input ps-5" placeholder="Buscar por nombre..." [formControl]="filtroBusqueda">
+              </div>
+            </div>
 
-        <div class="col-12 col-md-4 col-xl-3">
-          <span class="corp-label d-block">Rango de Edad (Años)</span>
-          <div class="input-group">
-            <input type="number" class="form-control corp-input text-center" placeholder="Min" aria-label="Min" [formControl]="filtroEdadMin">
-            <span class="input-group-text bg-transparent border-0 text-muted px-2">-</span>
-            <input type="number" class="form-control corp-input text-center" placeholder="Max" aria-label="Max" [formControl]="filtroEdadMax">
+            <div class="col-12 col-md-4 col-xl-2">
+              <label class="corp-label" for="filtro_departamento">Departamento</label>
+              <select id="filtro_departamento" class="form-select corp-input" [formControl]="filtroDepartamento">
+                <option value="">Todos</option>
+                <option *ngFor="let depto of departamentosUnicos" [value]="depto.toLowerCase()">{{ depto }}</option>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-4 col-xl-3">
+              <span class="corp-label d-block">Rango de Edad (Años)</span>
+              <div class="input-group">
+                <input type="number" class="form-control corp-input text-center" placeholder="Min" aria-label="Min" [formControl]="filtroEdadMin">
+                <span class="input-group-text bg-transparent border-0 text-muted px-2">-</span>
+                <input type="number" class="form-control corp-input text-center" placeholder="Max" aria-label="Max" [formControl]="filtroEdadMax">
+              </div>
+            </div>
+
+            <div class="col-12 col-md-4 col-xl-3">
+              <span class="corp-label d-block">Salario Esperado ($)</span>
+              <div class="input-group">
+                <input type="number" class="form-control corp-input" placeholder="Mínimo" aria-label="Salario min" [formControl]="filtroSalarioMin">
+                <span class="input-group-text bg-transparent border-0 text-muted px-2">-</span>
+                <input type="number" class="form-control corp-input" placeholder="Máximo" aria-label="Salario max" [formControl]="filtroSalarioMax">
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="col-12 col-md-4 col-xl-3">
-          <span class="corp-label d-block">Salario Esperado ($)</span>
-          <div class="input-group">
-            <input type="number" class="form-control corp-input" placeholder="Mínimo" aria-label="Salario min" [formControl]="filtroSalarioMin">
-            <span class="input-group-text bg-transparent border-0 text-muted px-2">-</span>
-            <input type="number" class="form-control corp-input" placeholder="Máximo" aria-label="Salario max" [formControl]="filtroSalarioMax">
+        <div class="corp-card" *ngIf="candidatosPaginados && candidatosPaginados.length > 0">
+          <div class="table-responsive">
+            <table class="corp-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="ps-4">Candidato</th>
+                  <th scope="col">Información de Contacto</th>
+                  <th scope="col">Edad</th>
+                  <th scope="col">Área / Depto</th>
+                  <th scope="col" class="text-end">Salario</th>
+                  <th scope="col" class="text-end pe-4">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let candidato of candidatosPaginados">
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle">
+                        {{ candidato.nombre ? candidato.nombre.charAt(0).toUpperCase() : 'U' }}
+                      </div>
+                      <div>
+                        <div class="fw-bold text-dark">{{ candidato.nombre }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <svg class="text-muted" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                      <a [href]="'mailto:' + candidato.email" class="text-decoration-none text-muted">{{ candidato.email }}</a>
+                    </div>
+                  </td>
+                  <td>{{ calcularEdad(candidato.fechaNacimiento) }} años</td>
+                  <td>
+                    <span class="depto-badge">{{ candidato.departamento }}</span>
+                  </td>
+                  <td class="text-end fw-semibold text-success">
+                    {{ candidato.salario | currency:'USD':'symbol':'1.0-0' }}
+                  </td>
+                  <td class="text-end pe-4">
+                    <button type="button" class="action-btn edit me-2" (click)="editarDeTabla(candidato)" title="Editar">
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                    <button type="button" class="action-btn delete" (click)="eliminar(candidato.id!)" title="Eliminar">
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-4 bg-white border-top" *ngIf="totalPaginas > 1">
+            <span class="text-muted small">
+              Mostrando <strong>{{ candidatosPaginados.length }}</strong> de <strong>{{ candidatosFiltrados.length }}</strong> registros
+            </span>
+            <nav aria-label="Navegación de resultados">
+              <ul class="pagination corp-pagination mb-0">
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                  <button class="page-link" (click)="primeraPagina()">&laquo;</button>
+                </li>
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                  <button class="page-link" (click)="paginaAnterior()">Ant</button>
+                </li>
+                <li class="page-item active">
+                  <span class="page-link">{{ paginaActual }}</span>
+                </li>
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                  <button class="page-link" (click)="paginaSiguiente()">Sig</button>
+                </li>
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                  <button class="page-link" (click)="ultimaPagina()">&raquo;</button>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
-      </div>
-    </div>
+        
+        <div *ngIf="!candidatosPaginados || candidatosPaginados.length === 0" class="corp-card p-5 text-center d-flex flex-column align-items-center">
+          <div class="bg-light rounded-circle p-4 mb-3">
+            <svg class="text-muted" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+          </div>
+          <h5 class="fw-bold text-dark">No hay candidatos encontrados</h5>
+          <p class="text-muted mb-4">Intente ajustar los filtros de búsqueda o registre un nuevo perfil en la base de datos.</p>
+          <button class="btn-corp-primary" (click)="crearNuevo()">Registrar Primer Candidato</button>
+        </div>
 
-    <div class="corp-card" *ngIf="candidatosPaginados && candidatosPaginados.length > 0">
-      <div class="table-responsive">
-        <table class="corp-table">
-          <thead>
-            <tr>
-              <th scope="col" class="ps-4">Candidato</th>
-              <th scope="col">Información de Contacto</th>
-              <th scope="col">Edad</th>
-              <th scope="col">Área / Depto</th>
-              <th scope="col" class="text-end">Salario</th>
-              <th scope="col" class="text-end pe-4">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let candidato of candidatosPaginados">
-              <td class="ps-4">
-                <div class="d-flex align-items-center">
-                  <div class="avatar-circle">
-                    {{ candidato.nombre ? candidato.nombre.charAt(0).toUpperCase() : 'U' }}
-                  </div>
-                  <div>
-                    <div class="fw-bold text-dark">{{ candidato.nombre }}</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="d-flex align-items-center gap-2">
-                  <svg class="text-muted" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                  <a [href]="'mailto:' + candidato.email" class="text-decoration-none text-muted">{{ candidato.email }}</a>
-                </div>
-              </td>
-              <td>{{ calcularEdad(candidato.fechaNacimiento) }} años</td>
-              <td>
-                <span class="depto-badge">{{ candidato.departamento }}</span>
-              </td>
-              <td class="text-end fw-semibold text-success">
-                {{ candidato.salario | currency:'USD':'symbol':'1.0-0' }}
-              </td>
-              <td class="text-end pe-4">
-                <button type="button" class="action-btn edit me-2" (click)="editarDeTabla(candidato)" title="Editar">
-                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                </button>
-                <button type="button" class="action-btn delete" (click)="eliminar(candidato.id!)" title="Eliminar">
-                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
+    </ng-container>
 
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-4 bg-white border-top" *ngIf="totalPaginas > 1">
-        <span class="text-muted small">
-          Mostrando <strong>{{ candidatosPaginados.length }}</strong> de <strong>{{ candidatosFiltrados.length }}</strong> registros
-        </span>
-        <nav aria-label="Navegación de resultados">
-          <ul class="pagination corp-pagination mb-0">
-            <li class="page-item" [class.disabled]="paginaActual === 1">
-              <button class="page-link" (click)="primeraPagina()">&laquo;</button>
-            </li>
-            <li class="page-item" [class.disabled]="paginaActual === 1">
-              <button class="page-link" (click)="paginaAnterior()">Ant</button>
-            </li>
-            <li class="page-item active">
-              <span class="page-link">{{ paginaActual }}</span>
-            </li>
-            <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
-              <button class="page-link" (click)="paginaSiguiente()">Sig</button>
-            </li>
-            <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
-              <button class="page-link" (click)="ultimaPagina()">&raquo;</button>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-    
-    <div *ngIf="!candidatosPaginados || candidatosPaginados.length === 0" class="corp-card p-5 text-center d-flex flex-column align-items-center">
-      <div class="bg-light rounded-circle p-4 mb-3">
-        <svg class="text-muted" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-      </div>
-      <h5 class="fw-bold text-dark">No hay candidatos encontrados</h5>
-      <p class="text-muted mb-4">Intente ajustar los filtros de búsqueda o registre un nuevo perfil en la base de datos.</p>
-      <button class="btn-corp-primary" (click)="crearNuevo()">Registrar Primer Candidato</button>
-    </div>
+    <ng-container *ngIf="mostrarFormulario">
+      <div class="row justify-content-center vista-animada">
+        <div class="col-12 col-xl-10">
+          
+          <div class="mb-4 d-flex align-items-center">
+            <button class="btn btn-link text-decoration-none text-muted d-flex align-items-center gap-2 px-0" (click)="cancelarEdicion()">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              <span class="fw-medium">Volver al Directorio Principal</span>
+            </button>
+          </div>
 
-    <div class="row justify-content-center" id="formulario-candidato" *ngIf="mostrarFormulario">
-      <div class="col-12 col-xl-10 mt-2">
-        <div class="corp-card border-top border-primary border-4">
-          <div class="p-4 p-md-5">
-            <h4 class="fw-bold text-dark mb-1">
-              {{ editForm.get('id')!.value ? 'Editar Perfil del Candidato' : 'Nuevo Registro de Talento' }}
-            </h4>
-            <p class="text-muted mb-4">Ingrese la información detallada. Los campos con asterisco (<span class="text-danger">*</span>) son obligatorios.</p>
-            
-            <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+          <div class="corp-card border-top border-primary border-4">
+            <div class="p-4 p-md-5">
+              <h4 class="fw-bold text-dark mb-1">
+                {{ editForm.get('id')!.value ? 'Editar Perfil del Candidato' : 'Nuevo Registro de Talento' }}
+              </h4>
+              <p class="text-muted mb-4">Ingrese la información detallada. Los campos con asterisco (<span class="text-danger">*</span>) son obligatorios.</p>
               
-              <div class="row g-4">
-                <div class="col-md-6">
-                  <label class="corp-label" for="field_nombre">Nombre Completo <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control corp-input" name="nombre" id="field_nombre" formControlName="nombre" placeholder="Ej. Ana García López" />
-                </div>
+              <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
                 
-                <div class="col-md-6">
-                  <label class="corp-label" for="field_email">Correo Electrónico <span class="text-danger">*</span></label>
-                  <input type="email" class="form-control corp-input" name="email" id="field_email" formControlName="email" placeholder="ana.garcia@email.com" />
-                </div>
-                
-                <div class="col-md-4">
-                  <label class="corp-label" for="field_fechaNacimiento">Fecha de Nacimiento <span class="text-danger">*</span></label>
-                  <input type="date" class="form-control corp-input" name="fechaNacimiento" id="field_fechaNacimiento" formControlName="fechaNacimiento" />
-                </div>
-                
-                <div class="col-md-4">
-                  <label class="corp-label" for="field_departamento">Área / Departamento <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control corp-input" name="departamento" id="field_departamento" formControlName="departamento" placeholder="Ej. Finanzas" />
-                </div>
-                
-                <div class="col-md-4">
-                  <label class="corp-label" for="field_salario">Salario Solicitado <span class="text-danger">*</span></label>
-                  <div class="position-relative">
-                    <span class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted fw-bold">$</span>
-                    <input type="number" class="form-control corp-input ps-4" name="salario" id="field_salario" formControlName="salario" placeholder="0.00" min="0" max="15000" />
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <label class="corp-label" for="field_nombre">Nombre Completo <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control corp-input" name="nombre" id="field_nombre" formControlName="nombre" placeholder="Ej. Ana García López" />
                   </div>
-                  <div *ngIf="editForm.get('salario')!.invalid && (editForm.get('salario')!.dirty || editForm.get('salario')!.touched)" class="text-danger small mt-1 fw-medium">
-                    <div *ngIf="editForm.get('salario')?.errors?.['max']">⚠️ El salario no puede superar los $15,000.</div>
-                    <div *ngIf="editForm.get('salario')?.errors?.['min']">⚠️ El salario no puede ser negativo.</div>
+                  
+                  <div class="col-md-6">
+                    <label class="corp-label" for="field_email">Correo Electrónico <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control corp-input" name="email" id="field_email" formControlName="email" placeholder="ana.garcia@email.com" />
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <label class="corp-label" for="field_fechaNacimiento">Fecha de Nacimiento <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control corp-input" name="fechaNacimiento" id="field_fechaNacimiento" formControlName="fechaNacimiento" />
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <label class="corp-label" for="field_departamento">Área / Departamento <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control corp-input" name="departamento" id="field_departamento" formControlName="departamento" placeholder="Ej. Finanzas" />
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <label class="corp-label" for="field_salario">Salario Solicitado <span class="text-danger">*</span></label>
+                    <div class="position-relative">
+                      <span class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted fw-bold">$</span>
+                      <input type="number" class="form-control corp-input ps-4" name="salario" id="field_salario" formControlName="salario" placeholder="0.00" min="0" max="15000" />
+                    </div>
+                    <div *ngIf="editForm.get('salario')!.invalid && (editForm.get('salario')!.dirty || editForm.get('salario')!.touched)" class="text-danger small mt-1 fw-medium">
+                      <div *ngIf="editForm.get('salario')?.errors?.['max']">⚠️ El salario no puede superar los $15,000.</div>
+                      <div *ngIf="editForm.get('salario')?.errors?.['min']">⚠️ El salario no puede ser negativo.</div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
-                <button type="button" class="btn-corp-secondary" (click)="cancelarEdicion()">Descartar Cambios</button>
-                <button type="submit" [disabled]="editForm.invalid || isSaving" class="btn-corp-primary px-5">
-                  {{ editForm.get('id')!.value ? 'Actualizar Perfil' : 'Guardar Registro' }}
-                </button>
-              </div>
-            </form>
+                <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
+                  <button type="button" class="btn-corp-secondary" (click)="cancelarEdicion()">Descartar Cambios</button>
+                  <button type="submit" [disabled]="editForm.invalid || isSaving" class="btn-corp-primary px-5">
+                    {{ editForm.get('id')!.value ? 'Actualizar Perfil' : 'Guardar Registro' }}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
 
   </div>
 </div>
