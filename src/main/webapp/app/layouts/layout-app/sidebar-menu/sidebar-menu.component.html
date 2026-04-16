@@ -1,0 +1,55 @@
+<!-- Estructura jerárquica de menús y módulos -->
+<div class="menu-structure">
+  <!-- Cada menú principal -->
+  <div *ngFor="let menu of menuItems" [id]="menu.idHtml" class="menu-item">
+    <!-- Encabezado del menú (clickeable para expandir/contraer si hay submódulos) -->
+    <div
+      class="menu-header"
+      [class.expandable]="menu.submodulos && menu.submodulos.length > 0"
+      (click)="toggleMenu(menu.id)"
+    >
+      <!-- Icono de expansion (solo si tiene submódulos) -->
+      <i
+        *ngIf="menu.submodulos && menu.submodulos.length > 0"
+        data-lucide="chevron-right"
+        class="menu-icon toggle-icon"
+        [class.expanded]="isMenuOpen(menu.id)"
+      ></i>
+
+      <!-- Icono del menú (placeholder - aquí puedes agregar iconos reales) -->
+      <i data-lucide="folder" class="menu-icon"></i>
+
+      <!-- Título del menú -->
+      <span class="menu-title">{{ menu.titulo }}</span>
+    </div>
+
+    <!-- Submódulos (módulos bajo este menú) -->
+    <div
+      class="submenu-container"
+      *ngIf="menu.submodulos && menu.submodulos.length > 0"
+      [class.open]="isMenuOpen(menu.id)"
+    >
+      <a
+        *ngFor="let modulo of menu.submodulos"
+        [routerLink]="modulo.ruta"
+        routerLinkActive="active"
+        class="submenu-item"
+      >
+        <!-- Icono del submódulo -->
+        <i data-lucide="arrow-right" class="submenu-icon"></i>
+
+        <!-- Nombre del submódulo -->
+        <span class="submenu-text">{{ modulo.nombre }}</span>
+      </a>
+    </div>
+
+    <!-- Caso especial: Si no hay submódulos, hacer el menú clickeable directamente -->
+    <a
+      *ngIf="!menu.submodulos || menu.submodulos.length === 0"
+      href="javascript:void(0);"
+      class="nav-link-empty"
+    >
+      <span class="text-muted small">Sin módulos asignados</span>
+    </a>
+  </div>
+</div>

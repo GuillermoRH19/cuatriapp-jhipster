@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { MiErrorComponent } from './mi-error/mi-error.component';
+import { DynamicLayoutComponent } from './layouts/layout-app/dynamic-layout.component';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 
 @Component({
@@ -46,20 +47,62 @@ export const routes: Routes = [
     ],
   },
 
-  // 👇 RUTA DE LA VISTA PRIVADA (Protegida por login)
+  // 👇 LAYOUT DINÁMICO - Todas las rutas autenticadas van aquí
   {
-    path: 'registro-candidato',
+    path: 'dashboard',
+    component: DynamicLayoutComponent,
+    canActivate: [UserRouteAccessService],
+    children: [
+      {
+        path: '',
+        redirectTo: 'inicio',
+        pathMatch: 'full',
+      },
+      {
+        path: 'inicio',
+        loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
+        title: 'Inicio',
+        data: { pageTitle: 'Inicio' },
+      },
+      {
+        path: 'registro-candidato',
+        loadComponent: () => import('./entities/candidato/update/candidato-update.component').then(m => m.CandidatoUpdateComponent),
+        title: 'Gestión de Candidatos',
+        data: {
+          pageTitle: 'Gestión de Candidatos',
+          authorities: ['ROLE_USER', 'ROLE_ADMIN'],
+        },
+      },
+      {
+        path: 'entities',
+        loadChildren: () => import('./entities/entity.routes'),
+      },
+      {
+        path: 'account',
+        loadChildren: () => import('./account/account.routes'),
+      },
+      {
+        path: 'admin',
+        data: { pageTitle: 'Administración' },
+        loadChildren: () => import('./admin/admin.routes'),
+      },
+    ],
+  },
+
+  // 👇 RUTAS LEGADAS (sin layout dinámico)
+  {
+    path: 'registro-candidato-legacy',
     loadComponent: () => import('./entities/candidato/update/candidato-update.component').then(m => m.CandidatoUpdateComponent),
-    title: 'Gestión de Candidatos', // Nombre actualizado para reflejar su nueva función
+    title: 'Gestión de Candidatos',
     data: {
       pageTitle: 'Gestión de Candidatos',
-      authorities: ['ROLE_USER', 'ROLE_ADMIN'], // Permisos requeridos
+      authorities: ['ROLE_USER', 'ROLE_ADMIN'],
     },
-    canActivate: [UserRouteAccessService], // Asegura que bloquee a usuarios no logueados
+    canActivate: [UserRouteAccessService],
   },
 
   {
-    path: 'entities',
+    path: 'entities-legacy',
     data: { pageTitle: 'global.menu.entities.main' },
     loadChildren: () => import('./entities/entity.routes'),
   },

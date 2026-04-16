@@ -1,0 +1,180 @@
+/* ============================================================================
+   Menú Jerárquico - Estilos
+   ============================================================================ */
+
+.menu-structure {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================================
+   MENU ITEM (Grupo de menú)
+   ============================================================================ */
+
+.menu-item {
+  margin-bottom: 5px;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.5);
+  }
+
+  &.expandable {
+    user-select: none;
+  }
+}
+
+.menu-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  flex-shrink: 0;
+
+  &.toggle-icon {
+    transition: transform 0.2s ease;
+    margin-right: 6px;
+
+    &.expanded {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.menu-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================================
+   SUBMENU CONTAINER (Contenedor de submódulos)
+   ============================================================================ */
+
+.submenu-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.1);
+
+  &.open {
+    max-height: 500px; /* Ajusta según sea necesario */
+  }
+}
+
+/* ============================================================================
+   SUBMENU ITEM (Módulo individual)
+   ============================================================================ */
+
+.submenu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px 10px 40px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    border-left-color: rgba(255, 255, 255, 0.5);
+  }
+
+  &.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-left-color: white;
+    font-weight: 600;
+  }
+}
+
+.submenu-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.submenu-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================================
+   MENU VACÍO (Sin módulos asignados)
+   ============================================================================ */
+
+.nav-link-empty {
+  display: block;
+  padding: 12px 15px;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-size: 12px;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .submenu-item {
+    padding: 9px 15px 9px 35px;
+    font-size: 11px;
+  }
+
+  .menu-header {
+    padding: 11px 12px;
+    font-size: 12px;
+  }
+
+  .menu-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+
+  .submenu-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+  }
+}
+
+/* ============================================================================
+   ANIMACIONES
+   ============================================================================ */
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submenu-item {
+  animation: slideDown 0.2s ease-out;
+}

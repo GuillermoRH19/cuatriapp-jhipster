@@ -36,22 +36,20 @@ spring:
   # 👇 CONFIGURACIÓN BASE DE DATOS SOMEE 👇
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    # URL con timeout de login de 60 segundos
     url: jdbc:sqlserver://CuatrimestreApp.mssql.somee.com;databaseName=CuatrimestreApp;encrypt=false;trustServerCertificate=true;loginTimeout=60;
-    
     username: JGRH_SQLLogin_1
-    # Tu contraseña ya incluida:
     password: '7xzhrkntc8'
-    
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
       poolName: Hikari
       auto-commit: false
-      # Espera 60 segundos antes de rendirse si Somee está dormido
       connection-timeout: 60000 
       maximum-pool-size: 5
 
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: none # <--- AQUÍ FRENAMOS A HIBERNATE
     properties:
       hibernate:
         format_sql: true
@@ -61,10 +59,10 @@ spring:
       enabled: false
 
   liquibase:
+    enabled: false # <--- AQUÍ APAGAMOS LIQUIBASE
     contexts: dev, faker
 
-  # 👇 CONFIGURACIÓN DE CORREO (CORREGIDA LA INDENTACIÓN) 👇
-  # Esto soluciona el error "UnsatisfiedDependencyException"
+  # 👇 CONFIGURACIÓN DE CORREO 👇
   mail:
     host: smtp.gmail.com
     port: 587
