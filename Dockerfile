@@ -1,4 +1,7 @@
-FROM eclipse-temurin:17-jdk-jammy AS build
+FROM mcr.microsoft.com/devcontainers/java:17-bullseye AS build
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
 
 WORKDIR /app
 
@@ -8,7 +11,7 @@ COPY . .
 RUN sed -i 's/\r$//' mvnw .mvn/wrapper/maven-wrapper.properties && chmod +x mvnw
 
 # Compilar proyecto en producción
-RUN ./mvnw -Pprod package -DskipTests
+RUN ./mvnw -Pprod package -DskipTests -Dmaven.test.skip=true
 
 FROM eclipse-temurin:17-jdk-jammy
 
