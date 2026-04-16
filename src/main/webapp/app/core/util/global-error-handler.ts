@@ -1,4 +1,5 @@
 import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -9,13 +10,16 @@ export class GlobalErrorHandler implements ErrorHandler {
   ) {}
 
   handleError(error: any): void {
-    // 1. Logueamos el error en consola para que tú (el desarrollador) lo veas
     console.error('🔥 Error detectado por el Manejador Global:', error);
 
-    // 2. Obtenemos el Router manualmente (usando Injector para evitar ciclos de dependencia)
-    const router = this.injector.get(Router);
+    // HTTP errors are already handled by the interceptors (auth-expired, error-handler).
+    // Redirecting here would race with those interceptors and send the user to /mi-error
+    // instead of /login on session expiry.
+    if (error instanceof HttpErrorResponse) {
+      return;
+    }
 
-    // 3. Usamos NgZone para asegurar que Angular detecte la navegación aunque el error haya ocurrido fuera
+    const router = this.injector.get(Router);
     this.zone.run(() => {
       router.navigate(['/mi-error']);
     });

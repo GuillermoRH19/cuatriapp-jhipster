@@ -28,7 +28,14 @@ export class ModuloComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
-    this.moduloService.getMenus().subscribe(menus => this.menus.set(menus));
+    this.loadMenus();
+  }
+
+  loadMenus(): void {
+    this.moduloService.getMenus().subscribe({
+      next: menus => this.menus.set(menus),
+      error: () => {},
+    });
   }
 
   load(): void {
@@ -81,7 +88,7 @@ export class ModuloComponent implements OnInit {
         }
         modal.close();
         this.load();
-        this.moduloService.getMenus().subscribe(menus => this.menus.set(menus));
+        this.loadMenus();
       },
       error: () => (this.isSaving = false),
     });
@@ -97,6 +104,7 @@ export class ModuloComponent implements OnInit {
         }
         this.load();
       },
+      error: () => alert('Error al eliminar el módulo.'),
     });
   }
 }

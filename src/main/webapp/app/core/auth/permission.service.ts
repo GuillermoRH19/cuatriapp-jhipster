@@ -28,6 +28,7 @@ export class PermissionService {
         this.permissions.set(data);
         this.loaded = true;
       },
+      error: () => {},
     });
   }
 

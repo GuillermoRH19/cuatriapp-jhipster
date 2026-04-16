@@ -1,5 +1,5 @@
 import { ApplicationConfig, ErrorHandler } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withDebugTracing } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 // 👇 Importamos HTTP_INTERCEPTORS y withInterceptorsFromDi
 import { provideHttpClient, HTTP_INTERCEPTORS, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -12,7 +12,7 @@ import { AuthInterceptor } from 'app/core/interceptor/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withComponentInputBinding(), withDebugTracing()),
+    provideRouter(routes, withComponentInputBinding()),
 
     // 👇 Le decimos a Angular que habilite los interceptores basados en clases
     provideHttpClient(withInterceptorsFromDi()),
