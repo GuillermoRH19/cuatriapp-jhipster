@@ -1,3 +1,85 @@
+@if (account !== null) {
+  <div class="hero-header p-5 mb-4 rounded-3 text-white bg-gradient-dark">
+    <div class="container-fluid py-3 text-center">
+      <h1 class="display-4 fw-bold">¡Bienvenido al Sistema!</h1>
+      <p class="fs-4">Hola de nuevo, {{ account.login }}</p>
+    </div>
+  </div>
+
+  <div class="container-fluid px-4 mb-5">
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-8">
+        <h2 class="fw-bold text-primary">Tu panel principal</h2>
+        <p class="lead text-muted">A continuación tienes un resumen estático de la actividad reciente del negocio.</p>
+      </div>
+      <div class="col-lg-4 text-end">
+        <div class="card bg-primary text-white shadow rounded-4 border-0">
+          <div class="card-body py-4">
+            <h5 class="card-title opacity-75">Nivel de Acceso</h5>
+            <h3 class="fw-bold mb-0">
+              <fa-icon icon="users-cog" class="me-2"></fa-icon> 
+              {{ account.authorities.includes('ROLE_ADMIN') ? 'Administrador' : 'Usuario' }}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4 feature-card">
+          <div class="card-body text-center p-4">
+            <div class="icon-circle bg-light-primary text-primary mx-auto mb-3">
+              <fa-icon icon="tachometer-alt" size="2x"></fa-icon>
+            </div>
+            <h4>Estadísticas</h4>
+            <p class="text-muted mb-0">Rendimiento general y crecimiento mensual estable al 24%.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4 feature-card">
+          <div class="card-body text-center p-4">
+            <div class="icon-circle bg-light-success text-success mx-auto mb-3">
+              <fa-icon icon="users" size="2x"></fa-icon>
+            </div>
+            <h4>Candidatos</h4>
+            <p class="text-muted mb-0">Se han registrado 42 candidatos activos este mes.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4 feature-card">
+          <div class="card-body text-center p-4">
+            <div class="icon-circle bg-light-warning text-warning mx-auto mb-3">
+              <fa-icon icon="tasks" size="2x"></fa-icon>
+            </div>
+            <h4>Sistema</h4>
+            <p class="text-muted mb-0">Todos los servicios se encuentran en estado óptimo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .icon-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bg-light-primary { background-color: #e0f0ff; }
+    .bg-light-success { background-color: #e6f9ec; }
+    .bg-light-warning { background-color: #fff8e6; }
+    .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; }
+  </style>
+}
+
+@if (account === null) {
 <div class="hero-header p-5 mb-4 rounded-3 text-white bg-gradient-dark">
   <div class="container-fluid py-3 text-center">
     <h1 class="display-4 fw-bold">Sistema Empresarial</h1>
@@ -138,3 +220,4 @@
     <button type="button" class="btn btn-secondary" (click)="modal.close()">Cerrar</button>
   </div>
 </ng-template>
+}
