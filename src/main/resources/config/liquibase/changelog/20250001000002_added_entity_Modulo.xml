@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="20250001000002-1" author="custom" onFail="MARK_RAN">
+    <changeSet id="20250001000002-1" author="custom" failOnError="false">
         <createTable tableName="modulo">
             <column name="id" type="integer" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -19,7 +19,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="20250001000002-2" author="custom" onFail="MARK_RAN">
+    <changeSet id="20250001000002-2" author="custom" failOnError="false">
         <addForeignKeyConstraint
             baseTableName="modulo"
             baseColumnNames="id_menu"

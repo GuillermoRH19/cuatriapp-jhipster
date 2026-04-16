@@ -18,7 +18,7 @@
         JHipster core tables.
         The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
     -->
-    <changeSet id="00000000000001" author="jhipster" onFail="MARK_RAN">
+    <changeSet id="00000000000001" author="jhipster" failOnError="false">
         <createTable tableName="jhi_user">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -107,7 +107,7 @@
         <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="${datetimeType}"/>
     </changeSet>
 
-    <changeSet author="jhipster" id="00000000000002" context="test" onFail="MARK_RAN">
+    <changeSet author="jhipster" id="00000000000002" context="test" failOnError="false">
         <createTable tableName="jhi_date_time_wrapper">
             <column  name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="jhi_date_time_wrapperPK"/>
