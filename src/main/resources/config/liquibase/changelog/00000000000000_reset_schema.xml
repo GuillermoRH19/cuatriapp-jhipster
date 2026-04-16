@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!--
+        Changeset de limpieza total. Solo se ejecuta cuando se activa el contexto "reset".
+        En Railway: variable LIQUIBASE_CONTEXTS=reset
+        Después del primer boot limpio: eliminar esa variable.
+    -->
+    <changeSet id="reset-schema-001" author="custom" runAlways="true" context="reset">
+        <sql dbms="mssql" splitStatements="false">
+            -- 1. Borrar todas las FK constraints de las tablas de usuario
+            DECLARE @sql NVARCHAR(MAX) = '';
+            SELECT @sql += 'ALTER TABLE ' + QUOTENAME(OBJECT_NAME(parent_object_id))
+                         + ' DROP CONSTRAINT ' + QUOTENAME(name) + ';'
+            FROM sys.foreign_keys
+            WHERE OBJECT_NAME(parent_object_id) IN (
+                'jhi_user_authority','jhi_user','permisos_perfil',
+                'modulo','candidato','jhi_carousel_image'
+            );
+            IF LEN(@sql) > 0 EXEC sp_executesql @sql;
+
+            -- 2. Borrar tablas en orden (hijas primero)
+            IF OBJECT_ID('jhi_user_authority',    'U') IS NOT NULL DROP TABLE jhi_user_authority;
+            IF OBJECT_ID('permisos_perfil',        'U') IS NOT NULL DROP TABLE permisos_perfil;
+            IF OBJECT_ID('candidato',              'U') IS NOT NULL DROP TABLE candidato;
+            IF OBJECT_ID('jhi_carousel_image',     'U') IS NOT NULL DROP TABLE jhi_carousel_image;
+            IF OBJECT_ID('jhi_user',               'U') IS NOT NULL DROP TABLE jhi_user;
+            IF OBJECT_ID('modulo',                 'U') IS NOT NULL DROP TABLE modulo;
+            IF OBJECT_ID('menu',                   'U') IS NOT NULL DROP TABLE menu;
+            IF OBJECT_ID('perfil',                 'U') IS NOT NULL DROP TABLE perfil;
+            IF OBJECT_ID('jhi_authority',          'U') IS NOT NULL DROP TABLE jhi_authority;
+            IF OBJECT_ID('jhi_date_time_wrapper',  'U') IS NOT NULL DROP TABLE jhi_date_time_wrapper;
+
+            -- 3. Borrar secuencia
+            IF EXISTS (SELECT * FROM sys.sequences WHERE name = 'sequence_generator')
+                DROP SEQUENCE sequence_generator;
+        </sql>
+        <rollback/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -19,6 +19,7 @@
     <property name="timeType" value="time" dbms="mssql"/>
 
     
+    <include file="config/liquibase/changelog/00000000000000_reset_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240122000000_added_entity_Image.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250001000000_added_entity_Perfil.xml" relativeToChangelogFile="false"/>
