@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="20250001000000-1" author="custom">
+    <changeSet id="20250001000000-1" author="custom" onFail="MARK_RAN">
         <createTable tableName="perfil">
             <column name="id" type="integer" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -19,7 +19,7 @@
     </changeSet>
 
     <!-- Datos iniciales: perfil administrador y perfil usuario -->
-    <changeSet id="20250001000000-2" author="custom">
+    <changeSet id="20250001000000-2" author="custom" onFail="MARK_RAN">
         <insert tableName="perfil">
             <column name="nombre_perfil" value="Administrador"/>
             <column name="bit_administrador" valueBoolean="true"/>

@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="20250001000003-1" author="custom">
+    <changeSet id="20250001000003-1" author="custom" onFail="MARK_RAN">
         <createTable tableName="permisos_perfil">
             <column name="id" type="integer" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -33,7 +33,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="20250001000003-2" author="custom">
+    <changeSet id="20250001000003-2" author="custom" onFail="MARK_RAN">
         <addForeignKeyConstraint
             baseTableName="permisos_perfil"
             baseColumnNames="id_modulo"
@@ -49,7 +49,7 @@
     </changeSet>
 
     <!-- Índice único para evitar duplicados perfil+módulo -->
-    <changeSet id="20250001000003-3" author="custom">
+    <changeSet id="20250001000003-3" author="custom" onFail="MARK_RAN">
         <addUniqueConstraint
             tableName="permisos_perfil"
             columnNames="id_perfil, id_modulo"

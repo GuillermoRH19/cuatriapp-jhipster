@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <!-- Agregar columna perfil_id a jhi_user -->
-    <changeSet id="20250001000005-1" author="custom">
+    <changeSet id="20250001000005-1" author="custom" onFail="MARK_RAN">
         <addColumn tableName="jhi_user">
             <column name="perfil_id" type="integer">
                 <constraints nullable="true"/>
@@ -13,7 +13,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="20250001000005-2" author="custom">
+    <changeSet id="20250001000005-2" author="custom" onFail="MARK_RAN">
         <addForeignKeyConstraint
             baseTableName="jhi_user"
             baseColumnNames="perfil_id"
@@ -23,7 +23,7 @@
     </changeSet>
 
     <!-- Asignar perfil Administrador (id=1) al usuario admin por defecto -->
-    <changeSet id="20250001000005-3" author="custom">
+    <changeSet id="20250001000005-3" author="custom" onFail="MARK_RAN">
         <update tableName="jhi_user">
             <column name="perfil_id" valueNumeric="1"/>
             <where>login = 'admin'</where>
