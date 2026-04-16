@@ -5,6 +5,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -41,12 +42,12 @@ public class MailService {
 
     public MailService(
         JHipsterProperties jHipsterProperties,
-        JavaMailSender javaMailSender,
+        Optional<JavaMailSender> javaMailSender,
         MessageSource messageSource,
         SpringTemplateEngine templateEngine
     ) {
         this.jHipsterProperties = jHipsterProperties;
-        this.javaMailSender = javaMailSender;
+        this.javaMailSender = javaMailSender.orElse(null);
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
     }
@@ -57,6 +58,10 @@ public class MailService {
     }
 
     private void sendEmailSync(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
+        if (javaMailSender == null) {
+            LOG.warn("JavaMailSender not configured — skipping email to '{}'", to);
+            return;
+        }
         LOG.debug(
             "Send email[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
             isMultipart,
