@@ -37,7 +37,7 @@
     </changeSet>
 
     <!-- Asignar perfil Administrador (id=1) al usuario admin si no tiene uno -->
-    <changeSet id="20250001000006-3" author="custom">
+    <changeSet id="20250001000006-3" author="custom" failOnError="false">
         <sql dbms="mssql">
             UPDATE jhi_user
             SET perfil_id = 1
