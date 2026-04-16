@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 # Dar permiso de ejecución a mvnw
-RUN chmod +x mvnw
+RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 
 # Compilar proyecto en producción
 RUN ./mvnw -Pprod package -DskipTests
