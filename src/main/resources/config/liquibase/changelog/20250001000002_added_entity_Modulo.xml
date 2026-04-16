@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20250001000002-1" author="custom">
+        <createTable tableName="modulo">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nombre_modulo" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ruta" type="varchar(255)"/>
+            <column name="id_menu" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20250001000002-2" author="custom">
+        <addForeignKeyConstraint
+            baseTableName="modulo"
+            baseColumnNames="id_menu"
+            constraintName="fk_modulo_menu"
+            referencedTableName="menu"
+            referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

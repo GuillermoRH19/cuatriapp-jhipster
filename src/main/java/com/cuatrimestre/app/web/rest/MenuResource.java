@@ -25,6 +25,8 @@ import com.cuatrimestre.app.service.dto.MenuDTO;
 @Transactional
 public class MenuResource {
 
+    private static final Logger log = LoggerFactory.getLogger(MenuResource.class);
+
     private final MenuService menuService;
     private final UserService userService;
 
@@ -34,28 +36,29 @@ public class MenuResource {
     }
 
     /**
-     * GET /menus/sidebar : Obtiene el menú dinámico based on user perfil.
-     * 
+     * GET /menus/sidebar : Obtiene el menú dinámico del usuario autenticado según su Perfil.
+     *
      * @return Lista de MenuDTO con la estructura jerárquica
      */
     @GetMapping("/menus/sidebar")
     public ResponseEntity<List<MenuDTO>> getSidebarMenu() {
         log.debug("REST request to get sidebar menu for current user");
-        
-        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
-        
-        if (currentUserLogin.isEmpty()) {
-            log.warn("User is not authenticated");
-            return ResponseEntity.badRequest().build();
-        }
 
-        // TODO: La lógica actual de JHipster usa Authority, no Perfil.
-        // Aquí asumo idPerfil = 1 como admin por defecto.
-        // Debes mapear el usuario actual a un Perfil desde la BD.
-        Integer idPerfil = 1; // CAMBIAR: Obtener dinámicamente desde usuario
-        
-        List<MenuDTO> menuStructure = menuService.getSidebarMenu(idPerfil);
-        return ResponseEntity.ok().body(menuStructure);
+        return userService.getUserWithAuthorities()
+            .map(user -> {
+                if (user.getPerfil() == null) {
+                    log.warn("User {} has no perfil assigned, returning empty menu", user.getLogin());
+                    return ResponseEntity.ok().<List<MenuDTO>>body(java.util.Collections.emptyList());
+                }
+                Integer idPerfil = user.getPerfil().getId();
+                log.debug("Loading menu for user {} with perfil id {}", user.getLogin(), idPerfil);
+                List<MenuDTO> menuStructure = menuService.getSidebarMenu(idPerfil);
+                return ResponseEntity.ok().body(menuStructure);
+            })
+            .orElseGet(() -> {
+                log.warn("No authenticated user found");
+                return ResponseEntity.badRequest().build();
+            });
     }
 
     /**

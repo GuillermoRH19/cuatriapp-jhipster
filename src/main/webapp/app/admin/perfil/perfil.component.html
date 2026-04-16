@@ -1,0 +1,93 @@
+<div class="container-fluid">
+  <h2>Gestión de Perfiles</h2>
+
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-primary" (click)="openCreate(perfilModal)">
+      <fa-icon icon="plus"></fa-icon> Nuevo Perfil
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="text-center"><span class="spinner-border"></span></div>
+  } @else {
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre del Perfil</th>
+            <th>Administrador</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (perfil of perfiles(); track perfil.id) {
+            <tr>
+              <td>{{ perfil.id }}</td>
+              <td>{{ perfil.nombrePerfil }}</td>
+              <td>
+                @if (perfil.administrador) {
+                  <span class="badge bg-danger">Admin</span>
+                } @else {
+                  <span class="badge bg-secondary">Usuario</span>
+                }
+              </td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" (click)="openEdit(perfilModal, perfil)">
+                  <fa-icon icon="pencil-alt"></fa-icon> Editar
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="delete(perfil.id!)">
+                  <fa-icon icon="trash"></fa-icon> Eliminar
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="text-center text-muted">No hay perfiles registrados.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Modal Crear / Editar -->
+<ng-template #perfilModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ editingId ? 'Editar Perfil' : 'Nuevo Perfil' }}</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editForm" (ngSubmit)="save(modal)">
+      <div class="mb-3">
+        <label class="form-label" for="nombrePerfil">Nombre del Perfil <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="nombrePerfil"
+          class="form-control"
+          formControlName="nombrePerfil"
+          [class.is-invalid]="editForm.get('nombrePerfil')!.invalid && editForm.get('nombrePerfil')!.touched"
+        />
+        @if (editForm.get('nombrePerfil')!.errors?.['required']) {
+          <div class="invalid-feedback">El nombre es obligatorio.</div>
+        }
+      </div>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="administrador" formControlName="administrador" />
+        <label class="form-check-label" for="administrador">
+          Es Administrador (acceso total a todos los módulos)
+        </label>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-primary" [disabled]="editForm.invalid || isSaving" (click)="save(modal)">
+      @if (isSaving) {
+        <span class="spinner-border spinner-border-sm me-1"></span>
+      }
+      Guardar
+    </button>
+  </div>
+</ng-template>

@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DTO para la respuesta del menú dinámico.
- * Representa un menú con sus módulos (submenús).
- */
 public class MenuDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,7 +13,6 @@ public class MenuDTO implements Serializable {
     private String idHtml;
     private List<ModuloDTO> submodulos;
 
-    // --- CONSTRUCTORES ---
     public MenuDTO() {
         this.submodulos = new ArrayList<>();
     }
@@ -29,7 +24,6 @@ public class MenuDTO implements Serializable {
         this.submodulos = new ArrayList<>();
     }
 
-    // --- GETTERS Y SETTERS ---
     public Integer getId() {
         return id;
     }

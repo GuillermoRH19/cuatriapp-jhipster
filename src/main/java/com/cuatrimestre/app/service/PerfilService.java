@@ -60,7 +60,6 @@ public class PerfilService {
             Integer id = data.get("id") != null ? Integer.parseInt(data.get("id").toString()) : null;
             String nombre = (String) data.get("strNombrePerfil");
             
-            // Convertir checkbox a boolean (LÓGICA PYTHON: True/False/1/'on')
             Boolean esAdmin = false;
             Object adminValue = data.get("bitAdministrador");
             if (adminValue != null) {
@@ -77,7 +76,6 @@ public class PerfilService {
             String msg;
 
             if (id != null) {
-                // UPDATE
                 Optional<Perfil> existing = perfilRepository.findById(id);
                 if (existing.isEmpty()) {
                     return Map.of("success", false, "msg", "Perfil no encontrado");
@@ -88,7 +86,6 @@ public class PerfilService {
                 msg = "Perfil actualizado";
                 System.out.println("[DEBUG] Actualizando perfil ID: " + id);
             } else {
-                // INSERT
                 perfil = new Perfil(nombre, esAdmin);
                 msg = "Perfil registrado";
                 System.out.println("[DEBUG] Creando nuevo perfil: " + nombre);
@@ -117,7 +114,6 @@ public class PerfilService {
                 return Map.of("success", false, "msg", "Perfil no encontrado");
             }
 
-            // Validar que no esté en uso (si tiene permisos asociados)
             if (!perfil.get().getPermisos().isEmpty()) {
                 return Map.of("success", false, 
                     "msg", "No se puede eliminar: el perfil está en uso (tiene permisos asignados)");

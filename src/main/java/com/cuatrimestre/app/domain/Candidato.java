@@ -39,7 +39,6 @@ public class Candidato implements Serializable {
     @Column(name = "token_acceso")
     private String tokenAcceso;
 
-    // --- GETTERS Y SETTERS ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

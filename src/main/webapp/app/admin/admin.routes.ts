@@ -8,6 +8,21 @@ const routes: Routes = [
     title: 'userManagement.home.title',
   },
   {
+    path: 'perfil',
+    loadChildren: () => import('./perfil/perfil.routes'),
+    title: 'Gestión de Perfiles',
+  },
+  {
+    path: 'modulo',
+    loadChildren: () => import('./modulo/modulo.routes'),
+    title: 'Gestión de Módulos',
+  },
+  {
+    path: 'permisos-perfil',
+    loadChildren: () => import('./permisos-perfil/permisos-perfil.routes'),
+    title: 'Gestión de Permisos',
+  },
+  {
     path: 'docs',
     loadComponent: () => import('./docs/docs.component'),
     title: 'global.menu.admin.apidocs',

@@ -4,6 +4,7 @@ import com.cuatrimestre.app.config.Constants;
 import com.cuatrimestre.app.domain.Authority;
 import com.cuatrimestre.app.domain.User;
 import com.cuatrimestre.app.repository.AuthorityRepository;
+import com.cuatrimestre.app.repository.PerfilRepository;
 import com.cuatrimestre.app.repository.UserRepository;
 import com.cuatrimestre.app.security.AuthoritiesConstants;
 import com.cuatrimestre.app.security.SecurityUtils;
@@ -39,17 +40,21 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
+    private final PerfilRepository perfilRepository;
+
     private final CacheManager cacheManager;
 
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
+        PerfilRepository perfilRepository,
         CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.perfilRepository = perfilRepository;
         this.cacheManager = cacheManager;
     }
 
@@ -58,7 +63,6 @@ public class UserService {
         return userRepository
             .findOneByActivationKey(key)
             .map(user -> {
-                // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
                 this.clearUserCaches(user);
@@ -113,7 +117,6 @@ public class UserService {
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(userDTO.getLogin().toLowerCase());
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
@@ -122,9 +125,7 @@ public class UserService {
         }
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
-        // new user is not active
         newUser.setActivated(false);
-        // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
@@ -155,7 +156,7 @@ public class UserService {
         }
         user.setImageUrl(userDTO.getImageUrl());
         if (userDTO.getLangKey() == null) {
-            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
+            user.setLangKey(Constants.DEFAULT_LANGUAGE); 
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
@@ -173,6 +174,9 @@ public class UserService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
+        }
+        if (userDTO.getPerfilId() != null) {
+            perfilRepository.findById(userDTO.getPerfilId()).ifPresent(user::setPerfil);
         }
         userRepository.save(user);
         this.clearUserCaches(user);
@@ -210,6 +214,11 @@ public class UserService {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(managedAuthorities::add);
+                if (userDTO.getPerfilId() != null) {
+                    perfilRepository.findById(userDTO.getPerfilId()).ifPresent(user::setPerfil);
+                } else {
+                    user.setPerfil(null);
+                }
                 userRepository.save(user);
                 this.clearUserCaches(user);
                 LOG.debug("Changed Information for User: {}", user);

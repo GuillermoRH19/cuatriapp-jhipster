@@ -21,6 +21,12 @@
     
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240122000000_added_entity_Image.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250001000000_added_entity_Perfil.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250001000001_added_entity_Menu.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250001000002_added_entity_Modulo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250001000003_added_entity_PermisosPerfil.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250001000004_added_entity_Candidato.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250001000005_add_perfil_to_user.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

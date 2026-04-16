@@ -1,0 +1,136 @@
+<div class="container-fluid">
+  <h2>Gestión de Permisos por Perfil</h2>
+
+  <!-- Selector de perfil -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label class="form-label fw-bold" for="perfilSelect">Seleccionar Perfil:</label>
+      <select
+        id="perfilSelect"
+        class="form-select"
+        [(ngModel)]="selectedPerfilId"
+        (ngModelChange)="onPerfilChange()"
+      >
+        <option [ngValue]="null">-- Seleccione un perfil --</option>
+        @for (perfil of perfiles(); track perfil.id) {
+          <option [ngValue]="perfil.id">
+            {{ perfil.nombrePerfil }}
+            @if (perfil.administrador) { (Admin) }
+          </option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="text-center my-4"><span class="spinner-border"></span> Cargando permisos...</div>
+  }
+
+  @if (savedOk) {
+    <div class="alert alert-success alert-dismissible">
+      Permisos guardados exitosamente.
+      <button type="button" class="btn-close" (click)="savedOk = false"></button>
+    </div>
+  }
+
+  @if (permisos().length > 0) {
+    <!-- Controles masivos -->
+    <div class="d-flex gap-2 mb-3 flex-wrap">
+      <span class="fw-bold me-2">Marcar todo:</span>
+      <button class="btn btn-sm btn-outline-success" (click)="toggleAll('bitConsulta', true)">✓ Consulta</button>
+      <button class="btn btn-sm btn-outline-primary" (click)="toggleAll('bitAgregar', true)">✓ Agregar</button>
+      <button class="btn btn-sm btn-outline-warning" (click)="toggleAll('bitEditar', true)">✓ Editar</button>
+      <button class="btn btn-sm btn-outline-danger" (click)="toggleAll('bitEliminar', true)">✓ Eliminar</button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitDetalle', true)">✓ Detalle</button>
+      <span class="ms-3 fw-bold me-2">Quitar todo:</span>
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitConsulta', false)">✗ Consulta</button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitAgregar', false)">✗ Agregar</button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitEditar', false)">✗ Editar</button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitEliminar', false)">✗ Eliminar</button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitDetalle', false)">✗ Detalle</button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark text-center">
+          <tr>
+            <th class="text-start">Módulo</th>
+            <th>Consultar</th>
+            <th>Agregar</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (perm of permisos(); track perm.idModulo) {
+            <tr>
+              <td>{{ perm.strNombreModulo }}</td>
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="perm.bitConsulta"
+                  [ngModelOptions]="{ standalone: true }"
+                  [trueValue]="1"
+                  [falseValue]="0"
+                />
+              </td>
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="perm.bitAgregar"
+                  [ngModelOptions]="{ standalone: true }"
+                  [trueValue]="1"
+                  [falseValue]="0"
+                />
+              </td>
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="perm.bitEditar"
+                  [ngModelOptions]="{ standalone: true }"
+                  [trueValue]="1"
+                  [falseValue]="0"
+                />
+              </td>
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="perm.bitEliminar"
+                  [ngModelOptions]="{ standalone: true }"
+                  [trueValue]="1"
+                  [falseValue]="0"
+                />
+              </td>
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="perm.bitDetalle"
+                  [ngModelOptions]="{ standalone: true }"
+                  [trueValue]="1"
+                  [falseValue]="0"
+                />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-primary btn-lg" [disabled]="isSaving" (click)="save()">
+        @if (isSaving) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+        }
+        <fa-icon icon="save"></fa-icon> Guardar Permisos
+      </button>
+    </div>
+  } @else if (selectedPerfilId !== null && !isLoading) {
+    <div class="alert alert-info">No hay módulos registrados para asignar permisos.</div>
+  }
+</div>

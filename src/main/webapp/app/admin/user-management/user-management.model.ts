@@ -11,6 +11,7 @@ export interface IUser {
   createdDate?: Date;
   lastModifiedBy?: string;
   lastModifiedDate?: Date;
+  perfilId?: number | null;
 }
 
 export class User implements IUser {
@@ -27,5 +28,6 @@ export class User implements IUser {
     public createdDate?: Date,
     public lastModifiedBy?: string,
     public lastModifiedDate?: Date,
+    public perfilId?: number | null,
   ) {}
 }

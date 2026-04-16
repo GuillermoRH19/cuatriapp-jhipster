@@ -101,13 +101,27 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label" for="field_authority">Profiles</label>
+        <label class="form-label" for="field_authority">Roles del Sistema</label>
         <select class="form-control" id="field_authority" multiple name="authority" formControlName="authorities">
           @for (authority of authorities(); track $index) {
             <option [value]="authority">{{ authority }}</option>
           }
         </select>
       </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="field_perfil">Perfil de Acceso</label>
+        <select class="form-select" id="field_perfil" formControlName="perfilId">
+          <option [ngValue]="null">-- Sin perfil asignado --</option>
+          @for (perfil of perfiles(); track perfil.id) {
+            <option [ngValue]="perfil.id">
+              {{ perfil.nombrePerfil }}{{ perfil.administrador ? ' (Admin)' : '' }}
+            </option>
+          }
+        </select>
+        <div class="form-text text-muted">El perfil determina qué módulos y acciones puede realizar el usuario.</div>
+      </div>
+
       <button type="button" class="btn btn-secondary" (click)="previousState()">
         <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
       </button>

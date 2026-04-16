@@ -60,7 +60,6 @@ public class PermisosService {
         boolean esAdmin = Boolean.TRUE.equals(perfil.getAdministrador());
 
         if (esAdmin) {
-            // ADMIN: Todos los módulos con permisos en 1
             System.out.println("[DEBUG] Es Super Administrador. Asignando todos los permisos...");
             List<Modulo> todosModulos = moduloRepository.findAll();
             
@@ -68,7 +67,7 @@ public class PermisosService {
                 Map<String, Object> perm = new HashMap<>();
                 perm.put("idModulo", modulo.getId());
                 perm.put("strNombreModulo", modulo.getNombreModulo());
-                perm.put("idPermiso", null); // No hay ID real, es asignación dinámica
+                perm.put("idPermiso", null); 
                 perm.put("bitAgregar", 1);
                 perm.put("bitEditar", 1);
                 perm.put("bitEliminar", 1);
@@ -77,7 +76,6 @@ public class PermisosService {
                 permisosList.add(perm);
             }
         } else {
-            // USUARIO NORMAL: LEFT JOIN con PermisosPerfil
             System.out.println("[DEBUG] No es Super Admin. Obteniendo permisos específicos...");
             List<Modulo> todosModulos = moduloRepository.findAll();
 
@@ -98,7 +96,6 @@ public class PermisosService {
                     perm.put("bitConsulta", p.getConsulta() ? 1 : 0);
                     perm.put("bitDetalle", p.getDetalle() ? 1 : 0);
                 } else {
-                    // NULL = sin permisos
                     perm.put("idPermiso", null);
                     perm.put("bitAgregar", 0);
                     perm.put("bitEditar", 0);
@@ -121,7 +118,6 @@ public class PermisosService {
     public List<Map<String, Object>> getPermisosByViewPerfil(Integer idPerfil) {
         System.out.println("[DEBUG] Obteniendo vista de permisos para perfil ID: " + idPerfil);
         
-        // Validar que el perfil existe
         Optional<Perfil> perfilOptional = perfilRepository.findById(idPerfil);
         if (perfilOptional.isEmpty()) {
             return new ArrayList<>();
@@ -174,7 +170,6 @@ public class PermisosService {
             Integer idModulo = Integer.parseInt(data.get("idModulo").toString());
             Integer idPerfil = Integer.parseInt(data.get("idPerfil").toString());
 
-            // Convertir bits
             Boolean agregar = convertToBit(data.get("bitAgregar"));
             Boolean editar = convertToBit(data.get("bitEditar"));
             Boolean eliminar = convertToBit(data.get("bitEliminar"));
@@ -185,7 +180,6 @@ public class PermisosService {
                 .findByModuloIdAndPerfilId(idModulo, idPerfil);
 
             if (existente.isPresent()) {
-                // UPDATE
                 PermisosPerfil permiso = existente.get();
                 permiso.setAgregar(agregar);
                 permiso.setEditar(editar);
@@ -195,7 +189,6 @@ public class PermisosService {
                 permisosPerfilRepository.save(permiso);
                 System.out.println("[DEBUG] Permiso actualizado");
             } else {
-                // INSERT
                 Optional<Modulo> moduloOpt = moduloRepository.findById(idModulo);
                 Optional<Perfil> perfilOpt = perfilRepository.findById(idPerfil);
 

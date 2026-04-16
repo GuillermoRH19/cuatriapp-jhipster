@@ -2,9 +2,6 @@ package com.cuatrimestre.app.service.dto;
 
 import java.io.Serializable;
 
-/**
- * DTO para los módulos dentro de un menú.
- */
 public class ModuloDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -13,7 +10,6 @@ public class ModuloDTO implements Serializable {
     private String nombre;
     private String ruta;
 
-    // --- CONSTRUCTORES ---
     public ModuloDTO() {}
 
     public ModuloDTO(Integer id, String nombre, String ruta) {
@@ -22,7 +18,6 @@ public class ModuloDTO implements Serializable {
         this.ruta = ruta;
     }
 
-    // --- GETTERS Y SETTERS ---
     public Integer getId() {
         return id;
     }

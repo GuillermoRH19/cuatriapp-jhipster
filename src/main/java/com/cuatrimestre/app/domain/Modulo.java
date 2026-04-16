@@ -38,7 +38,6 @@ public class Modulo implements Serializable {
     @Column(name = "ruta", length = 255)
     private String ruta;
 
-    // --- CONSTRUCTORES ---
     public Modulo() {}
 
     public Modulo(String nombreModulo, Menu menu, String ruta) {
@@ -47,7 +46,6 @@ public class Modulo implements Serializable {
         this.ruta = ruta;
     }
 
-    // --- GETTERS Y SETTERS ---
     public Integer getId() {
         return id;
     }

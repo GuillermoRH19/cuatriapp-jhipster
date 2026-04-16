@@ -2,9 +2,6 @@ package com.cuatrimestre.app.service.dto;
 
 import java.io.Serializable;
 
-/**
- * A DTO representing a password change required data - current and new password.
- */
 public class PasswordChangeDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -13,7 +10,6 @@ public class PasswordChangeDTO implements Serializable {
     private String newPassword;
 
     public PasswordChangeDTO() {
-        // Empty constructor needed for Jackson.
     }
 
     public PasswordChangeDTO(String currentPassword, String newPassword) {

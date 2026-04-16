@@ -92,12 +92,10 @@ public class ModuloService {
 
             System.out.println("[DEBUG] Guardando módulo con menú: " + nombreMenu);
 
-            // --- LÓGICA MÁGICA DEL MENÚ ---
             if (nombreMenu == null || nombreMenu.trim().isEmpty()) {
                 return Map.of("success", false, "msg", "El Menú Padre es obligatorio");
             }
 
-            // 1. Buscar si ese texto ya existe como menú
             Optional<Menu> menuExistente = menuRepository.findByNombreMenu(nombreMenu);
             Integer idMenu;
 
@@ -105,19 +103,16 @@ public class ModuloService {
                 idMenu = menuExistente.get().getId();
                 System.out.println("[DEBUG] Menú ya existe con ID: " + idMenu);
             } else {
-                // 2. Si no existe, lo creamos
                 Menu nuevoMenu = new Menu(nombreMenu);
                 Menu menuGuardado = menuRepository.save(nuevoMenu);
                 idMenu = menuGuardado.getId();
                 System.out.println("[DEBUG] Nuevo menú creado con ID: " + idMenu);
             }
 
-            // --- AHORA SÍ, GUARDAMOS EL MÓDULO ---
             Modulo modulo;
             String msg;
 
             if (idModulo != null) {
-                // UPDATE
                 Optional<Modulo> existente = moduloRepository.findById(idModulo);
                 if (existente.isEmpty()) {
                     return Map.of("success", false, "msg", "Módulo no encontrado");
@@ -127,7 +122,6 @@ public class ModuloService {
                 modulo.setNombreModulo(nombre);
                 modulo.setRuta(ruta);
 
-                // Obtener el menú y asignarlo
                 Optional<Menu> menu = menuRepository.findById(idMenu);
                 if (menu.isPresent()) {
                     modulo.setMenu(menu.get());
@@ -136,7 +130,6 @@ public class ModuloService {
                 msg = "Módulo actualizado";
                 System.out.println("[DEBUG] Actualizando módulo ID: " + idModulo);
             } else {
-                // INSERT
                 Optional<Menu> menu = menuRepository.findById(idMenu);
                 if (menu.isEmpty()) {
                     return Map.of("success", false, "msg", "Menú no encontrado");
@@ -239,7 +232,6 @@ public class ModuloService {
                 return Map.of("success", false, "msg", "Menú no encontrado");
             }
 
-            // Validar que no tenga módulos vinculados
             if (!menu.get().getModulos().isEmpty()) {
                 return Map.of("success", false, 
                     "msg", "No se puede eliminar: el menú está siendo utilizado por uno o más módulos");

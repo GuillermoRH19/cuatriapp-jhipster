@@ -50,73 +50,59 @@ public class MenuService {
      * @return Lista de MenuDTO estructurada jerárquicamente
      */
     public List<MenuDTO> getSidebarMenu(Integer idPerfil) {
-        System.out.println("\n[DEBUG] Cargando menú para el perfil ID: " + idPerfil);
+        log.debug("Cargando menú para el perfil ID: {}", idPerfil);
 
-        // 1. Validar si el perfil existe y obtener su información
         Optional<Perfil> perfilOptional = perfilRepository.findById(idPerfil);
         if (perfilOptional.isEmpty()) {
-            System.out.println("[ERROR] El perfil ID " + idPerfil + " no existe en la base de datos.");
+            log.error("El perfil ID {} no existe en la base de datos.", idPerfil);
             return Collections.emptyList();
         }
 
         Perfil perfil = perfilOptional.get();
         boolean esAdmin = Boolean.TRUE.equals(perfil.getAdministrador());
 
-        System.out.println("[DEBUG] ¿Es Super Administrador? " + esAdmin);
+        log.debug("Perfil: {} - ¿Es administrador? {}", perfil.getNombrePerfil(), esAdmin);
 
-        // 2. Obtener todos los menús
         List<Menu> todosLosMenus = menuRepository.findAll();
 
-        // 3. Procesar menús y módulos según permisos
         List<MenuDTO> resultado = new ArrayList<>();
-        
+
         for (Menu menu : todosLosMenus) {
             MenuDTO menuDTO = new MenuDTO(menu.getId(), menu.getNombreMenu());
             Set<Modulo> modulos = menu.getModulos();
 
             if (modulos != null) {
                 for (Modulo modulo : modulos) {
-                    // 4. Validar permiso de consulta (LÓGICA PYTHON EXACTA)
                     boolean tieneAcceso = false;
 
                     if (esAdmin) {
-                        // Admin ve TODO automáticamente
-                        System.out.println("[DEBUG] " + perfil.getNombrePerfil() + " es Super Administrador. Asignando acceso a módulo: " + modulo.getNombreModulo());
+                        log.debug("Admin '{}': acceso automático al módulo '{}'", perfil.getNombrePerfil(), modulo.getNombreModulo());
                         tieneAcceso = true;
                     } else {
-                        // Usuario normal: INNER JOIN PermisosPerfil con bitConsulta=1
                         Optional<PermisosPerfil> permiso = permisosPerfilRepository.findByModuloIdAndPerfilId(
                             modulo.getId(), idPerfil);
-                        
                         if (permiso.isPresent() && Boolean.TRUE.equals(permiso.get().getConsulta())) {
-                            System.out.println("[DEBUG] Perfil " + perfil.getNombrePerfil() + " tiene permiso de consulta en módulo: " + modulo.getNombreModulo());
+                            log.debug("Perfil '{}': permiso consulta en módulo '{}'", perfil.getNombrePerfil(), modulo.getNombreModulo());
                             tieneAcceso = true;
                         }
                     }
 
                     if (tieneAcceso) {
-                        ModuloDTO moduloDTO = new ModuloDTO(
+                        menuDTO.getSubmodulos().add(new ModuloDTO(
                             modulo.getId(),
                             modulo.getNombreModulo(),
                             modulo.getRuta()
-                        );
-                        menuDTO.getSubmodulos().add(moduloDTO);
+                        ));
                     }
                 }
             }
 
-            // Solo agregar el menú si tiene al menos un módulo accesible
             if (!menuDTO.getSubmodulos().isEmpty()) {
                 resultado.add(menuDTO);
             }
         }
 
-        System.out.println("[DEBUG] Estructura jerárquica generada: " + resultado.size() + " menús");
-        for (MenuDTO m : resultado) {
-            System.out.println("   [*] Sección: " + m.getTitulo() + " | Submódulos: " + m.getSubmodulos().size());
-        }
-        System.out.println("[DEBUG] Conexión a base de datos cerrada.\n");
-        
+        log.debug("Menú generado: {} secciones para perfil {}", resultado.size(), perfil.getNombrePerfil());
         return resultado;
     }
 
@@ -139,7 +125,6 @@ public class MenuService {
         Map<String, Object> resultado = new HashMap<>();
 
         if (Boolean.TRUE.equals(perfil.getAdministrador())) {
-            // Admin tiene todos los permisos
             resultado.put("esAdmin", true);
             resultado.put("permisos", perfil.getPermisos());
         } else {

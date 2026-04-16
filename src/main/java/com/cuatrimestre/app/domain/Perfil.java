@@ -36,7 +36,6 @@ public class Perfil implements Serializable {
     @OneToMany(mappedBy = "perfil", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PermisosPerfil> permisos = new HashSet<>();
 
-    // --- CONSTRUCTORES ---
     public Perfil() {}
 
     public Perfil(String nombrePerfil, Boolean administrador) {
@@ -44,7 +43,6 @@ public class Perfil implements Serializable {
         this.administrador = administrador;
     }
 
-    // --- GETTERS Y SETTERS ---
     public Integer getId() {
         return id;
     }

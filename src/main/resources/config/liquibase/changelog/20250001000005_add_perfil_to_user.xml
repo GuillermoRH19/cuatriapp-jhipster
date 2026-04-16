@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Agregar columna perfil_id a jhi_user -->
+    <changeSet id="20250001000005-1" author="custom">
+        <addColumn tableName="jhi_user">
+            <column name="perfil_id" type="integer">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20250001000005-2" author="custom">
+        <addForeignKeyConstraint
+            baseTableName="jhi_user"
+            baseColumnNames="perfil_id"
+            constraintName="fk_user_perfil"
+            referencedTableName="perfil"
+            referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Asignar perfil Administrador (id=1) al usuario admin por defecto -->
+    <changeSet id="20250001000005-3" author="custom">
+        <update tableName="jhi_user">
+            <column name="perfil_id" valueNumeric="1"/>
+            <where>login = 'admin'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

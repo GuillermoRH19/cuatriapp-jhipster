@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20250001000003-1" author="custom">
+        <createTable tableName="permisos_perfil">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_modulo" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_perfil" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bit_agregar" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bit_editar" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bit_eliminar" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bit_consulta" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bit_detalle" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20250001000003-2" author="custom">
+        <addForeignKeyConstraint
+            baseTableName="permisos_perfil"
+            baseColumnNames="id_modulo"
+            constraintName="fk_permisos_modulo"
+            referencedTableName="modulo"
+            referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            baseTableName="permisos_perfil"
+            baseColumnNames="id_perfil"
+            constraintName="fk_permisos_perfil"
+            referencedTableName="perfil"
+            referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Índice único para evitar duplicados perfil+módulo -->
+    <changeSet id="20250001000003-3" author="custom">
+        <addUniqueConstraint
+            tableName="permisos_perfil"
+            columnNames="id_perfil, id_modulo"
+            constraintName="uc_permisos_perfil_modulo"/>
+    </changeSet>
+
+</databaseChangeLog>

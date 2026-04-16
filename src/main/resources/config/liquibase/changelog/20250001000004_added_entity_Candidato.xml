@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20250001000004-1" author="custom">
+        <createTable tableName="candidato">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nombre" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_nacimiento" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="departamento" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="salario" type="decimal(21,2)"/>
+            <column name="token_acceso" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

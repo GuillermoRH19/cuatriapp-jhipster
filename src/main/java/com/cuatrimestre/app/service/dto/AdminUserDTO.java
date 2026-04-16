@@ -9,9 +9,6 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * A DTO representing a user, with his authorities.
- */
 public class AdminUserDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,8 +48,9 @@ public class AdminUserDTO implements Serializable {
 
     private Set<String> authorities;
 
+    private Integer perfilId;
+
     public AdminUserDTO() {
-        // Empty constructor needed for Jackson.
     }
 
     public AdminUserDTO(User user) {
@@ -69,6 +67,7 @@ public class AdminUserDTO implements Serializable {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
+        this.perfilId = user.getPerfil() != null ? user.getPerfil().getId() : null;
     }
 
     public Long getId() {
@@ -175,7 +174,15 @@ public class AdminUserDTO implements Serializable {
         this.authorities = authorities;
     }
 
-    // prettier-ignore
+    public Integer getPerfilId() {
+        return perfilId;
+    }
+
+    public void setPerfilId(Integer perfilId) {
+        this.perfilId = perfilId;
+    }
+
+
     @Override
     public String toString() {
         return "AdminUserDTO{" +

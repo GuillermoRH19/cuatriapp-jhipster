@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import SharedModule from 'app/shared/shared.module';
 import { IUser } from '../user-management.model';
 import { UserManagementService } from '../service/user-management.service';
+import { IPerfil } from '../../perfil/perfil.model';
+import { PerfilService } from '../../perfil/perfil.service';
 
 const userTemplate = {} as IUser;
 
@@ -19,6 +21,7 @@ const newUser: IUser = {
 })
 export default class UserManagementUpdateComponent implements OnInit {
   authorities = signal<string[]>([]);
+  perfiles = signal<IPerfil[]>([]);
   isSaving = signal(false);
 
   editForm = new FormGroup({
@@ -40,9 +43,11 @@ export default class UserManagementUpdateComponent implements OnInit {
     }),
     activated: new FormControl(userTemplate.activated, { nonNullable: true }),
     authorities: new FormControl(userTemplate.authorities, { nonNullable: true }),
+    perfilId: new FormControl<number | null>(null),
   });
 
   private readonly userService = inject(UserManagementService);
+  private readonly perfilService = inject(PerfilService);
   private readonly route = inject(ActivatedRoute);
 
   ngOnInit(): void {
@@ -54,6 +59,7 @@ export default class UserManagementUpdateComponent implements OnInit {
       }
     });
     this.userService.authorities().subscribe(authorities => this.authorities.set(authorities));
+    this.perfilService.getAll().subscribe(perfiles => this.perfiles.set(perfiles));
   }
 
   previousState(): void {

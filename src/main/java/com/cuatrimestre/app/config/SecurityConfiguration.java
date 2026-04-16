@@ -69,7 +69,6 @@ public class SecurityConfiguration {
                     )
             )
             .authorizeHttpRequests(authz ->
-                // prettier-ignore
                 authz
                     .requestMatchers(mvc.pattern("/")).permitAll()
                     .requestMatchers(mvc.pattern("/index.html"), mvc.pattern("/*.js"), mvc.pattern("/*.txt"), mvc.pattern("/*.json"), mvc.pattern("/*.map"), mvc.pattern("/*.css")).permitAll()
@@ -79,11 +78,7 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern("/content/**")).permitAll()
                     .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
                     
-                    // 👇👇👇 ZONA DE API PÚBLICA CORREGIDA 👇👇👇
-                    // SOLO permitimos el método POST (Guardar). 
-                    // GET, PUT y DELETE quedan bloqueados para usuarios sin sesión.
                     .requestMatchers(antMatcher(HttpMethod.POST, "/api/candidatoes")).permitAll()
-                    // 👆👆👆 FIN ZONA PÚBLICA 👆👆👆
 
                     .requestMatchers(mvc.pattern("/api/authenticate")).permitAll()
                     .requestMatchers(mvc.pattern("/api/register")).permitAll()
@@ -91,7 +86,7 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern("/api/account/reset-password/init")).permitAll()
                     .requestMatchers(mvc.pattern("/api/account/reset-password/finish")).permitAll()
                     .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
-                    .requestMatchers(mvc.pattern("/api/**")).authenticated() // El resto sigue seguro
+                    .requestMatchers(mvc.pattern("/api/**")).authenticated()
                     .requestMatchers(mvc.pattern("/management/**")).hasAuthority(AuthoritiesConstants.ADMIN)
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

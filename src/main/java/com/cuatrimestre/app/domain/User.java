@@ -2,6 +2,7 @@ package com.cuatrimestre.app.domain;
 
 import com.cuatrimestre.app.config.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.cuatrimestre.app.domain.Perfil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -93,6 +94,10 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "perfil_id")
+    private Perfil perfil;
+
     public Long getId() {
         return id;
     }
@@ -105,7 +110,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
         return login;
     }
 
-    // Lowercase the login before saving it in database
     public void setLogin(String login) {
         this.login = StringUtils.lowerCase(login, Locale.ENGLISH);
     }
@@ -198,6 +202,14 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
         this.authorities = authorities;
     }
 
+    public Perfil getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -211,11 +223,9 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
         return "User{" +

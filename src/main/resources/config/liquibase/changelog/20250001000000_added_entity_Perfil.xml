@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20250001000000-1" author="custom">
+        <createTable tableName="perfil">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nombre_perfil" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bit_administrador" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Datos iniciales: perfil administrador y perfil usuario -->
+    <changeSet id="20250001000000-2" author="custom">
+        <insert tableName="perfil">
+            <column name="nombre_perfil" value="Administrador"/>
+            <column name="bit_administrador" valueBoolean="true"/>
+        </insert>
+        <insert tableName="perfil">
+            <column name="nombre_perfil" value="Usuario"/>
+            <column name="bit_administrador" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

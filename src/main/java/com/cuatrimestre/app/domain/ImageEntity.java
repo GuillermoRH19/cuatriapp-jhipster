@@ -1,6 +1,6 @@
 package com.cuatrimestre.app.domain;
 
-import jakarta.persistence.*; // 👈 ESTO ERA EL ERROR (javax -> jakarta)
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -16,13 +16,12 @@ public class ImageEntity implements Serializable {
     private String title;
 
     @Lob
-    @Column(name = "data", columnDefinition="LONGBLOB") // Añadido para asegurar compatibilidad
+    @Column(name = "data", columnDefinition="LONGBLOB")
     private byte[] data;
 
     @Column(name = "content_type")
     private String contentType;
 
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

@@ -52,7 +52,6 @@ public class PermisosPerfil implements Serializable {
     @Column(name = "bit_detalle", nullable = false)
     private Boolean detalle = false;
 
-    // --- CONSTRUCTORES ---
     public PermisosPerfil() {}
 
     public PermisosPerfil(Modulo modulo, Perfil perfil, Boolean agregar, Boolean editar, 
@@ -66,7 +65,6 @@ public class PermisosPerfil implements Serializable {
         this.detalle = detalle;
     }
 
-    // --- GETTERS Y SETTERS ---
     public Integer getId() {
         return id;
     }
