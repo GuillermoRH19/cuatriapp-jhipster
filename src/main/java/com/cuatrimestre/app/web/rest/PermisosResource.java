@@ -3,8 +3,6 @@ package com.cuatrimestre.app.web.rest;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +28,6 @@ import com.cuatrimestre.app.service.PermisosService;
 @Transactional
 public class PermisosResource {
 
-    private final Logger log = LoggerFactory.getLogger(PermisosResource.class);
     private final PermisosService permisosService;
 
     public PermisosResource(PermisosService permisosService) {

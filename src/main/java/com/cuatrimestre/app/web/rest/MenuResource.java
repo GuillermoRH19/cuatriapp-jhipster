@@ -25,8 +25,6 @@ import com.cuatrimestre.app.service.dto.MenuDTO;
 @Transactional
 public class MenuResource {
 
-    private final Logger log = LoggerFactory.getLogger(MenuResource.class);
-
     private final MenuService menuService;
     private final UserService userService;
 

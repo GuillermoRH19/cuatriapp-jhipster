@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +36,6 @@ import com.cuatrimestre.app.service.ModuloService;
 @Transactional
 public class ModuloResource {
 
-    private final Logger log = LoggerFactory.getLogger(ModuloResource.class);
     private final ModuloService moduloService;
 
     public ModuloResource(ModuloService moduloService) {

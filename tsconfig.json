@@ -1,6 +1,12 @@
 {
   "compilerOptions": {
     "baseUrl": "src/main/webapp/",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@core/*": ["app/core/*"],
+      "@shared/*": ["app/shared/*"],
+      "@layouts/*": ["app/layouts/*"]
+    },
     "outDir": "./target/out-tsc/root",
     "forceConsistentCasingInFileNames": true,
     "strict": true,

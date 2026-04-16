@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MenuService } from '@app/core/services/menu.service';
 import { Menu } from '@app/shared/models/menu.model';
+import { AccountService } from '@app/core/auth/account.service';
 import { AuthServerProvider } from '@app/core/auth/auth-jwt.service';
 import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
 
@@ -22,6 +23,7 @@ import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
 })
 export class DynamicLayoutComponent implements OnInit, OnDestroy {
   private readonly menuService = inject(MenuService);
+  private readonly accountService = inject(AccountService);
   private readonly authServerProvider = inject(AuthServerProvider);
   private readonly router = inject(Router);
 
@@ -42,7 +44,7 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
       });
 
     // Obtener datos del usuario actual
-    this.authServerProvider.getIdentity().then((user: any) => {
+    this.accountService.identity().subscribe((user: any) => {
       this.currentUser = user;
       console.log('[DynamicLayout] Usuario:', this.currentUser);
     });
