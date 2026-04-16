@@ -70,50 +70,40 @@
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  [(ngModel)]="perm.bitConsulta"
-                  [ngModelOptions]="{ standalone: true }"
-                  [trueValue]="1"
-                  [falseValue]="0"
+                  [checked]="perm.bitConsulta == 1"
+                  (change)="perm.bitConsulta = $any($event.target).checked ? 1 : 0"
                 />
               </td>
               <td class="text-center">
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  [(ngModel)]="perm.bitAgregar"
-                  [ngModelOptions]="{ standalone: true }"
-                  [trueValue]="1"
-                  [falseValue]="0"
+                  [checked]="perm.bitAgregar == 1"
+                  (change)="perm.bitAgregar = $any($event.target).checked ? 1 : 0"
                 />
               </td>
               <td class="text-center">
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  [(ngModel)]="perm.bitEditar"
-                  [ngModelOptions]="{ standalone: true }"
-                  [trueValue]="1"
-                  [falseValue]="0"
+                  [checked]="perm.bitEditar == 1"
+                  (change)="perm.bitEditar = $any($event.target).checked ? 1 : 0"
                 />
               </td>
               <td class="text-center">
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  [(ngModel)]="perm.bitEliminar"
-                  [ngModelOptions]="{ standalone: true }"
-                  [trueValue]="1"
-                  [falseValue]="0"
+                  [checked]="perm.bitEliminar == 1"
+                  (change)="perm.bitEliminar = $any($event.target).checked ? 1 : 0"
                 />
               </td>
               <td class="text-center">
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  [(ngModel)]="perm.bitDetalle"
-                  [ngModelOptions]="{ standalone: true }"
-                  [trueValue]="1"
-                  [falseValue]="0"
+                  [checked]="perm.bitDetalle == 1"
+                  (change)="perm.bitDetalle = $any($event.target).checked ? 1 : 0"
                 />
               </td>
             </tr>

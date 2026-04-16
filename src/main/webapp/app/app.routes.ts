@@ -79,7 +79,7 @@ export const routes: Routes = [
       },
       {
         path: 'account',
-        loadChildren: () => import('./account/account.route').then(m => m.accountRoute),
+        loadChildren: () => import('./account/account.route'),
       },
       {
         path: 'admin',
