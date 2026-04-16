@@ -187,22 +187,17 @@
         </div>
       </div>
 
-      <div class="card shadow-sm border-0 bg-light rounded-4">
-        <div class="card-body">
+      <div class="card shadow-sm border-0 rounded-4 bg-light">
+        <div class="card-body p-4">
           <h6 class="text-uppercase text-muted fw-bold mb-3 small">
-            <i class="fa fa-cogs"></i> Herramientas de Prueba
+            <fa-icon icon="info-circle" class="me-1"></fa-icon> ¿Por qué elegirnos?
           </h6>
-          <div class="d-grid gap-2">
-            <button class="btn btn-outline-dark btn-sm text-start" (click)="abrirNuevaPestana()">
-               Abrir nueva pestaña
-            </button>
-            <button class="btn btn-outline-danger btn-sm text-start" (click)="provocarError()">
-               Provocar error forzado
-            </button>
-            <button class="btn btn-outline-success btn-sm text-start" (click)="enviarDatosBD()">
-               Insertar Datos SQL (Test)
-            </button>
-          </div>
+          <ul class="list-unstyled mb-0 small text-muted">
+            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Gestión centralizada de candidatos</li>
+            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Control de acceso por perfiles y permisos</li>
+            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Módulos configurables por administrador</li>
+            <li><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Seguridad con JWT y captcha verificado</li>
+          </ul>
         </div>
       </div>
 

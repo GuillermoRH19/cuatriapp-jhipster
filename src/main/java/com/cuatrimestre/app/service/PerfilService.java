@@ -58,10 +58,10 @@ public class PerfilService {
     public Map<String, Object> save(Map<String, Object> data) {
         try {
             Integer id = data.get("id") != null ? Integer.parseInt(data.get("id").toString()) : null;
-            String nombre = (String) data.get("strNombrePerfil");
-            
+            String nombre = (String) data.get("nombrePerfil");
+
             Boolean esAdmin = false;
-            Object adminValue = data.get("bitAdministrador");
+            Object adminValue = data.get("administrador");
             if (adminValue != null) {
                 if (adminValue instanceof Boolean) {
                     esAdmin = (Boolean) adminValue;

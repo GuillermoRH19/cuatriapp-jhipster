@@ -20,7 +20,7 @@ export const routes: Routes = [
     path: '',
     component: HomeComponent,
     title: 'Inicio',
-    data: { pageTitle: 'home.title' },
+    data: { pageTitle: 'Inicio' },
   },
   {
     path: 'mi-error',
