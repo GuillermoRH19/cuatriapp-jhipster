@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 # Dar permiso de ejecución a mvnw
-RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
+RUN sed -i 's/\r$//' mvnw .mvn/wrapper/maven-wrapper.properties && chmod +x mvnw
 
 # Compilar proyecto en producción
 RUN ./mvnw -Pprod package -DskipTests
