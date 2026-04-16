@@ -44,6 +44,7 @@ export default class UserManagementUpdateComponent implements OnInit {
     activated: new FormControl(userTemplate.activated, { nonNullable: true }),
     authorities: new FormControl(userTemplate.authorities, { nonNullable: true }),
     perfilId: new FormControl<number | null>(null),
+    password: new FormControl<string | null>(null),
   });
 
   private readonly userService = inject(UserManagementService);

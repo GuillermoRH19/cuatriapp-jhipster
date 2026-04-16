@@ -86,6 +86,23 @@
         }
       </div>
 
+      @if (!editForm.value.id) {
+        <div class="mb-3">
+          <label class="form-label" for="field_password">
+            Contraseña <span class="text-danger">*</span>
+          </label>
+          <input
+            type="password"
+            id="field_password"
+            class="form-control"
+            name="password"
+            formControlName="password"
+            placeholder="Mínimo 4 caracteres"
+          />
+          <div class="form-text text-muted">El usuario usará esta contraseña para iniciar sesión.</div>
+        </div>
+      }
+
       <div class="form-check">
         <label class="form-check-label" for="activated">
           <input

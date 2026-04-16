@@ -50,6 +50,8 @@ public class AdminUserDTO implements Serializable {
 
     private Integer perfilId;
 
+    private String password;
+
     public AdminUserDTO() {
     }
 
@@ -182,6 +184,13 @@ public class AdminUserDTO implements Serializable {
         this.perfilId = perfilId;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public String toString() {
