@@ -12,7 +12,6 @@ logging:
     com.cuatrimestre.app: DEBUG
 
 spring:
-  # 👇 VITAL PARA RENDER: Carga perezosa para evitar errores de inicio
   main:
     lazy-initialization: true
 
@@ -33,23 +32,22 @@ spring:
     serialization:
       indent-output: true
   
-  # 👇 CONFIGURACIÓN BASE DE DATOS SOMEE 👇
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:sqlserver://CuatrimestreApp.mssql.somee.com;databaseName=CuatrimestreApp;encrypt=false;trustServerCertificate=true;loginTimeout=60;
-    username: JGRH_SQLLogin_1
-    password: '7xzhrkntc8'
+    url: ${DB_URL:jdbc:sqlserver://CuatrimestreApp.mssql.somee.com;databaseName=CuatrimestreApp;encrypt=false;trustServerCertificate=true;loginTimeout=60;}
+    username: ${DB_USERNAME:JGRH_SQLLogin_1}
+    password: ${DB_PASSWORD:}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
       poolName: Hikari
       auto-commit: false
-      connection-timeout: 60000 
+      connection-timeout: 60000
       maximum-pool-size: 5
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none # <--- AQUÍ FRENAMOS A HIBERNATE
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
@@ -59,15 +57,14 @@ spring:
       enabled: false
 
   liquibase:
-    enabled: false # <--- AQUÍ APAGAMOS LIQUIBASE
+    enabled: false
     contexts: dev, faker
 
-  # 👇 CONFIGURACIÓN DE CORREO 👇
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: user@example.com
-    password: password
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
@@ -81,41 +78,37 @@ spring:
     cache: false
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
   forward-headers-strategy: native
 
-# ===================================================================
-# JHipster specific properties
-# ===================================================================
-
 jhipster:
-  cache: 
-    ehcache: 
+  cache:
+    ehcache:
       time-to-live-seconds: 3600
       max-entries: 100
-  
+
   cors:
-    allowed-origins: 'http://localhost:8100,https://localhost:8100,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200'
-    allowed-origin-patterns: 'https://*.githubpreview.dev'
+    allowed-origins: '${CORS_ORIGINS:http://localhost:8100,https://localhost:8100,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200}'
+    allowed-origin-patterns: '${CORS_ORIGIN_PATTERNS:https://*.githubpreview.dev}'
     allowed-methods: '*'
     allowed-headers: '*'
     exposed-headers: 'Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params'
     allow-credentials: true
     max-age: 1800
-  
+
   security:
     authentication:
       jwt:
-        base64-secret: YmFiZGJmMjg3NDZiMjVkODJlNzU1MDAyZDMzNmQyNmMyZDk4NTYxODFkMWJhZmZiNjZkZjYwODVkNjE5OTE5MDI5OTg4YTM1OTNmYTlkNzdjOThlNWQ3MGY2NDE1MzVmY2Q0MjkwZjA1MWRmNzg0NjgyY2NiYTYwZDRiNmMwNGY=
+        base64-secret: ${JWT_SECRET:}
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
-  
-  mail: 
-    base-url: http://127.0.0.1:8080
-  
+
+  mail:
+    base-url: ${APP_BASE_URL:http://127.0.0.1:8080}
+
   logging:
-    use-json-format: false 
-    logstash: 
+    use-json-format: false
+    logstash:
       enabled: false
       host: localhost
       port: 5000

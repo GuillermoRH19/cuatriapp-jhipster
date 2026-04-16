@@ -7,6 +7,7 @@ import { catchError, shareReplay, tap } from 'rxjs/operators';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { Account } from 'app/core/auth/account.model';
 import { ApplicationConfigService } from '../config/application-config.service';
+import { PermissionService } from './permission.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -18,6 +19,7 @@ export class AccountService {
   private readonly stateStorageService = inject(StateStorageService);
   private readonly router = inject(Router);
   private readonly applicationConfigService = inject(ApplicationConfigService);
+  private readonly permissionService = inject(PermissionService);
 
   save(account: Account): Observable<{}> {
     return this.http.post(this.applicationConfigService.getEndpointFor('api/account'), account);
@@ -26,8 +28,13 @@ export class AccountService {
   authenticate(identity: Account | null): void {
     this.userIdentity.set(identity);
     this.authenticationState.next(this.userIdentity());
-    if (!identity) {
+    if (identity) {
+      if (identity.perfilId) {
+        this.permissionService.loadPermissions(identity.perfilId);
+      }
+    } else {
       this.accountCache$ = null;
+      this.permissionService.clearPermissions();
     }
   }
 
