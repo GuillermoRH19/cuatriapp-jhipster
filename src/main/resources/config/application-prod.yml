@@ -34,6 +34,8 @@ jhipster:
     authentication:
       jwt:
         base64-secret: ${JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET:}
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
   cors:
     allowed-origins: ${JHIPSTER_CORS_ALLOWED_ORIGINS:}
     allowed-origin-patterns: ${JHIPSTER_CORS_ALLOWED_ORIGIN_PATTERNS:https://*.railway.app}
