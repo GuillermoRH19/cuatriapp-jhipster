@@ -54,6 +54,8 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    this.menuService.reloadMenu();
+
     this.menuService.menu$
       .pipe(takeUntil(this.destroy$))
       .subscribe((menus: Menu[]) => (this.menuItems = menus));
@@ -115,7 +117,12 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authServerProvider.logout().subscribe(() => this.router.navigate(['/login']));
+    this.authServerProvider.logout().subscribe({
+      complete: () => {
+        this.accountService.authenticate(null);
+        this.router.navigate(['/']);
+      },
+    });
   }
 
   goToProfile(): void {
