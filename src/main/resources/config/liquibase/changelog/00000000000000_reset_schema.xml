@@ -33,6 +33,9 @@
         <!-- Paso 3: Borrar secuencia -->
         <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.sequences WHERE name = 'sequence_generator') DROP SEQUENCE sequence_generator;</sql>
 
+        <!-- Paso 4: Limpiar historial de Liquibase para forzar re-ejecución de todos los changesets -->
+        <sql dbms="mssql">DELETE FROM DATABASECHANGELOG WHERE id != 'reset-schema-001';</sql>
+
         <rollback/>
     </changeSet>
 
