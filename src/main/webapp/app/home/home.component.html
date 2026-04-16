@@ -157,22 +157,31 @@
           <h3 class="card-title mb-2">Acceso Seguro</h3>
           <p class="text-muted small mb-4">Verifica tu identidad para continuar</p>
 
-          <div class="d-flex justify-content-center mb-3">
-            <ng-hcaptcha 
-              [siteKey]="siteKey"
-              (verify)="onCaptchaVerify()" 
-              (expired)="onCaptchaExpired()">
-            </ng-hcaptcha>
-          </div>
+          @if (!captchaFallo) {
+            <div class="d-flex justify-content-center mb-3">
+              <ng-hcaptcha
+                [siteKey]="siteKey"
+                (verify)="onCaptchaVerify()"
+                (expired)="onCaptchaExpired()"
+                (error)="onCaptchaError()">
+              </ng-hcaptcha>
+            </div>
+          } @else {
+            <div class="alert alert-warning py-2 px-3 small mb-3 text-start rounded-3">
+              <fa-icon icon="lock" class="me-1"></fa-icon>
+              El captcha no pudo cargarse. Puedes continuar de todas formas.
+            </div>
+          }
 
-          <button 
-            class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm transition-btn" 
-            [disabled]="!captchaResuelto" 
+          <button
+            class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm transition-btn"
+            [disabled]="!captchaResuelto"
             (click)="login()">
             @if (!captchaResuelto) {
               <span>Resuelve el Captcha</span>
             } @else {
-              <span> Iniciar Sesión</span>
+              <fa-icon icon="sign-in-alt" class="me-2"></fa-icon>
+              <span>Iniciar Sesión</span>
             }
           </button>
         </div>

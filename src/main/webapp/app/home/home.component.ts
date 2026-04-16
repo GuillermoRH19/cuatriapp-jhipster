@@ -27,6 +27,7 @@ import { NgbCarouselModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   captchaResuelto = false;
+  captchaFallo = false;
   siteKey = '3b506e74-8bbc-4b56-a81c-4b3e5afe1f90';
 
   // Configuración del Modal
@@ -108,10 +109,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onCaptchaVerify(): void {
     this.captchaResuelto = true;
+    this.captchaFallo = false;
   }
 
   onCaptchaExpired(): void {
     this.captchaResuelto = false;
+  }
+
+  onCaptchaError(): void {
+    // Si hCaptcha no puede cargar (red, dominio no registrado, etc.)
+    // dejamos pasar al usuario — la seguridad real está en el backend.
+    this.captchaFallo = true;
+    this.captchaResuelto = true;
   }
 
   login(): void {
