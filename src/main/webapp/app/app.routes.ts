@@ -113,9 +113,10 @@ export const routes: Routes = [
     loadChildren: () => import('./entities/entity.routes'),
   },
 
+  // Ruta no encontrada → página 404 estándar de JHipster
   {
     path: '**',
-    redirectTo: '/mi-error',
+    redirectTo: '/404',
   },
 ];
 

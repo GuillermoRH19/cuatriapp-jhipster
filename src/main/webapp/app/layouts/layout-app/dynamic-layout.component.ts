@@ -1,23 +1,41 @@
-import { Component, OnInit, OnDestroy, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { NavigationEnd, RouterModule, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { MenuService } from '@app/core/services/menu.service';
 import { Menu } from '@app/shared/models/menu.model';
 import { AccountService } from '@app/core/auth/account.service';
 import { AuthServerProvider } from '@app/core/auth/auth-jwt.service';
 import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
+import SharedModule from 'app/shared/shared.module';
 
-/**
- * Layout dinámico principal con menú jerárquico.
- * Reemplaza el layout estático.
- */
+export interface Breadcrumb {
+  label: string;
+  url: string;
+}
+
+const ROUTE_LABELS: Record<string, string> = {
+  inicio: 'Inicio',
+  dashboard: 'Dashboard',
+  admin: 'Administración',
+  'user-management': 'Usuarios',
+  perfil: 'Perfiles',
+  modulo: 'Módulos',
+  'permisos-perfil': 'Permisos',
+  'registro-candidato': 'Candidatos',
+  account: 'Mi Cuenta',
+  settings: 'Configuración',
+  entities: 'Entidades',
+  new: 'Nuevo',
+  edit: 'Editar',
+  view: 'Detalle',
+};
+
 @Component({
   selector: 'app-dynamic-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarMenuComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [CommonModule, RouterModule, SidebarMenuComponent, SharedModule],
   templateUrl: './dynamic-layout.component.html',
   styleUrls: ['./dynamic-layout.component.scss'],
 })
@@ -31,23 +49,27 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
   currentUser: any = null;
   sidebarOpen = true;
   showUserMenu = false;
+  breadcrumbs = signal<Breadcrumb[]>([]);
 
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    // Cargar el menú dinámico
     this.menuService.menu$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((menus: Menu[]) => {
-        this.menuItems = menus;
-        console.log('[DynamicLayout] Menú cargado:', this.menuItems);
-      });
+      .subscribe((menus: Menu[]) => (this.menuItems = menus));
 
-    // Obtener datos del usuario actual
     this.accountService.identity().subscribe((user: any) => {
       this.currentUser = user;
-      console.log('[DynamicLayout] Usuario:', this.currentUser);
     });
+
+    this.router.events
+      .pipe(
+        filter(e => e instanceof NavigationEnd),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(() => this.breadcrumbs.set(this.buildBreadcrumbs()));
+
+    this.breadcrumbs.set(this.buildBreadcrumbs());
   }
 
   ngOnDestroy(): void {
@@ -55,44 +77,57 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Alterna visibilidad del sidebar en mobile.
-   */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!(event.target as HTMLElement).closest('.user-menu-wrapper')) {
+      this.showUserMenu = false;
+    }
+  }
+
+  private buildBreadcrumbs(): Breadcrumb[] {
+    const url = this.router.url.split('?')[0];
+    const segments = url.split('/').filter(s => s && s !== 'dashboard');
+    const crumbs: Breadcrumb[] = [];
+    let path = '/dashboard';
+
+    for (const seg of segments) {
+      path += `/${seg}`;
+      if (/^\d+$/.test(seg)) continue;
+      crumbs.push({
+        label: ROUTE_LABELS[seg] ?? seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' '),
+        url: path,
+      });
+    }
+    return crumbs;
+  }
+
+  get currentPageTitle(): string {
+    const crumbs = this.breadcrumbs();
+    return crumbs.length > 0 ? crumbs[crumbs.length - 1].label : 'Dashboard';
+  }
+
   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
   }
 
-  /**
-   * Alterna visibilidad del menú de usuario.
-   */
   toggleUserMenu(): void {
     this.showUserMenu = !this.showUserMenu;
   }
 
-  /**
-   * Cierra sesión y redirige al login.
-   */
   logout(): void {
-    this.authServerProvider.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
+    this.authServerProvider.logout().subscribe(() => this.router.navigate(['/login']));
   }
 
-  /**
-   * Navega al perfil del usuario.
-   */
   goToProfile(): void {
-    this.router.navigate(['/account/settings']);
+    this.showUserMenu = false;
+    this.router.navigate(['/dashboard/account/settings']);
   }
 
-  /**
-   * Obtiene las iniciales del usuario.
-   */
   getUserInitials(): string {
     if (!this.currentUser) return 'U';
-    const firstName = this.currentUser.firstName || '';
-    const lastName = this.currentUser.lastName || '';
-    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+    const first = (this.currentUser.firstName ?? '').charAt(0);
+    const last = (this.currentUser.lastName ?? '').charAt(0);
+    return (first + last).toUpperCase() || (this.currentUser.login ?? 'U').charAt(0).toUpperCase();
   }
 
   isAdmin(): boolean {

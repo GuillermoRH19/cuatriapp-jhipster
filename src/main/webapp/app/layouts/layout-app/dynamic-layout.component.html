@@ -1,127 +1,131 @@
-<div class="app-container" [class.sidebar-closed]="!sidebarOpen">
-  <!-- Overlay para cerrar sidebar en mobile -->
-  <div class="sidebar-overlay" id="sidebarOverlay" (click)="toggleSidebar()" [class.show]="!sidebarOpen"></div>
+<div class="app-shell" [class.sidebar-collapsed]="!sidebarOpen">
 
-  <!-- Sidebar dinámico -->
+  <!-- Overlay mobile -->
+  <div class="sidebar-overlay" [class.visible]="!sidebarOpen" (click)="toggleSidebar()"></div>
+
+  <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar" [class.open]="sidebarOpen">
-    <div class="sidebar-header">
-      <div class="user-context">
-        <div class="avatar">{{ getUserInitials() }}</div>
-        <div class="context-text">
-          <span class="context-title">{{ currentUser?.login || 'Usuario' | uppercase }}</span>
-        </div>
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="brand-logo">
+        <fa-icon icon="tachometer-alt"></fa-icon>
+      </div>
+      <span class="brand-name">CuatriApp</span>
+    </div>
+
+    <!-- User card -->
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">{{ getUserInitials() }}</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">{{ currentUser?.login || 'Usuario' }}</span>
+        <span class="sidebar-user-role">{{ isAdmin() ? 'Administrador' : 'Usuario' }}</span>
       </div>
     </div>
 
-    <div class="nav-scroll-area">
-      <div class="nav-group-label">MENÚ DEL SISTEMA</div>
+    <!-- Nav -->
+    <nav class="sidebar-nav">
 
-      <!-- Componente de menú jerárquico (dinámico por perfil) -->
-      <app-sidebar-menu [menuItems]="menuItems"></app-sidebar-menu>
-
-      <!-- Sección fija de ADMINISTRACIÓN (solo ROLE_ADMIN) -->
-      @if (isAdmin()) {
-        <div class="nav-group-label mt-3">ADMINISTRACIÓN</div>
-        <div class="admin-menu-section">
-          <a [routerLink]="['/dashboard/admin/user-management']" routerLinkActive="active" class="admin-nav-link">
-            <i data-lucide="users"></i>
-            <span>Usuarios y Roles</span>
-          </a>
-          <a [routerLink]="['/dashboard/admin/perfil']" routerLinkActive="active" class="admin-nav-link">
-            <i data-lucide="shield"></i>
-            <span>Perfiles</span>
-          </a>
-          <a [routerLink]="['/dashboard/admin/modulo']" routerLinkActive="active" class="admin-nav-link">
-            <i data-lucide="layout-grid"></i>
-            <span>Módulos</span>
-          </a>
-          <a [routerLink]="['/dashboard/admin/permisos-perfil']" routerLinkActive="active" class="admin-nav-link">
-            <i data-lucide="lock"></i>
-            <span>Permisos por Perfil</span>
-          </a>
-        </div>
+      <!-- Menú dinámico (desde API, filtrado por permisos) -->
+      @if (menuItems.length > 0) {
+        <p class="nav-section-label">MENÚ</p>
+        <app-sidebar-menu [menuItems]="menuItems"></app-sidebar-menu>
       }
+
+      <!-- Admin links: solo ROLE_ADMIN, invisible para otros -->
+      @if (isAdmin()) {
+        <p class="nav-section-label">ADMINISTRACIÓN</p>
+
+        <a routerLink="/dashboard/admin/user-management" routerLinkActive="active" class="nav-item">
+          <fa-icon icon="users" class="nav-item-icon"></fa-icon>
+          <span>Usuarios y Roles</span>
+        </a>
+        <a routerLink="/dashboard/admin/perfil" routerLinkActive="active" class="nav-item">
+          <fa-icon icon="shield-alt" class="nav-item-icon"></fa-icon>
+          <span>Perfiles</span>
+        </a>
+        <a routerLink="/dashboard/admin/modulo" routerLinkActive="active" class="nav-item">
+          <fa-icon icon="layer-group" class="nav-item-icon"></fa-icon>
+          <span>Módulos</span>
+        </a>
+        <a routerLink="/dashboard/admin/permisos-perfil" routerLinkActive="active" class="nav-item">
+          <fa-icon icon="tasks" class="nav-item-icon"></fa-icon>
+          <span>Permisos</span>
+        </a>
+      }
+
+    </nav>
+
+    <!-- Logout anclado al fondo -->
+    <div class="sidebar-footer">
+      <button class="nav-item nav-item-logout" (click)="logout()">
+        <fa-icon icon="sign-out-alt" class="nav-item-icon"></fa-icon>
+        <span>Cerrar Sesión</span>
+      </button>
     </div>
 
-    <!-- Footer del sidebar (opcional) -->
-    <!-- 
-    <div class="sidebar-footer">
-      <a href="#" class="nav-link">
-        <i data-lucide="history"></i> Historial
-      </a>
-      <a href="#" class="nav-link">
-        <i data-lucide="life-buoy"></i> Ayuda
-      </a>
-    </div>
-    -->
   </aside>
 
-  <!-- Contenido principal -->
-  <div class="main-content">
-    <!-- Barra de herramientas superior -->
-    <nav class="breadcrumb-bar d-flex justify-content-between align-items-center">
-      <div class="d-flex align-items-center">
-        <!-- Botón para toggle sidebar en mobile -->
-        <button class="mobile-toggle" (click)="toggleSidebar()" id="btnToggle">
-          <i data-lucide="menu"></i>
+  <!-- ===== ÁREA PRINCIPAL ===== -->
+  <div class="main-area">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-toggle" (click)="toggleSidebar()" title="Alternar menú">
+          <fa-icon icon="bars"></fa-icon>
         </button>
 
-        <!-- Breadcrumbs (placeholder) -->
-        <i data-lucide="folder" size="14" style="margin-right: 8px"></i>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item active">Inicio</li>
-          </ol>
+        <!-- Migas de pan dinámicas -->
+        <nav class="breadcrumbs" aria-label="Ruta de navegación">
+          <a routerLink="/dashboard/inicio" class="breadcrumb-home" title="Inicio">
+            <fa-icon icon="home"></fa-icon>
+          </a>
+          @for (crumb of breadcrumbs(); track crumb.url; let last = $last) {
+            <span class="breadcrumb-sep" aria-hidden="true">/</span>
+            @if (last) {
+              <span class="breadcrumb-active">{{ crumb.label }}</span>
+            } @else {
+              <a [routerLink]="crumb.url" class="breadcrumb-link">{{ crumb.label }}</a>
+            }
+          }
         </nav>
       </div>
 
-      <!-- Menú de usuario (dropdown) -->
-      <div class="dropdown me-3">
-        <div
-          class="user-profile-trigger d-flex align-items-center gap-2"
-          id="userMenu"
-          (click)="toggleUserMenu()"
-          style="cursor: pointer"
-        >
-          <div class="avatar-sm">{{ getUserInitials() }}</div>
-          <span class="user-name-text">{{ currentUser?.login || 'Usuario' }}</span>
-          <i data-lucide="chevron-down" size="14"></i>
+      <div class="topbar-right">
+        <!-- Menú de usuario -->
+        <div class="user-menu-wrapper">
+          <button class="user-trigger" (click)="toggleUserMenu()">
+            <div class="topbar-avatar">{{ getUserInitials() }}</div>
+            <span class="user-trigger-name">{{ currentUser?.login || 'Usuario' }}</span>
+            <fa-icon [icon]="showUserMenu ? 'chevron-down' : 'chevron-right'" class="user-trigger-caret"></fa-icon>
+          </button>
+
+          @if (showUserMenu) {
+            <div class="user-dropdown">
+              <div class="user-dropdown-header">
+                <strong>{{ currentUser?.firstName || currentUser?.login }}</strong>
+                <span>{{ currentUser?.email }}</span>
+              </div>
+              <div class="user-dropdown-divider"></div>
+              <button class="user-dropdown-item" (click)="goToProfile()">
+                <fa-icon icon="user-cog" class="me-2"></fa-icon>
+                Mi Perfil
+              </button>
+              <button class="user-dropdown-item user-dropdown-item-danger" (click)="logout()">
+                <fa-icon icon="sign-out-alt" class="me-2"></fa-icon>
+                Cerrar Sesión
+              </button>
+            </div>
+          }
         </div>
-
-        <ul
-          class="dropdown-menu dropdown-menu-end shadow border-0 mt-2"
-          [class.show]="showUserMenu"
-          aria-labelledby="userMenu"
-        >
-          <li class="px-3 py-2 border-bottom">
-            <p class="mb-0 small text-muted">Sesión iniciada como</p>
-            <p class="mb-0 fw-bold small text-dark">{{ currentUser?.email || 'Sin email' }}</p>
-          </li>
-          <li>
-            <a class="dropdown-item py-2" href="javascript:void(0);" (click)="goToProfile()">
-              <i class="fas fa-user-circle me-2"></i> Mi Perfil
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item py-2 text-danger" href="javascript:void(0);" (click)="logout()">
-              <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
-            </a>
-          </li>
-        </ul>
       </div>
-    </nav>
+    </header>
 
-    <!-- Contenedor de rutas -->
-    <main class="body-container">
+    <!-- Contenido de página -->
+    <main class="page-content">
       <router-outlet></router-outlet>
     </main>
+
   </div>
 </div>
-
-<!-- Script para inicializar iconos Lucide -->
-<script>
-  // Lucide icons se inicializarán cuando esté disponible
-  if (typeof lucide !== 'undefined') {
-    lucide.createIcons();
-  }
-</script>
