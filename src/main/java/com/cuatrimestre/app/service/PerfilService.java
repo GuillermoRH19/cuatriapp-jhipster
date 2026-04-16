@@ -80,7 +80,7 @@ public class PerfilService {
                 if (existing.isEmpty()) {
                     return Map.of("success", false, "msg", "Perfil no encontrado");
                 }
-                perfil = existing.get();
+                perfil = existing.orElseThrow();
                 perfil.setNombrePerfil(nombre);
                 perfil.setAdministrador(esAdmin);
                 msg = "Perfil actualizado";
@@ -114,7 +114,7 @@ public class PerfilService {
                 return Map.of("success", false, "msg", "Perfil no encontrado");
             }
 
-            if (!perfil.get().getPermisos().isEmpty()) {
+            if (!perfil.orElseThrow().getPermisos().isEmpty()) {
                 return Map.of("success", false, 
                     "msg", "No se puede eliminar: el perfil está en uso (tiene permisos asignados)");
             }

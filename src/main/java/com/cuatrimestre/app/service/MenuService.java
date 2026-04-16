@@ -58,7 +58,7 @@ public class MenuService {
             return Collections.emptyList();
         }
 
-        Perfil perfil = perfilOptional.get();
+        Perfil perfil = perfilOptional.orElseThrow();
         boolean esAdmin = Boolean.TRUE.equals(perfil.getAdministrador());
 
         log.debug("Perfil: {} - ¿Es administrador? {}", perfil.getNombrePerfil(), esAdmin);
@@ -81,7 +81,7 @@ public class MenuService {
                     } else {
                         Optional<PermisosPerfil> permiso = permisosPerfilRepository.findByModuloIdAndPerfilId(
                             modulo.getId(), idPerfil);
-                        if (permiso.isPresent() && Boolean.TRUE.equals(permiso.get().getConsulta())) {
+                        if (permiso.isPresent() && Boolean.TRUE.equals(permiso.orElseThrow().getConsulta())) {
                             log.debug("Perfil '{}': permiso consulta en módulo '{}'", perfil.getNombrePerfil(), modulo.getNombreModulo());
                             tieneAcceso = true;
                         }
@@ -121,7 +121,7 @@ public class MenuService {
             return Collections.emptyMap();
         }
 
-        Perfil perfil = perfilOptional.get();
+        Perfil perfil = perfilOptional.orElseThrow();
         Map<String, Object> resultado = new HashMap<>();
 
         if (Boolean.TRUE.equals(perfil.getAdministrador())) {

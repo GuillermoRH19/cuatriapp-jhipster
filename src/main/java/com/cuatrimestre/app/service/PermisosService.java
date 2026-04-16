@@ -56,7 +56,7 @@ public class PermisosService {
             return permisosList;
         }
 
-        Perfil perfil = perfilOptional.get();
+        Perfil perfil = perfilOptional.orElseThrow();
         boolean esAdmin = Boolean.TRUE.equals(perfil.getAdministrador());
 
         if (esAdmin) {
@@ -88,7 +88,7 @@ public class PermisosService {
                 perm.put("strNombreModulo", modulo.getNombreModulo());
 
                 if (permisoOpt.isPresent()) {
-                    PermisosPerfil p = permisoOpt.get();
+                    PermisosPerfil p = permisoOpt.orElseThrow();
                     perm.put("idPermiso", p.getId());
                     perm.put("bitAgregar", p.getAgregar() ? 1 : 0);
                     perm.put("bitEditar", p.getEditar() ? 1 : 0);
@@ -135,7 +135,7 @@ public class PermisosService {
             row.put("strNombreModulo", modulo.getNombreModulo());
 
             if (permisoOpt.isPresent()) {
-                PermisosPerfil p = permisoOpt.get();
+                PermisosPerfil p = permisoOpt.orElseThrow();
                 row.put("idPermiso", p.getId());
                 row.put("bitAgregar", p.getAgregar() ? 1 : 0);
                 row.put("bitEditar", p.getEditar() ? 1 : 0);
@@ -180,7 +180,7 @@ public class PermisosService {
                 .findByModuloIdAndPerfilId(idModulo, idPerfil);
 
             if (existente.isPresent()) {
-                PermisosPerfil permiso = existente.get();
+                PermisosPerfil permiso = existente.orElseThrow();
                 permiso.setAgregar(agregar);
                 permiso.setEditar(editar);
                 permiso.setEliminar(eliminar);
@@ -197,7 +197,7 @@ public class PermisosService {
                 }
 
                 PermisosPerfil permiso = new PermisosPerfil(
-                    moduloOpt.get(), perfilOpt.get(), agregar, editar, eliminar, consulta, detalle
+                    moduloOpt.orElseThrow(), perfilOpt.orElseThrow(), agregar, editar, eliminar, consulta, detalle
                 );
                 permisosPerfilRepository.save(permiso);
                 System.out.println("[DEBUG] Permiso creado");

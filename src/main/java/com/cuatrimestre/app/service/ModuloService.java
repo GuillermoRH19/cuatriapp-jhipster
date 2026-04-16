@@ -100,7 +100,7 @@ public class ModuloService {
             Integer idMenu;
 
             if (menuExistente.isPresent()) {
-                idMenu = menuExistente.get().getId();
+                idMenu = menuExistente.orElseThrow().getId();
                 System.out.println("[DEBUG] Menú ya existe con ID: " + idMenu);
             } else {
                 Menu nuevoMenu = new Menu(nombreMenu);
@@ -118,13 +118,13 @@ public class ModuloService {
                     return Map.of("success", false, "msg", "Módulo no encontrado");
                 }
 
-                modulo = existente.get();
+                modulo = existente.orElseThrow();
                 modulo.setNombreModulo(nombre);
                 modulo.setRuta(ruta);
 
                 Optional<Menu> menu = menuRepository.findById(idMenu);
                 if (menu.isPresent()) {
-                    modulo.setMenu(menu.get());
+                    modulo.setMenu(menu.orElseThrow());
                 }
 
                 msg = "Módulo actualizado";
@@ -135,7 +135,7 @@ public class ModuloService {
                     return Map.of("success", false, "msg", "Menú no encontrado");
                 }
 
-                modulo = new Modulo(nombre, menu.get(), ruta);
+                modulo = new Modulo(nombre, menu.orElseThrow(), ruta);
                 msg = "Módulo registrado";
                 System.out.println("[DEBUG] Creando nuevo módulo con menú: " + nombreMenu);
             }
@@ -207,7 +207,7 @@ public class ModuloService {
                 return Map.of("success", false, "msg", "Menú no encontrado");
             }
 
-            Menu menu = menuOpt.get();
+            Menu menu = menuOpt.orElseThrow();
             menu.setNombreMenu(nombreMenu);
             menuRepository.save(menu);
 
@@ -232,7 +232,7 @@ public class ModuloService {
                 return Map.of("success", false, "msg", "Menú no encontrado");
             }
 
-            if (!menu.get().getModulos().isEmpty()) {
+            if (!menu.orElseThrow().getModulos().isEmpty()) {
                 return Map.of("success", false, 
                     "msg", "No se puede eliminar: el menú está siendo utilizado por uno o más módulos");
             }
