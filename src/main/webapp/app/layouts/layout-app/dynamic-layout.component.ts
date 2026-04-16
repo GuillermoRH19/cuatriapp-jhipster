@@ -94,4 +94,8 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
     const lastName = this.currentUser.lastName || '';
     return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
   }
+
+  isAdmin(): boolean {
+    return this.accountService.hasAnyAuthority('ROLE_ADMIN');
+  }
 }

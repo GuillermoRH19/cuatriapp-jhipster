@@ -16,8 +16,31 @@
     <div class="nav-scroll-area">
       <div class="nav-group-label">MENÚ DEL SISTEMA</div>
 
-      <!-- Componente de menú jerárquico -->
+      <!-- Componente de menú jerárquico (dinámico por perfil) -->
       <app-sidebar-menu [menuItems]="menuItems"></app-sidebar-menu>
+
+      <!-- Sección fija de ADMINISTRACIÓN (solo ROLE_ADMIN) -->
+      @if (isAdmin()) {
+        <div class="nav-group-label mt-3">ADMINISTRACIÓN</div>
+        <div class="admin-menu-section">
+          <a [routerLink]="['/dashboard/admin/user-management']" routerLinkActive="active" class="admin-nav-link">
+            <i data-lucide="users"></i>
+            <span>Usuarios y Roles</span>
+          </a>
+          <a [routerLink]="['/dashboard/admin/perfil']" routerLinkActive="active" class="admin-nav-link">
+            <i data-lucide="shield"></i>
+            <span>Perfiles</span>
+          </a>
+          <a [routerLink]="['/dashboard/admin/modulo']" routerLinkActive="active" class="admin-nav-link">
+            <i data-lucide="layout-grid"></i>
+            <span>Módulos</span>
+          </a>
+          <a [routerLink]="['/dashboard/admin/permisos-perfil']" routerLinkActive="active" class="admin-nav-link">
+            <i data-lucide="lock"></i>
+            <span>Permisos por Perfil</span>
+          </a>
+        </div>
+      }
     </div>
 
     <!-- Footer del sidebar (opcional) -->

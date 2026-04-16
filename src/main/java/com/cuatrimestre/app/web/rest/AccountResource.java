@@ -71,7 +71,13 @@ public class AccountResource {
 
     @GetMapping("/account")
     public AdminUserDTO getAccount() {
-        return userService.getUserWithAuthorities().map(AdminUserDTO::new)
+        return userService.getUserWithAuthorities()
+            .map(user -> {
+                if (!user.isActivated()) {
+                    throw new AccountResourceException("User account is suspended");
+                }
+                return new AdminUserDTO(user);
+            })
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
 

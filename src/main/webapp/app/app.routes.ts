@@ -86,6 +86,12 @@ export const routes: Routes = [
         data: { pageTitle: 'Administración' },
         loadChildren: () => import('./admin/admin.routes'),
       },
+      {
+        path: 'modulo/:nombre',
+        loadComponent: () => import('./shared/modulo-crud/modulo-crud.component').then(m => m.ModuloCrudComponent),
+        title: 'Módulo',
+        data: { pageTitle: 'Módulo' },
+      },
     ],
   },
 
