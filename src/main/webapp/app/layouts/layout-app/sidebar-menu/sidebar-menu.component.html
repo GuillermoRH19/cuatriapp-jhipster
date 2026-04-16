@@ -9,7 +9,7 @@
         (click)="toggleMenu(menu.id)"
         [attr.aria-expanded]="isOpen(menu.id)"
       >
-        <fa-icon [icon]="getMenuIcon(menu.titulo)" class="menu-group-icon"></fa-icon>
+        <fa-icon [icon]="getMenuIcon(menu.titulo ?? '')" class="menu-group-icon"></fa-icon>
         <span class="menu-group-title">{{ menu.titulo }}</span>
         @if (menu.submodulos && menu.submodulos.length > 0) {
           <fa-icon
