@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!--
+        Fix: El changeset 20250001000005-1 fue marcado MARK_RAN sin ejecutarse.
+        Este changeset agrega perfil_id de forma segura con IF NOT EXISTS.
+    -->
+    <changeSet id="20250001000006-1" author="custom">
+        <sql dbms="mssql">
+            IF NOT EXISTS (
+                SELECT 1 FROM sys.columns
+                WHERE object_id = OBJECT_ID('jhi_user') AND name = 'perfil_id'
+            )
+            BEGIN
+                ALTER TABLE jhi_user ADD perfil_id INT NULL;
+            END
+        </sql>
+    </changeSet>
+
+    <!-- Agregar FK solo si no existe -->
+    <changeSet id="20250001000006-2" author="custom">
+        <sql dbms="mssql">
+            IF NOT EXISTS (
+                SELECT 1 FROM sys.foreign_keys
+                WHERE name = 'fk_user_perfil'
+                  AND parent_object_id = OBJECT_ID('jhi_user')
+            )
+            BEGIN
+                ALTER TABLE jhi_user
+                    ADD CONSTRAINT fk_user_perfil
+                    FOREIGN KEY (perfil_id) REFERENCES perfil(id);
+            END
+        </sql>
+    </changeSet>
+
+    <!-- Asignar perfil Administrador (id=1) al usuario admin si no tiene uno -->
+    <changeSet id="20250001000006-3" author="custom">
+        <sql dbms="mssql">
+            UPDATE jhi_user
+            SET perfil_id = 1
+            WHERE login = 'admin' AND perfil_id IS NULL;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
