@@ -114,7 +114,16 @@ export const routes: Routes = [
     loadChildren: () => import('./entities/entity.routes'),
   },
 
-  // Ruta no encontrada → página 404 estándar de JHipster
+  // Página 404
+  {
+    path: '404',
+    loadComponent: () => import('./layouts/error/error.component'),
+    data: {
+      errorMessage: 'The page does not exist.',
+    },
+    title: 'Error page!',
+  },
+  // Ruta no encontrada → página 404
   {
     path: '**',
     redirectTo: '/404',
