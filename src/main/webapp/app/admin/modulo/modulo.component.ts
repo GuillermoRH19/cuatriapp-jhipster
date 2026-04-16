@@ -75,6 +75,10 @@ export class ModuloComponent implements OnInit {
           alert(res.msg ?? 'Error al guardar.');
           return;
         }
+        // Si es creación nueva, mostrar la ruta auto-generada
+        if (this.editingId === null && res?.ruta) {
+          alert(`✅ Módulo creado exitosamente.\n\nRuta asignada: ${res.ruta}\n\nEsta ruta se usará automáticamente en el menú del usuario.`);
+        }
         modal.close();
         this.load();
         this.moduloService.getMenus().subscribe(menus => this.menus.set(menus));

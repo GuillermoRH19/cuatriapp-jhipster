@@ -99,9 +99,15 @@
           id="strRuta"
           class="form-control"
           formControlName="strRuta"
-          placeholder="/dashboard/mi-modulo"
+          placeholder="(se genera automáticamente)"
         />
-        <div class="form-text text-muted">Ruta de navegación en Angular (opcional).</div>
+        <div class="form-text text-muted">
+          @if (editingId) {
+            Ruta actual de navegación. Cámbiala solo si necesitas una URL personalizada.
+          } @else {
+            Deja en blanco para que se genere automáticamente como <code>/dashboard/modulo/{id}</code>.
+          }
+        </div>
       </div>
     </form>
   </div>

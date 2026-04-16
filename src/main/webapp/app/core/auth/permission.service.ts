@@ -53,6 +53,18 @@ export class PermissionService {
     return !!mod && mod.bitConsulta === 1;
   }
 
+  hasPermissionById(moduloId: number, permission: 'consulta' | 'agregar' | 'editar' | 'eliminar' | 'detalle'): boolean {
+    const mod = this.permissions().find(p => p.idModulo === moduloId);
+    if (!mod) return false;
+    const key = `bit${permission.charAt(0).toUpperCase()}${permission.slice(1)}` as keyof ModulePermissions;
+    return (mod[key] as number) === 1;
+  }
+
+  getModuleNameById(moduloId: number): string {
+    const mod = this.permissions().find(p => p.idModulo === moduloId);
+    return mod?.strNombreModulo ?? '';
+  }
+
   getPermissions(): ModulePermissions[] {
     return this.permissions();
   }

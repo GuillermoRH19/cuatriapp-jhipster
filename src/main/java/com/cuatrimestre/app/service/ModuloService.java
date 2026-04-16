@@ -120,7 +120,10 @@ public class ModuloService {
 
                 modulo = existente.orElseThrow();
                 modulo.setNombreModulo(nombre);
-                modulo.setRuta(ruta);
+                // Solo actualizar la ruta si el admin la cambió explícitamente
+                if (ruta != null && !ruta.trim().isEmpty()) {
+                    modulo.setRuta(ruta);
+                }
 
                 Optional<Menu> menu = menuRepository.findById(idMenu);
                 if (menu.isPresent()) {
@@ -128,7 +131,9 @@ public class ModuloService {
                 }
 
                 msg = "Módulo actualizado";
+                Modulo guardado = moduloRepository.save(modulo);
                 System.out.println("[DEBUG] Actualizando módulo ID: " + idModulo);
+                return Map.of("success", true, "msg", msg, "id", guardado.getId(), "ruta", guardado.getRuta() != null ? guardado.getRuta() : "");
             } else {
                 Optional<Menu> menu = menuRepository.findById(idMenu);
                 if (menu.isEmpty()) {
@@ -138,10 +143,17 @@ public class ModuloService {
                 modulo = new Modulo(nombre, menu.orElseThrow(), ruta);
                 msg = "Módulo registrado";
                 System.out.println("[DEBUG] Creando nuevo módulo con menú: " + nombreMenu);
-            }
+                Modulo guardado = moduloRepository.save(modulo);
 
-            moduloRepository.save(modulo);
-            return Map.of("success", true, "msg", msg);
+                // Auto-generar la ruta con el ID si no se proporcionó una
+                if (ruta == null || ruta.trim().isEmpty()) {
+                    guardado.setRuta("/dashboard/modulo/" + guardado.getId());
+                    moduloRepository.save(guardado);
+                }
+
+                String rutaFinal = guardado.getRuta();
+                return Map.of("success", true, "msg", msg, "id", guardado.getId(), "ruta", rutaFinal != null ? rutaFinal : "");
+            }
 
         } catch (Exception e) {
             System.out.println("[ERROR] Error al guardar módulo: " + e.getMessage());
