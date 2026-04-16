@@ -5,39 +5,34 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <!--
-        Changeset de limpieza total. Solo se ejecuta cuando se activa el contexto "reset".
-        En Railway: variable LIQUIBASE_CONTEXTS=reset
-        Después del primer boot limpio: eliminar esa variable.
+        Limpieza total del esquema. Solo corre con LIQUIBASE_CONTEXTS=reset en Railway.
+        Después del primer boot limpio, quitar esa variable de Railway.
     -->
     <changeSet id="reset-schema-001" author="custom" runAlways="true" context="reset">
-        <sql dbms="mssql" splitStatements="false">
-            -- 1. Borrar todas las FK constraints de las tablas de usuario
-            DECLARE @sql NVARCHAR(MAX) = '';
-            SELECT @sql += 'ALTER TABLE ' + QUOTENAME(OBJECT_NAME(parent_object_id))
-                         + ' DROP CONSTRAINT ' + QUOTENAME(name) + ';'
-            FROM sys.foreign_keys
-            WHERE OBJECT_NAME(parent_object_id) IN (
-                'jhi_user_authority','jhi_user','permisos_perfil',
-                'modulo','candidato','jhi_carousel_image'
-            );
-            IF LEN(@sql) > 0 EXEC sp_executesql @sql;
 
-            -- 2. Borrar tablas en orden (hijas primero)
-            IF OBJECT_ID('jhi_user_authority',    'U') IS NOT NULL DROP TABLE jhi_user_authority;
-            IF OBJECT_ID('permisos_perfil',        'U') IS NOT NULL DROP TABLE permisos_perfil;
-            IF OBJECT_ID('candidato',              'U') IS NOT NULL DROP TABLE candidato;
-            IF OBJECT_ID('jhi_carousel_image',     'U') IS NOT NULL DROP TABLE jhi_carousel_image;
-            IF OBJECT_ID('jhi_user',               'U') IS NOT NULL DROP TABLE jhi_user;
-            IF OBJECT_ID('modulo',                 'U') IS NOT NULL DROP TABLE modulo;
-            IF OBJECT_ID('menu',                   'U') IS NOT NULL DROP TABLE menu;
-            IF OBJECT_ID('perfil',                 'U') IS NOT NULL DROP TABLE perfil;
-            IF OBJECT_ID('jhi_authority',          'U') IS NOT NULL DROP TABLE jhi_authority;
-            IF OBJECT_ID('jhi_date_time_wrapper',  'U') IS NOT NULL DROP TABLE jhi_date_time_wrapper;
+        <!-- Paso 1: Borrar FK constraints individualmente (con IF EXISTS) -->
+        <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'fk_user_id' AND parent_object_id = OBJECT_ID('jhi_user_authority')) ALTER TABLE jhi_user_authority DROP CONSTRAINT fk_user_id;</sql>
+        <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'fk_authority_name' AND parent_object_id = OBJECT_ID('jhi_user_authority')) ALTER TABLE jhi_user_authority DROP CONSTRAINT fk_authority_name;</sql>
+        <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'fk_permisos_modulo' AND parent_object_id = OBJECT_ID('permisos_perfil')) ALTER TABLE permisos_perfil DROP CONSTRAINT fk_permisos_modulo;</sql>
+        <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'fk_permisos_perfil' AND parent_object_id = OBJECT_ID('permisos_perfil')) ALTER TABLE permisos_perfil DROP CONSTRAINT fk_permisos_perfil;</sql>
+        <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'fk_modulo_menu' AND parent_object_id = OBJECT_ID('modulo')) ALTER TABLE modulo DROP CONSTRAINT fk_modulo_menu;</sql>
+        <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'fk_user_perfil' AND parent_object_id = OBJECT_ID('jhi_user')) ALTER TABLE jhi_user DROP CONSTRAINT fk_user_perfil;</sql>
 
-            -- 3. Borrar secuencia
-            IF EXISTS (SELECT * FROM sys.sequences WHERE name = 'sequence_generator')
-                DROP SEQUENCE sequence_generator;
-        </sql>
+        <!-- Paso 2: Borrar tablas en orden (hijas primero) -->
+        <sql dbms="mssql">IF OBJECT_ID('jhi_user_authority',   'U') IS NOT NULL DROP TABLE jhi_user_authority;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('permisos_perfil',       'U') IS NOT NULL DROP TABLE permisos_perfil;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('candidato',             'U') IS NOT NULL DROP TABLE candidato;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('jhi_carousel_image',    'U') IS NOT NULL DROP TABLE jhi_carousel_image;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('jhi_user',              'U') IS NOT NULL DROP TABLE jhi_user;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('modulo',                'U') IS NOT NULL DROP TABLE modulo;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('menu',                  'U') IS NOT NULL DROP TABLE menu;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('perfil',                'U') IS NOT NULL DROP TABLE perfil;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('jhi_authority',         'U') IS NOT NULL DROP TABLE jhi_authority;</sql>
+        <sql dbms="mssql">IF OBJECT_ID('jhi_date_time_wrapper', 'U') IS NOT NULL DROP TABLE jhi_date_time_wrapper;</sql>
+
+        <!-- Paso 3: Borrar secuencia -->
+        <sql dbms="mssql">IF EXISTS (SELECT 1 FROM sys.sequences WHERE name = 'sequence_generator') DROP SEQUENCE sequence_generator;</sql>
+
         <rollback/>
     </changeSet>
 
