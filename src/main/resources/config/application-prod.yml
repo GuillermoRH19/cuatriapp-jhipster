@@ -15,7 +15,8 @@ spring:
         dialect: org.hibernate.dialect.SQLServerDialect
 
   liquibase:
-    enabled: false
+    enabled: true
+    drop-first: ${LIQUIBASE_DROP_FIRST:false}
 
 server:
   port: 8080
