@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,8 @@ import com.cuatrimestre.app.repository.PermisosPerfilRepository;
 @Service
 public class PermisosService {
 
+    private static final Logger log = LoggerFactory.getLogger(PermisosService.class);
+
     private final PermisosPerfilRepository permisosPerfilRepository;
     private final PerfilRepository perfilRepository;
     private final ModuloRepository moduloRepository;
@@ -41,118 +46,91 @@ public class PermisosService {
         this.moduloRepository = moduloRepository;
     }
 
-    /**
-     * Obtiene permisos del perfil.
-     * Traducción: get_permisos_by_perfil()
-     * 
-     * Si es Admin: retorna todos los módulos con permisos en 1
-     * Si es usuario: retorna solo módulos con bitConsulta=1
-     */
+    @Transactional(readOnly = true)
     public List<Map<String, Object>> getPermisosByPerfil(Integer idPerfil) {
-        System.out.println("[DEBUG] Obteniendo permisos para el perfil ID: " + idPerfil);
-        List<Map<String, Object>> permisosList = new ArrayList<>();
+        log.debug("PERMISOS - Cargando permisos para perfil ID: {}", idPerfil);
 
         Optional<Perfil> perfilOptional = perfilRepository.findById(idPerfil);
         if (perfilOptional.isEmpty()) {
-            System.out.println("[ERROR] El perfil ID " + idPerfil + " no existe.");
-            return permisosList;
+            log.error("PERMISOS - Perfil ID {} no existe.", idPerfil);
+            return new ArrayList<>();
         }
 
         Perfil perfil = perfilOptional.orElseThrow();
         boolean esAdmin = Boolean.TRUE.equals(perfil.getAdministrador());
+        List<Modulo> todosModulos = moduloRepository.findAll();
+        List<Map<String, Object>> permisosList = new ArrayList<>();
 
         if (esAdmin) {
-            System.out.println("[DEBUG] Es Super Administrador. Asignando todos los permisos...");
-            List<Modulo> todosModulos = moduloRepository.findAll();
-            
+            log.info("PERMISOS - Perfil '{}' es administrador: todos los permisos en 1", perfil.getNombrePerfil());
             for (Modulo modulo : todosModulos) {
-                Map<String, Object> perm = new HashMap<>();
-                perm.put("idModulo", modulo.getId());
-                perm.put("strNombreModulo", modulo.getNombreModulo());
-                perm.put("idPermiso", null); 
-                perm.put("bitAgregar", 1);
-                perm.put("bitEditar", 1);
-                perm.put("bitEliminar", 1);
-                perm.put("bitConsulta", 1);
-                perm.put("bitDetalle", 1);
-                permisosList.add(perm);
+                permisosList.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), null, 1, 1, 1, 1, 1));
             }
         } else {
-            System.out.println("[DEBUG] No es Super Admin. Obteniendo permisos específicos...");
-            List<Modulo> todosModulos = moduloRepository.findAll();
+            // Una sola query para todos los permisos del perfil
+            Map<Integer, PermisosPerfil> permisosPorModulo = permisosPerfilRepository
+                .findByPerfilId(idPerfil).stream()
+                .collect(Collectors.toMap(pp -> pp.getModulo().getId(), pp -> pp));
+
+            log.info("PERMISOS - Perfil '{}': {} permisos configurados de {} módulos disponibles",
+                perfil.getNombrePerfil(), permisosPorModulo.size(), todosModulos.size());
+
+            if (permisosPorModulo.isEmpty()) {
+                log.warn("PERMISOS - Perfil '{}' (id={}) NO tiene permisos configurados en BD.",
+                    perfil.getNombrePerfil(), idPerfil);
+            }
 
             for (Modulo modulo : todosModulos) {
-                Optional<PermisosPerfil> permisoOpt = permisosPerfilRepository
-                    .findByModuloIdAndPerfilId(modulo.getId(), idPerfil);
-
-                Map<String, Object> perm = new HashMap<>();
-                perm.put("idModulo", modulo.getId());
-                perm.put("strNombreModulo", modulo.getNombreModulo());
-
-                if (permisoOpt.isPresent()) {
-                    PermisosPerfil p = permisoOpt.orElseThrow();
-                    perm.put("idPermiso", p.getId());
-                    perm.put("bitAgregar", p.getAgregar() ? 1 : 0);
-                    perm.put("bitEditar", p.getEditar() ? 1 : 0);
-                    perm.put("bitEliminar", p.getEliminar() ? 1 : 0);
-                    perm.put("bitConsulta", p.getConsulta() ? 1 : 0);
-                    perm.put("bitDetalle", p.getDetalle() ? 1 : 0);
+                PermisosPerfil p = permisosPorModulo.get(modulo.getId());
+                if (p != null) {
+                    log.debug("PERMISOS - Módulo '{}': agregar={} editar={} eliminar={} consulta={} detalle={}",
+                        modulo.getNombreModulo(), p.getAgregar(), p.getEditar(),
+                        p.getEliminar(), p.getConsulta(), p.getDetalle());
+                    permisosList.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), p.getId(),
+                        bit(p.getAgregar()), bit(p.getEditar()), bit(p.getEliminar()),
+                        bit(p.getConsulta()), bit(p.getDetalle())));
                 } else {
-                    perm.put("idPermiso", null);
-                    perm.put("bitAgregar", 0);
-                    perm.put("bitEditar", 0);
-                    perm.put("bitEliminar", 0);
-                    perm.put("bitConsulta", 0);
-                    perm.put("bitDetalle", 0);
+                    log.debug("PERMISOS - Módulo '{}' sin permiso asignado para perfil '{}'",
+                        modulo.getNombreModulo(), perfil.getNombrePerfil());
+                    permisosList.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), null, 0, 0, 0, 0, 0));
                 }
-                permisosList.add(perm);
             }
         }
 
         return permisosList;
     }
 
-    /**
-     * Obtiene todos los módulos con sus permisos para un perfil.
-     * Traducción: get_permisos_by_viewperfil()
-     * Simula LEFT JOIN: todos los módulos + sus permisos
-     */
+    @Transactional(readOnly = true)
     public List<Map<String, Object>> getPermisosByViewPerfil(Integer idPerfil) {
-        System.out.println("[DEBUG] Obteniendo vista de permisos para perfil ID: " + idPerfil);
-        
+        log.debug("PERMISOS - Vista completa de permisos para perfil ID: {}", idPerfil);
+
         Optional<Perfil> perfilOptional = perfilRepository.findById(idPerfil);
         if (perfilOptional.isEmpty()) {
+            log.error("PERMISOS - Perfil ID {} no existe en getPermisosByViewPerfil.", idPerfil);
             return new ArrayList<>();
         }
 
-        List<Map<String, Object>> resultado = new ArrayList<>();
+        Perfil perfil = perfilOptional.orElseThrow();
         List<Modulo> todosModulos = moduloRepository.findAll();
 
+        // Una sola query para todos los permisos del perfil
+        Map<Integer, PermisosPerfil> permisosPorModulo = permisosPerfilRepository
+            .findByPerfilId(idPerfil).stream()
+            .collect(Collectors.toMap(pp -> pp.getModulo().getId(), pp -> pp));
+
+        log.info("PERMISOS - ViewPerfil '{}': {} permisos en BD, {} módulos totales",
+            perfil.getNombrePerfil(), permisosPorModulo.size(), todosModulos.size());
+
+        List<Map<String, Object>> resultado = new ArrayList<>();
         for (Modulo modulo : todosModulos) {
-            Optional<PermisosPerfil> permisoOpt = permisosPerfilRepository
-                .findByModuloIdAndPerfilId(modulo.getId(), idPerfil);
-
-            Map<String, Object> row = new HashMap<>();
-            row.put("idModulo", modulo.getId());
-            row.put("strNombreModulo", modulo.getNombreModulo());
-
-            if (permisoOpt.isPresent()) {
-                PermisosPerfil p = permisoOpt.orElseThrow();
-                row.put("idPermiso", p.getId());
-                row.put("bitAgregar", p.getAgregar() ? 1 : 0);
-                row.put("bitEditar", p.getEditar() ? 1 : 0);
-                row.put("bitEliminar", p.getEliminar() ? 1 : 0);
-                row.put("bitConsulta", p.getConsulta() ? 1 : 0);
-                row.put("bitDetalle", p.getDetalle() ? 1 : 0);
+            PermisosPerfil p = permisosPorModulo.get(modulo.getId());
+            if (p != null) {
+                resultado.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), p.getId(),
+                    bit(p.getAgregar()), bit(p.getEditar()), bit(p.getEliminar()),
+                    bit(p.getConsulta()), bit(p.getDetalle())));
             } else {
-                row.put("idPermiso", null);
-                row.put("bitAgregar", 0);
-                row.put("bitEditar", 0);
-                row.put("bitEliminar", 0);
-                row.put("bitConsulta", 0);
-                row.put("bitDetalle", 0);
+                resultado.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), null, 0, 0, 0, 0, 0));
             }
-            resultado.add(row);
         }
 
         return resultado;
@@ -168,8 +146,6 @@ public class PermisosService {
     @Transactional
     public Map<String, Object> updatePermiso(Map<String, Object> data) {
         try {
-            System.out.println("[DEBUG] Actualizando permiso...");
-            
             Integer idModulo = Integer.parseInt(data.get("idModulo").toString());
             Integer idPerfil = Integer.parseInt(data.get("idPerfil").toString());
 
@@ -190,12 +166,13 @@ public class PermisosService {
                 permiso.setConsulta(consulta);
                 permiso.setDetalle(detalle);
                 permisosPerfilRepository.save(permiso);
-                System.out.println("[DEBUG] Permiso actualizado");
+                log.info("PERMISOS - Actualizado permiso módulo={} perfil={}", idModulo, idPerfil);
             } else {
                 Optional<Modulo> moduloOpt = moduloRepository.findById(idModulo);
                 Optional<Perfil> perfilOpt = perfilRepository.findById(idPerfil);
 
                 if (moduloOpt.isEmpty() || perfilOpt.isEmpty()) {
+                    log.error("PERMISOS - Módulo {} o Perfil {} no encontrado al crear permiso", idModulo, idPerfil);
                     return Map.of("success", false, "msg", "Módulo o Perfil no encontrado");
                 }
 
@@ -203,27 +180,42 @@ public class PermisosService {
                     moduloOpt.orElseThrow(), perfilOpt.orElseThrow(), agregar, editar, eliminar, consulta, detalle
                 );
                 permisosPerfilRepository.save(permiso);
-                System.out.println("[DEBUG] Permiso creado");
+                log.info("PERMISOS - Creado permiso módulo={} perfil={}", idModulo, idPerfil);
             }
 
             return Map.of("success", true, "msg", "Permiso guardado correctamente");
 
         } catch (DataIntegrityViolationException e) {
-            System.out.println("[ERROR] Conflicto de integridad al guardar permiso: " + e.getMessage());
+            log.error("PERMISOS - Conflicto de integridad al guardar permiso: {}", e.getMessage());
             return Map.of("success", false, "msg", "El permiso para este módulo y perfil ya existe");
         } catch (Exception e) {
-            System.out.println("[ERROR] Error al guardar permiso: " + e.getMessage());
+            log.error("PERMISOS - Error al guardar permiso: {}", e.getMessage());
             return Map.of("success", false, "msg", e.getMessage());
         }
     }
 
-    /**
-     * Helper: Convierte valores a Boolean (0/1/true/false)
-     */
     private Boolean convertToBit(Object value) {
         if (value == null) return false;
         if (value instanceof Boolean) return (Boolean) value;
         String strVal = value.toString();
         return "1".equals(strVal) || "true".equalsIgnoreCase(strVal) || "on".equalsIgnoreCase(strVal);
+    }
+
+    private int bit(Boolean value) {
+        return Boolean.TRUE.equals(value) ? 1 : 0;
+    }
+
+    private Map<String, Object> buildPermiso(Integer idModulo, String nombreModulo, Integer idPermiso,
+                                              int agregar, int editar, int eliminar, int consulta, int detalle) {
+        Map<String, Object> perm = new HashMap<>();
+        perm.put("idModulo", idModulo);
+        perm.put("strNombreModulo", nombreModulo);
+        perm.put("idPermiso", idPermiso);
+        perm.put("bitAgregar", agregar);
+        perm.put("bitEditar", editar);
+        perm.put("bitEliminar", eliminar);
+        perm.put("bitConsulta", consulta);
+        perm.put("bitDetalle", detalle);
+        return perm;
     }
 }

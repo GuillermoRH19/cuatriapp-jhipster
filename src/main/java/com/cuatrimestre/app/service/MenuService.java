@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cuatrimestre.app.domain.Menu;
 import com.cuatrimestre.app.domain.Modulo;
@@ -49,22 +51,39 @@ public class MenuService {
      * @param idPerfil ID del perfil del usuario
      * @return Lista de MenuDTO estructurada jerárquicamente
      */
+    @Transactional(readOnly = true)
     public List<MenuDTO> getSidebarMenu(Integer idPerfil) {
         log.debug("Cargando menú para el perfil ID: {}", idPerfil);
 
         Optional<Perfil> perfilOptional = perfilRepository.findById(idPerfil);
         if (perfilOptional.isEmpty()) {
-            log.error("El perfil ID {} no existe en la base de datos.", idPerfil);
+            log.error("PERMISOS - Perfil ID {} no existe en base de datos. Menú vacío.", idPerfil);
             return Collections.emptyList();
         }
 
         Perfil perfil = perfilOptional.orElseThrow();
         boolean esAdmin = Boolean.TRUE.equals(perfil.getAdministrador());
+        log.info("PERMISOS - Perfil '{}' (id={}) esAdmin={}", perfil.getNombrePerfil(), idPerfil, esAdmin);
 
-        log.debug("Perfil: {} - ¿Es administrador? {}", perfil.getNombrePerfil(), esAdmin);
+        // Carga todos los permisos del perfil en UNA sola query (evita N+1)
+        Map<Integer, PermisosPerfil> permisosPorModulo = Collections.emptyMap();
+        if (!esAdmin) {
+            List<PermisosPerfil> permisos = permisosPerfilRepository.findByPerfilId(idPerfil);
+            log.info("PERMISOS - Perfil '{}': {} registros en permisos_perfil cargados",
+                perfil.getNombrePerfil(), permisos.size());
+
+            if (permisos.isEmpty()) {
+                log.warn("PERMISOS - Perfil '{}' (id={}) NO tiene permisos configurados en base de datos. " +
+                    "El menú estará vacío. Asigna permisos en el módulo de administración.",
+                    perfil.getNombrePerfil(), idPerfil);
+                return Collections.emptyList();
+            }
+
+            permisosPorModulo = permisos.stream()
+                .collect(Collectors.toMap(pp -> pp.getModulo().getId(), pp -> pp));
+        }
 
         List<Menu> todosLosMenus = menuRepository.findAll();
-
         List<MenuDTO> resultado = new ArrayList<>();
 
         for (Menu menu : todosLosMenus) {
@@ -73,26 +92,24 @@ public class MenuService {
 
             if (modulos != null) {
                 for (Modulo modulo : modulos) {
-                    boolean tieneAcceso = false;
+                    boolean tieneAcceso;
 
                     if (esAdmin) {
-                        log.debug("Admin '{}': acceso automático al módulo '{}'", perfil.getNombrePerfil(), modulo.getNombreModulo());
                         tieneAcceso = true;
+                        log.debug("PERMISOS - Admin: acceso automático a módulo '{}' (id={})",
+                            modulo.getNombreModulo(), modulo.getId());
                     } else {
-                        Optional<PermisosPerfil> permiso = permisosPerfilRepository.findByModuloIdAndPerfilId(
-                            modulo.getId(), idPerfil);
-                        if (permiso.isPresent() && Boolean.TRUE.equals(permiso.orElseThrow().getConsulta())) {
-                            log.debug("Perfil '{}': permiso consulta en módulo '{}'", perfil.getNombrePerfil(), modulo.getNombreModulo());
-                            tieneAcceso = true;
-                        }
+                        PermisosPerfil permiso = permisosPorModulo.get(modulo.getId());
+                        tieneAcceso = permiso != null && Boolean.TRUE.equals(permiso.getConsulta());
+                        log.debug("PERMISOS - Módulo '{}' (id={}): permiso={}, consulta={}",
+                            modulo.getNombreModulo(), modulo.getId(),
+                            permiso != null ? "encontrado" : "NO encontrado",
+                            permiso != null ? permiso.getConsulta() : false);
                     }
 
                     if (tieneAcceso) {
                         menuDTO.getSubmodulos().add(new ModuloDTO(
-                            modulo.getId(),
-                            modulo.getNombreModulo(),
-                            modulo.getRuta()
-                        ));
+                            modulo.getId(), modulo.getNombreModulo(), modulo.getRuta()));
                     }
                 }
             }
@@ -102,7 +119,16 @@ public class MenuService {
             }
         }
 
-        log.debug("Menú generado: {} secciones para perfil {}", resultado.size(), perfil.getNombrePerfil());
+        log.info("PERMISOS - Menú final para perfil '{}': {} secciones, {} módulos totales",
+            perfil.getNombrePerfil(), resultado.size(),
+            resultado.stream().mapToInt(m -> m.getSubmodulos().size()).sum());
+
+        if (resultado.isEmpty() && !esAdmin) {
+            log.warn("PERMISOS - Perfil '{}' tiene permisos en BD pero ninguno con consulta=true. " +
+                "El menú está vacío. Revisa los bits de consulta en permisos_perfil.",
+                perfil.getNombrePerfil());
+        }
+
         return resultado;
     }
 
