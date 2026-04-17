@@ -1,9 +1,11 @@
 package com.cuatrimestre.app.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import com.cuatrimestre.app.domain.Authority;
 import com.cuatrimestre.app.domain.User;
+import com.cuatrimestre.app.repository.PerfilRepository;
 import com.cuatrimestre.app.security.AuthoritiesConstants;
 import com.cuatrimestre.app.service.dto.AdminUserDTO;
 import com.cuatrimestre.app.service.dto.UserDTO;
@@ -30,7 +32,7 @@ class UserMapperTest {
 
     @BeforeEach
     void init() {
-        userMapper = new UserMapper();
+        userMapper = new UserMapper(mock(PerfilRepository.class));
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
         user.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
