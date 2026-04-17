@@ -48,6 +48,12 @@ export class PermisosPerfilComponent implements OnInit {
     );
   }
 
+  setPermiso(idModulo: number, field: keyof IPermisoModulo, value: boolean): void {
+    this.permisos.update(list =>
+      list.map(p => p.idModulo === idModulo ? { ...p, [field]: value ? 1 : 0 } : p),
+    );
+  }
+
   save(): void {
     if (this.selectedPerfilId == null) return;
     this.isSaving = true;

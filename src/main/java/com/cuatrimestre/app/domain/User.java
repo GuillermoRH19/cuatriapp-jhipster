@@ -66,8 +66,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @Column(name = "lang_key", length = 10)
     private String langKey;
 
-    @Size(max = 256)
-    @Column(name = "image_url", length = 256)
+    @Column(name = "image_url", columnDefinition = "NVARCHAR(MAX)")
     private String imageUrl;
 
     @Size(max = 20)

@@ -29,6 +29,7 @@
     <include file="config/liquibase/changelog/20250001000004_added_entity_Candidato.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250001000005_add_perfil_to_user.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250001000006_fix_perfil_id_column.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260001000007_expand_image_url_column.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

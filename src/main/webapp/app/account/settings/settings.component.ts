@@ -38,6 +38,19 @@ export default class SettingsComponent implements OnInit {
 
   private readonly accountService = inject(AccountService);
 
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const file = input.files[0];
+    if (!file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.settingsForm.patchValue({ imageUrl: reader.result as string });
+    };
+    reader.readAsDataURL(file);
+  }
+
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {
       if (account) {

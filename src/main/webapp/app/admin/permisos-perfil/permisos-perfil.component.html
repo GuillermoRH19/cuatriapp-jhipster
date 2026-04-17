@@ -71,7 +71,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitConsulta == 1"
-                  (change)="perm.bitConsulta = $any($event.target).checked ? 1 : 0"
+                  (change)="setPermiso(perm.idModulo, 'bitConsulta', $any($event.target).checked)"
                 />
               </td>
               <td class="text-center">
@@ -79,7 +79,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitAgregar == 1"
-                  (change)="perm.bitAgregar = $any($event.target).checked ? 1 : 0"
+                  (change)="setPermiso(perm.idModulo, 'bitAgregar', $any($event.target).checked)"
                 />
               </td>
               <td class="text-center">
@@ -87,7 +87,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitEditar == 1"
-                  (change)="perm.bitEditar = $any($event.target).checked ? 1 : 0"
+                  (change)="setPermiso(perm.idModulo, 'bitEditar', $any($event.target).checked)"
                 />
               </td>
               <td class="text-center">
@@ -95,7 +95,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitEliminar == 1"
-                  (change)="perm.bitEliminar = $any($event.target).checked ? 1 : 0"
+                  (change)="setPermiso(perm.idModulo, 'bitEliminar', $any($event.target).checked)"
                 />
               </td>
               <td class="text-center">
@@ -103,7 +103,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitDetalle == 1"
-                  (change)="perm.bitDetalle = $any($event.target).checked ? 1 : 0"
+                  (change)="setPermiso(perm.idModulo, 'bitDetalle', $any($event.target).checked)"
                 />
               </td>
             </tr>

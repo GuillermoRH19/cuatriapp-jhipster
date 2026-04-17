@@ -16,6 +16,36 @@
 
       @if (settingsForm.value.login) {
         <form name="form" (ngSubmit)="save()" [formGroup]="settingsForm" novalidate>
+
+          <!-- Foto de perfil -->
+          <div class="mb-4 text-center">
+            @if (settingsForm.value.imageUrl) {
+              <img
+                [src]="settingsForm.value.imageUrl"
+                alt="Foto de perfil"
+                class="rounded-circle mb-2"
+                style="width:96px;height:96px;object-fit:cover;border:3px solid #dee2e6;"
+              />
+            } @else {
+              <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-2"
+                   style="width:96px;height:96px;font-size:2rem;">
+                <fa-icon icon="user"></fa-icon>
+              </div>
+            }
+            <div>
+              <label class="btn btn-sm btn-outline-primary" for="profileImageInput">
+                <fa-icon icon="camera" class="me-1"></fa-icon> Cambiar foto
+                <input
+                  id="profileImageInput"
+                  type="file"
+                  accept="image/*"
+                  style="display:none;"
+                  (change)="onImageSelected($event)"
+                />
+              </label>
+            </div>
+          </div>
+
           <div class="mb-3">
             <label class="form-label" for="firstName">First Name</label>
             <input
