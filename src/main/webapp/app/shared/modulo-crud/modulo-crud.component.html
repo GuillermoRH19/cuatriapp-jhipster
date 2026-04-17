@@ -3,7 +3,7 @@
   <!-- Encabezado con botón Nuevo -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="mb-0 text-capitalize">{{ moduloNombre || 'Módulo' }}</h2>
+      <h2 class="mb-0 text-capitalize">{{ displayNombre || 'Módulo' }}</h2>
       <small class="text-muted">Gestión del módulo</small>
     </div>
     @if (can('agregar')) {
@@ -43,8 +43,8 @@
                   style="cursor: pointer"
                 >
                   <td>{{ fila }}</td>
-                  <td>Registro {{ fila }}</td>
-                  <td>Descripción de ejemplo {{ fila }}</td>
+                  <td>{{ displayNombre }} #{{ fila }}</td>
+                  <td>Descripción para {{ displayNombre }} - Fila {{ fila }}</td>
                   <td><span class="badge bg-success">Activo</span></td>
                   <td class="text-center">
                     <div class="btn-group btn-group-sm">
