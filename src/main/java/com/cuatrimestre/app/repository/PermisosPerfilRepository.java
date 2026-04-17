@@ -1,5 +1,6 @@
 package com.cuatrimestre.app.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,8 @@ public interface PermisosPerfilRepository extends JpaRepository<PermisosPerfil, 
 
     @Query("SELECT pp FROM PermisosPerfil pp WHERE pp.modulo.id = :moduloId AND pp.perfil.id = :perfilId")
     Optional<PermisosPerfil> findByModuloIdAndPerfilId(@Param("moduloId") Integer moduloId, @Param("perfilId") Integer perfilId);
+
+    List<PermisosPerfil> findByPerfilId(Integer perfilId);
+
+    boolean existsByPerfilId(Integer perfilId);
 }

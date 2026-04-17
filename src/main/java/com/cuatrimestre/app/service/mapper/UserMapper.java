@@ -2,6 +2,7 @@ package com.cuatrimestre.app.service.mapper;
 
 import com.cuatrimestre.app.domain.Authority;
 import com.cuatrimestre.app.domain.User;
+import com.cuatrimestre.app.repository.PerfilRepository;
 import com.cuatrimestre.app.service.dto.AdminUserDTO;
 import com.cuatrimestre.app.service.dto.UserDTO;
 import java.util.*;
@@ -11,14 +12,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Service;
 
-/**
- * Mapper for the entity {@link User} and its DTO called {@link UserDTO}.
- *
- * Normal mappers are generated using MapStruct, this one is hand-coded as MapStruct
- * support is still in beta, and requires a manual step with an IDE.
- */
 @Service
 public class UserMapper {
+
+    private final PerfilRepository perfilRepository;
+
+    public UserMapper(PerfilRepository perfilRepository) {
+        this.perfilRepository = perfilRepository;
+    }
 
     public List<UserDTO> usersToUserDTOs(List<User> users) {
         return users.stream().filter(Objects::nonNull).map(this::userToUserDTO).toList();
@@ -59,6 +60,9 @@ public class UserMapper {
             user.setLangKey(userDTO.getLangKey());
             Set<Authority> authorities = this.authoritiesFromStrings(userDTO.getAuthorities());
             user.setAuthorities(authorities);
+            if (userDTO.getPerfilId() != null) {
+                perfilRepository.findById(userDTO.getPerfilId()).ifPresent(user::setPerfil);
+            }
             return user;
         }
     }

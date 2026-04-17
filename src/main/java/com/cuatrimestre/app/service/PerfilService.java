@@ -8,24 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.cuatrimestre.app.domain.Perfil;
 import com.cuatrimestre.app.repository.PerfilRepository;
+import com.cuatrimestre.app.repository.UserRepository;
 
-/**
- * Servicio para gestionar Perfiles.
- * Traducción directa de PerfilService (Python).
- * 
- * Lógica:
- * - get_all(): SELECT todos los perfiles
- * - get_by_id(id): SELECT por ID
- * - save(data): INSERT o UPDATE + validación es_admin
- * - delete(id): DELETE + error handling si está en uso
- */
 @Service
 public class PerfilService {
 
     private final PerfilRepository perfilRepository;
+    private final UserRepository userRepository;
 
-    public PerfilService(PerfilRepository perfilRepository) {
+    public PerfilService(PerfilRepository perfilRepository, UserRepository userRepository) {
         this.perfilRepository = perfilRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -114,8 +107,13 @@ public class PerfilService {
                 return Map.of("success", false, "msg", "Perfil no encontrado");
             }
 
+            if (userRepository.existsByPerfilId(idPerfil)) {
+                return Map.of("success", false,
+                    "msg", "No se puede eliminar: el perfil está asignado a uno o más usuarios");
+            }
+
             if (!perfil.orElseThrow().getPermisos().isEmpty()) {
-                return Map.of("success", false, 
+                return Map.of("success", false,
                     "msg", "No se puede eliminar: el perfil está en uso (tiene permisos asignados)");
             }
 

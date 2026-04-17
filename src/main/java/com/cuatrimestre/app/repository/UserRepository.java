@@ -24,13 +24,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findOneByEmailIgnoreCase(String email);
     Optional<User> findOneByLogin(String login);
 
-    @EntityGraph(attributePaths = "authorities")
+    @EntityGraph(attributePaths = {"authorities", "perfil"})
     @Cacheable(cacheNames = USERS_BY_LOGIN_CACHE, unless = "#result == null")
     Optional<User> findOneWithAuthoritiesByLogin(String login);
 
-    @EntityGraph(attributePaths = "authorities")
+    @EntityGraph(attributePaths = {"authorities", "perfil"})
     @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE, unless = "#result == null")
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
+
+    boolean existsByPerfilId(Integer perfilId);
 
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
 }

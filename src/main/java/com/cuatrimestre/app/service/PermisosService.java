@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cuatrimestre.app.domain.Modulo;
 import com.cuatrimestre.app.domain.Perfil;
@@ -163,6 +165,7 @@ public class PermisosService {
      * Data debe contener:
      * - idModulo, idPerfil, bitAgregar, bitEditar, bitEliminar, bitConsulta, bitDetalle
      */
+    @Transactional
     public Map<String, Object> updatePermiso(Map<String, Object> data) {
         try {
             System.out.println("[DEBUG] Actualizando permiso...");
@@ -205,6 +208,9 @@ public class PermisosService {
 
             return Map.of("success", true, "msg", "Permiso guardado correctamente");
 
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("[ERROR] Conflicto de integridad al guardar permiso: " + e.getMessage());
+            return Map.of("success", false, "msg", "El permiso para este módulo y perfil ya existe");
         } catch (Exception e) {
             System.out.println("[ERROR] Error al guardar permiso: " + e.getMessage());
             return Map.of("success", false, "msg", e.getMessage());
