@@ -26,8 +26,10 @@ export class ModuloCrudComponent implements OnInit {
   }
 
   can(accion: 'consulta' | 'agregar' | 'editar' | 'eliminar' | 'detalle'): boolean {
-    if (this.isAdmin) return true;
-    return this.permissionService.hasPermissionById(this.moduloId, accion);
+    if (this.permissionService.isLoaded()) {
+      return this.permissionService.hasPermissionById(this.moduloId, accion);
+    }
+    return this.isAdmin;
   }
 
   ngOnInit(): void {

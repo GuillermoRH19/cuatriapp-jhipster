@@ -29,11 +29,11 @@
               <td><span class="badge bg-info text-dark">{{ modulo.strNombreMenu }}</span></td>
               <td><code>{{ modulo.strRuta ?? '—' }}</code></td>
               <td>
-                <button class="btn btn-sm btn-warning me-1" (click)="openEdit(moduloModal, modulo)">
-                  <fa-icon icon="pencil-alt"></fa-icon> Editar
+                <button class="btn btn-sm btn-warning me-1" title="Editar" (click)="openEdit(moduloModal, modulo)">
+                  <fa-icon icon="pencil-alt"></fa-icon>
                 </button>
-                <button class="btn btn-sm btn-danger" (click)="delete(modulo.id!)">
-                  <fa-icon icon="trash-alt"></fa-icon> Eliminar
+                <button class="btn btn-sm btn-danger" title="Eliminar" (click)="delete(modulo.id!)">
+                  <fa-icon icon="trash-alt"></fa-icon>
                 </button>
               </td>
             </tr>
