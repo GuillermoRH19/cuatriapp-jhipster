@@ -16,6 +16,7 @@ import com.cuatrimestre.app.security.SecurityUtils;
 import com.cuatrimestre.app.service.MenuService;
 import com.cuatrimestre.app.service.UserService;
 import com.cuatrimestre.app.service.dto.MenuDTO;
+import com.cuatrimestre.app.security.AuthoritiesConstants;
 
 /**
  * REST controller para gestionar menús dinámicos.
@@ -46,14 +47,21 @@ public class MenuResource {
 
         return userService.getUserWithAuthorities()
             .map(user -> {
+                List<MenuDTO> menuStructure;
                 if (user.getPerfil() == null) {
-                    log.warn("User {} has no perfil assigned, returning empty menu", user.getLogin());
-                    return ResponseEntity.ok().<List<MenuDTO>>body(java.util.Collections.emptyList());
+                    if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)) {
+                        log.debug("Admin user {} has no perfil, returning all menus", user.getLogin());
+                        menuStructure = menuService.getAllMenus();
+                    } else {
+                        log.warn("User {} has no perfil assigned, returning empty menu", user.getLogin());
+                        menuStructure = java.util.Collections.emptyList();
+                    }
+                } else {
+                    Integer idPerfil = user.getPerfil().getId();
+                    log.debug("Loading menu for user {} with perfil id {}", user.getLogin(), idPerfil);
+                    menuStructure = menuService.getSidebarMenu(idPerfil);
                 }
-                Integer idPerfil = user.getPerfil().getId();
-                log.debug("Loading menu for user {} with perfil id {}", user.getLogin(), idPerfil);
-                List<MenuDTO> menuStructure = menuService.getSidebarMenu(idPerfil);
-                return ResponseEntity.ok().body(menuStructure);
+                return ResponseEntity.ok(menuStructure);
             })
             .orElseGet(() -> {
                 log.warn("No authenticated user found");

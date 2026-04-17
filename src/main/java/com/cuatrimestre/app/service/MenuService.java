@@ -107,6 +107,30 @@ public class MenuService {
     }
 
     /**
+     * Devuelve todos los menús con todos sus módulos (sin filtrar por permisos).
+     * Usado para usuarios ROLE_ADMIN sin perfil asignado.
+     */
+    public List<MenuDTO> getAllMenus() {
+        List<Menu> todosLosMenus = menuRepository.findAll();
+        List<MenuDTO> resultado = new ArrayList<>();
+        for (Menu menu : todosLosMenus) {
+            MenuDTO menuDTO = new MenuDTO(menu.getId(), menu.getNombreMenu());
+            Set<Modulo> modulos = menu.getModulos();
+            if (modulos != null) {
+                for (Modulo modulo : modulos) {
+                    menuDTO.getSubmodulos().add(new ModuloDTO(
+                        modulo.getId(), modulo.getNombreModulo(), modulo.getRuta()
+                    ));
+                }
+            }
+            if (!menuDTO.getSubmodulos().isEmpty()) {
+                resultado.add(menuDTO);
+            }
+        }
+        return resultado;
+    }
+
+    /**
      * Obtiene todos los permisos de un perfil.
      * 
      * @param idPerfil ID del perfil
