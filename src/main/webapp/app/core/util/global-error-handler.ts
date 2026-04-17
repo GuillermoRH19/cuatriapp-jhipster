@@ -19,9 +19,17 @@ export class GlobalErrorHandler implements ErrorHandler {
       return;
     }
 
+    // Router/navigation errors (like NG04002) are handled by the route config.
+    // Redirecting here would create a cascade of errors.
+    const errorMessage = error?.message || error?.toString() || '';
+    if (errorMessage.includes('NG04002') || errorMessage.includes('Cannot match any routes')) {
+      return;
+    }
+
     const router = this.injector.get(Router);
     this.zone.run(() => {
       router.navigate(['/mi-error']);
     });
   }
 }
+

@@ -35,7 +35,7 @@ export default class LoginComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.accountService.identity().subscribe(() => {
       if (this.accountService.isAuthenticated()) {
-        this.router.navigate(['/dashboard/admin/user-management']);
+        this.router.navigate(['/dashboard/inicio']);
       }
     });
   }
@@ -61,7 +61,7 @@ export default class LoginComponent implements OnInit, AfterViewInit {
         this.isLoadingFetch = false;
         if (account !== null) {
           this.authenticationError = false;
-          this.router.navigate(['/dashboard/admin/user-management']);
+          this.router.navigate(['/dashboard/inicio']);
         } else {
           this.authenticationError = true;
         }

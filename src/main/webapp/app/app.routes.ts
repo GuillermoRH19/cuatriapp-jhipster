@@ -114,7 +114,20 @@ export const routes: Routes = [
     loadChildren: () => import('./entities/entity.routes'),
   },
 
-  // Página 404
+  // Páginas de error
+  {
+    path: 'error',
+    loadComponent: () => import('./layouts/error/error.component'),
+    title: 'Error page!',
+  },
+  {
+    path: 'accessdenied',
+    loadComponent: () => import('./layouts/error/error.component'),
+    data: {
+      errorMessage: 'You are not authorized to access this page.',
+    },
+    title: 'Error page!',
+  },
   {
     path: '404',
     loadComponent: () => import('./layouts/error/error.component'),
