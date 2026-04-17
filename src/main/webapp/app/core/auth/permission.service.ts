@@ -25,10 +25,15 @@ export class PermissionService {
     const url = this.config.getEndpointFor(`api/permisos_perfil/${perfilId}`);
     this.http.get<ModulePermissions[]>(url).subscribe({
       next: data => {
+        // eslint-disable-next-line no-console
+        console.log(`PERMISOS CARGADOS para perfil ${perfilId}:`, data);
         this.permissions.set(data);
         this.loaded = true;
       },
-      error: () => {},
+      error: (err) => {
+        // eslint-disable-next-line no-console
+        console.error(`Error cargando permisos para perfil ${perfilId}:`, err);
+      },
     });
   }
 

@@ -27,7 +27,9 @@ export class ModuloCrudComponent implements OnInit {
 
   can(accion: 'consulta' | 'agregar' | 'editar' | 'eliminar' | 'detalle'): boolean {
     if (this.permissionService.isLoaded()) {
-      return this.permissionService.hasPermissionById(this.moduloId, accion);
+      const hasPerm = this.permissionService.hasPermissionById(this.moduloId, accion);
+      // console.log(`Permiso ${accion} para módulo ${this.moduloId}: ${hasPerm}`);
+      return hasPerm;
     }
     return this.isAdmin;
   }
