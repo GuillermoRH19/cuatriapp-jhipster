@@ -12,6 +12,7 @@ import com.cuatrimestre.app.domain.Menu;
 import com.cuatrimestre.app.domain.Modulo;
 import com.cuatrimestre.app.repository.MenuRepository;
 import com.cuatrimestre.app.repository.ModuloRepository;
+import com.cuatrimestre.app.repository.PermisosPerfilRepository;
 
 /**
  * Servicio para gestionar Módulos.
@@ -26,10 +27,12 @@ public class ModuloService {
 
     private final ModuloRepository moduloRepository;
     private final MenuRepository menuRepository;
+    private final PermisosPerfilRepository permisosPerfilRepository;
 
-    public ModuloService(ModuloRepository moduloRepository, MenuRepository menuRepository) {
+    public ModuloService(ModuloRepository moduloRepository, MenuRepository menuRepository, PermisosPerfilRepository permisosPerfilRepository) {
         this.moduloRepository = moduloRepository;
         this.menuRepository = menuRepository;
+        this.permisosPerfilRepository = permisosPerfilRepository;
     }
 
     /**
@@ -168,6 +171,11 @@ public class ModuloService {
      */
     public Map<String, Object> delete(Integer idModulo) {
         try {
+            System.out.println("[DEBUG] Eliminando permisos asociados al módulo ID: " + idModulo);
+            
+            // Eliminar dependencias primero para evitar error de FK (Foreign Key)
+            permisosPerfilRepository.deleteByModuloId(idModulo);
+
             System.out.println("[DEBUG] Eliminando módulo ID: " + idModulo);
 
             Optional<Modulo> modulo = moduloRepository.findById(idModulo);
@@ -181,7 +189,7 @@ public class ModuloService {
         } catch (Exception e) {
             System.out.println("[ERROR] Error al eliminar módulo: " + e.getMessage());
             return Map.of("success", false, 
-                "msg", "No se puede eliminar: el módulo está vinculado a permisos existentes");
+                "msg", "Ocurrió un error inesperado al intentar eliminar el módulo: " + e.getMessage());
         }
     }
 

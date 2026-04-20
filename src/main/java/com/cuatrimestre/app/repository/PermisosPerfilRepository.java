@@ -19,4 +19,9 @@ public interface PermisosPerfilRepository extends JpaRepository<PermisosPerfil, 
     List<PermisosPerfil> findByPerfilId(Integer perfilId);
 
     boolean existsByPerfilId(Integer perfilId);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    @Query("DELETE FROM PermisosPerfil p WHERE p.modulo.id = :moduloId")
+    void deleteByModuloId(@Param("moduloId") Integer moduloId);
 }
