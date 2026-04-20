@@ -1,82 +1,101 @@
 @if (account !== null) {
-  <div class="hero-header p-5 mb-4 rounded-3 text-white bg-gradient-dark">
-    <div class="container-fluid py-3 text-center">
-      <h1 class="display-4 fw-bold">¡Bienvenido al Sistema!</h1>
-      <p class="fs-4">Hola de nuevo, {{ account.login }}</p>
+  <!-- Hero Section Premium -->
+  <div class="dashboard-hero p-5 mb-4 rounded-4 shadow-sm border-0 position-relative overflow-hidden">
+    <div class="hero-content position-relative" style="z-index: 2;">
+      <div class="d-flex align-items-center justify-content-center mb-3">
+        <div class="greeting-badge px-3 py-1 rounded-pill small fw-bold mb-2">
+          <fa-icon [icon]="getGreeting() === 'Buenos días' ? 'sun' : 'moon'" class="me-1"></fa-icon>
+          {{ getGreeting() }}
+        </div>
+      </div>
+      <h1 class="display-5 fw-bold text-slate-900 mb-2">¡Bienvenido al Sistema!</h1>
+      <p class="fs-4 text-slate-600 mb-0">Hola de nuevo, <span class="text-primary fw-600">{{ getDisplayName() }}</span></p>
     </div>
+    <!-- Decoración de fondo -->
+    <div class="hero-decorative-circle-1"></div>
+    <div class="hero-decorative-circle-2"></div>
   </div>
 
-  <div class="container-fluid px-4 mb-5">
-    <div class="row align-items-center mb-5">
+  <div class="container-fluid px-0 mb-5">
+    <div class="row g-4 align-items-stretch mb-5">
+      <!-- Sección de Resumen -->
       <div class="col-lg-8">
-        <h2 class="fw-bold text-primary">Tu panel principal</h2>
-        <p class="lead text-muted">A continuación tienes un resumen estático de la actividad reciente del negocio.</p>
+        <div class="h-100 d-flex flex-direction-column justify-content-center">
+          <h2 class="fw-bold text-slate-800 mb-3">Tu panel principal</h2>
+          <p class="lead text-slate-500 mb-0">Esta es la actividad reciente y el estado actual de tus servicios empresariales.</p>
+        </div>
       </div>
-      <div class="col-lg-4 text-end">
-        <div class="card bg-primary text-white shadow rounded-4 border-0">
-          <div class="card-body py-4">
-            <h5 class="card-title opacity-75">Nivel de Acceso</h5>
-            <h3 class="fw-bold mb-0">
-              <fa-icon icon="users-cog" class="me-2"></fa-icon> 
-              {{ account.authorities.includes('ROLE_ADMIN') ? 'Administrador' : 'Usuario' }}
-            </h3>
+
+      <!-- Tarjeta de Nivel de Acceso Premium -->
+      <div class="col-lg-4">
+        <div class="card access-card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+          <div class="card-body p-4 d-flex align-items-center">
+            <div class="access-icon-wrapper me-3">
+              <fa-icon icon="shield-alt" size="2x"></fa-icon>
+            </div>
+            <div>
+              <p class="text-uppercase small fw-bold text-slate-400 mb-0 tracking-wider">Nivel de Acceso</p>
+              <h3 class="fw-bold text-slate-800 mb-0">
+                {{ account.authorities.includes('ROLE_ADMIN') ? 'Administrador' : 'Usuario' }}
+              </h3>
+            </div>
           </div>
+          <div class="access-card-glow"></div>
         </div>
       </div>
     </div>
 
+    <!-- Grid de Funcionalidades -->
     <div class="row g-4">
       <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 rounded-4 feature-card">
-          <div class="card-body text-center p-4">
-            <div class="icon-circle bg-light-primary text-primary mx-auto mb-3">
-              <fa-icon icon="tachometer-alt" size="2x"></fa-icon>
+        <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body p-4">
+            <div class="stat-icon-box blue mb-4">
+              <fa-icon icon="chart-line" size="lg"></fa-icon>
             </div>
-            <h4>Estadísticas</h4>
-            <p class="text-muted mb-0">Rendimiento general y crecimiento mensual estable al 24%.</p>
+            <h4 class="fw-bold text-slate-800">Estadísticas</h4>
+            <div class="d-flex align-items-baseline mb-2">
+              <span class="fs-3 fw-bold text-primary">+24%</span>
+              <span class="text-success small ms-2"><fa-icon icon="arrow-up"></fa-icon> Crecimiento</span>
+            </div>
+            <p class="text-slate-500 small mb-0">Rendimiento optimizado este mes.</p>
           </div>
         </div>
       </div>
+
       <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 rounded-4 feature-card">
-          <div class="card-body text-center p-4">
-            <div class="icon-circle bg-light-success text-success mx-auto mb-3">
-              <fa-icon icon="users" size="2x"></fa-icon>
+        <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body p-4">
+            <div class="stat-icon-box emerald mb-4">
+              <fa-icon icon="user-tie" size="lg"></fa-icon>
             </div>
-            <h4>Candidatos</h4>
-            <p class="text-muted mb-0">Se han registrado 42 candidatos activos este mes.</p>
+            <h4 class="fw-bold text-slate-800">Candidatos</h4>
+            <div class="d-flex align-items-baseline mb-2">
+              <span class="fs-3 fw-bold text-emerald">42</span>
+              <span class="text-emerald small ms-2">Activos</span>
+            </div>
+            <p class="text-slate-500 small mb-0">Nuevos registros procesados.</p>
           </div>
         </div>
       </div>
+
       <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 rounded-4 feature-card">
-          <div class="card-body text-center p-4">
-            <div class="icon-circle bg-light-warning text-warning mx-auto mb-3">
-              <fa-icon icon="tasks" size="2x"></fa-icon>
+        <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body p-4">
+            <div class="stat-icon-box violet mb-4">
+              <fa-icon icon="server" size="lg"></fa-icon>
             </div>
-            <h4>Sistema</h4>
-            <p class="text-muted mb-0">Todos los servicios se encuentran en estado óptimo.</p>
+            <h4 class="fw-bold text-slate-800">Sistema</h4>
+            <div class="d-flex align-items-center mb-2">
+              <span class="status-indicator online"></span>
+              <span class="fs-5 fw-bold text-slate-700 ms-2">Óptimo</span>
+            </div>
+            <p class="text-slate-500 small mb-0">Todos los servicios en línea.</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <style>
-    .icon-circle {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .bg-light-primary { background-color: #e0f0ff; }
-    .bg-light-success { background-color: #e6f9ec; }
-    .bg-light-warning { background-color: #fff8e6; }
-    .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; }
-  </style>
 }
 
 @if (account === null) {

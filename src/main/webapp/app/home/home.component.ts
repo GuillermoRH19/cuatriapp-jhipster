@@ -171,6 +171,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  getGreeting(): string {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Buenos días';
+    if (hour < 19) return 'Buenas tardes';
+    return 'Buenas noches';
+  }
+
+  getDisplayName(): string {
+    if (!this.account) return 'Usuario';
+    return this.account.firstName && this.account.lastName
+      ? `${this.account.firstName} ${this.account.lastName}`
+      : (this.account.firstName || this.account.login);
+  }
+
   abrirNuevaPestana(): void {
     window.open('https://www.google.com', '_blank');
   }

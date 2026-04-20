@@ -1,34 +1,172 @@
-/* Fondo oscuro elegante para el header */
-.bg-gradient-dark {
-  background: linear-gradient(135deg, #1a1e21 0%, #2c3e50 100%);
+// ─── Variables de Diseño ──────────────────────────────────────────────────
+$slate-50: #f8fafc;
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-700: #334155;
+$slate-800: #1e293b;
+$slate-900: #0f172a;
+
+$primary: #4f46e5;
+$primary-light: #eef2ff;
+$emerald: #10b981;
+$emerald-light: #ecfdf5;
+$violet: #8b5cf6;
+$violet-light: #f5f3ff;
+
+$transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ─── Estilos Generales ─────────────────────────────────────────────────────
+.text-slate-400 { color: $slate-400; }
+.text-slate-500 { color: $slate-500; }
+.text-slate-600 { color: $slate-600; }
+.text-slate-700 { color: $slate-700; }
+.text-slate-800 { color: $slate-800; }
+.text-slate-900 { color: $slate-900; }
+.text-emerald { color: $emerald; }
+.fw-600 { font-weight: 600; }
+.tracking-wider { letter-spacing: 0.05em; }
+
+// ─── Hero Dashboard ────────────────────────────────────────────────────────
+.dashboard-hero {
+  background: white;
+  border: 1px solid $slate-200;
+  text-align: center;
+  z-index: 1;
+  
+  .greeting-badge {
+    background: $primary-light;
+    color: $primary;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba($primary, 0.1);
+  }
+
+  .hero-decorative-circle-1 {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba($primary, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-decorative-circle-2 {
+    position: absolute;
+    bottom: -80px;
+    left: -20px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba($violet, 0.04) 0%, transparent 70%);
+    border-radius: 50%;
+  }
 }
 
-/* Forzar altura fija en carrusel para evitar saltos */
+// ─── Tarjeta de Acceso ────────────────────────────────────────────────────
+.access-card {
+  position: relative;
+  background: white;
+  border: 1px solid $slate-200 !important;
+  transition: $transition;
+
+  .access-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    background: $primary-light;
+    color: $primary;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .access-card-glow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba($primary, 0.02) 100%);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06) !important;
+    border-color: rgba($primary, 0.3) !important;
+  }
+}
+
+// ─── Tarjetas de Estadísticas ─────────────────────────────────────────────
+.stat-card {
+  background: white;
+  border: 1px solid $slate-200 !important;
+  transition: $transition;
+
+  .stat-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &.blue { background: $primary-light; color: $primary; }
+    &.emerald { background: $emerald-light; color: $emerald; }
+    &.violet { background: $violet-light; color: $violet; }
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06) !important;
+  }
+}
+
+// ─── Indicador de Estado ──────────────────────────────────────────────────
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: relative;
+  
+  &.online {
+    background: $emerald;
+    box-shadow: 0 0 0 4px rgba($emerald, 0.15);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: $emerald;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+// ─── Estilos Existentes (Carrusel) ────────────────────────────────────────
 .carousel-img-fit {
   height: 500px;
   object-fit: cover;
   object-position: center;
 }
 
-/* Botón flotante */
 .upload-btn {
   width: 60px;
   height: 60px;
   transition: transform 0.2s;
-  
-  &:hover {
-    transform: scale(1.1);
-  }
+  &:hover { transform: scale(1.1); }
 }
 
-.z-index-floating {
-  z-index: 100; /* Encima del carrusel */
-}
-
-/* Efectos en tarjetas */
 .transition-btn {
   transition: all 0.3s ease;
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-  }
+  &:hover:not(:disabled) { transform: translateY(-2px); }
 }
