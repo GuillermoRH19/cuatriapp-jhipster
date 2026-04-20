@@ -37,10 +37,10 @@ export class SseNotificationService {
       this.zone.run(() => {
         const affectedPerfilId = parseInt(event.data, 10);
         this.accountService.identity().subscribe(account => {
-          if (account && account.perfil && account.perfil.id === affectedPerfilId) {
+          if (account && account.perfilId === affectedPerfilId) {
             // eslint-disable-next-line no-console
             console.log('Permisos actualizados por el admin. Recargando perfil.');
-            this.permissionService.loadPermissions(account.perfil.id);
+            this.permissionService.loadPermissions(account.perfilId);
             // Pequeño retardo para asegurar que la re-carga finaliza antes de recargar la GUI sutilmente
             setTimeout(() => {
               window.location.reload();
