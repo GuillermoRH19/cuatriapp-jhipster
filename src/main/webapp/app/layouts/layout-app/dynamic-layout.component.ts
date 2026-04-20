@@ -8,6 +8,7 @@ import { Menu } from '@app/shared/models/menu.model';
 import { AccountService } from '@app/core/auth/account.service';
 import { AuthServerProvider } from '@app/core/auth/auth-jwt.service';
 import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
+import { PermissionService } from 'app/core/auth/permission.service';
 import SharedModule from 'app/shared/shared.module';
 
 export interface Breadcrumb {
@@ -40,6 +41,7 @@ const ROUTE_LABELS: Record<string, string> = {
   styleUrls: ['./dynamic-layout.component.scss'],
 })
 export class DynamicLayoutComponent implements OnInit, OnDestroy {
+  public readonly permissionService = inject(PermissionService);
   private readonly menuService = inject(MenuService);
   private readonly accountService = inject(AccountService);
   private readonly authServerProvider = inject(AuthServerProvider);

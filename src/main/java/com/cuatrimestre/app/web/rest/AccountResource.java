@@ -2,8 +2,12 @@ package com.cuatrimestre.app.web.rest;
 
 import com.cuatrimestre.app.domain.Authority;
 import com.cuatrimestre.app.domain.User;
+import com.cuatrimestre.app.domain.Menu;
+import com.cuatrimestre.app.domain.Modulo;
 import com.cuatrimestre.app.repository.UserRepository;
 import com.cuatrimestre.app.repository.AuthorityRepository;
+import com.cuatrimestre.app.repository.MenuRepository;
+import com.cuatrimestre.app.repository.ModuloRepository;
 import com.cuatrimestre.app.security.AuthoritiesConstants;
 import com.cuatrimestre.app.security.SecurityUtils;
 import com.cuatrimestre.app.service.MailService;
@@ -40,19 +44,25 @@ public class AccountResource {
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
+    private final MenuRepository menuRepository;
+    private final ModuloRepository moduloRepository;
 
     public AccountResource(
         UserRepository userRepository, 
         UserService userService, 
         MailService mailService,
         PasswordEncoder passwordEncoder,
-        AuthorityRepository authorityRepository
+        AuthorityRepository authorityRepository,
+        MenuRepository menuRepository,
+        ModuloRepository moduloRepository
     ) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.menuRepository = menuRepository;
+        this.moduloRepository = moduloRepository;
     }
 
     @PostMapping("/register")
@@ -131,17 +141,31 @@ public class AccountResource {
     // ==========================================
     //  MÉTODO PARA INSERTAR DATOS (BOTÓN)
     // ==========================================
-    @PostMapping("/insertar-datos-prueba") // <--- ESTA ES LA RUTA QUE USAREMOS
+    @PostMapping("/insertar-datos-prueba")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
     public void insertarDatosPrueba() {
-        // Generamos un identificador aleatorio
+        // 1. Asegurar Menú de Administración
+        Menu adminMenu = menuRepository.findByNombreMenu("Administración")
+            .orElseGet(() -> {
+                Menu m = new Menu();
+                m.setNombreMenu("Administración");
+                return menuRepository.save(m);
+            });
+
+        // 2. Registrar Módulos Administrativos
+        registrarModuloSiFalta("Usuarios y Roles", "/dashboard/admin/user-management", adminMenu);
+        registrarModuloSiFalta("Perfiles", "/dashboard/admin/perfil", adminMenu);
+        registrarModuloSiFalta("Módulos", "/dashboard/admin/modulo", adminMenu);
+        registrarModuloSiFalta("Permisos Perfil", "/dashboard/admin/permisos-perfil", adminMenu);
+
+        // 3. Generar usuario de prueba aleatorio
         String randomId = UUID.randomUUID().toString().substring(0, 8);
         String login = "user_" + randomId;
 
         User nuevoUsuario = new User();
         nuevoUsuario.setLogin(login);
-        nuevoUsuario.setPassword(passwordEncoder.encode("1234")); // Contraseña fija
+        nuevoUsuario.setPassword(passwordEncoder.encode("1234"));
         nuevoUsuario.setFirstName("Usuario");
         nuevoUsuario.setLastName("Prueba " + randomId);
         nuevoUsuario.setEmail(login + "@test.com");
@@ -149,14 +173,26 @@ public class AccountResource {
         nuevoUsuario.setLangKey("es");
         nuevoUsuario.setCreatedBy("system");
 
-        // Asignar rol
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         nuevoUsuario.setAuthorities(authorities);
 
-        // Guardar en SQL
         userRepository.save(nuevoUsuario);
         
-        LOG.info("✅ Insertado usuario de prueba: " + login);
+        LOG.info("✅ Insertado usuario de prueba y módulos administrativos verificados.");
+    }
+
+    private void registrarModuloSiFalta(String nombre, String ruta, Menu menu) {
+        // Buscamos si ya existe por nombre e idMenu
+        boolean existe = moduloRepository.findAll().stream()
+            .anyMatch(m -> m.getNombreModulo().equals(nombre) && m.getRuta().equals(ruta));
+        
+        if (!existe) {
+            Modulo m = new Modulo();
+            m.setNombreModulo(nombre);
+            m.setRuta(ruta);
+            m.setMenu(menu);
+            moduloRepository.save(m);
+        }
     }
 }

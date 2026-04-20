@@ -5,6 +5,7 @@ import { IPerfil } from '../perfil/perfil.model';
 import { PerfilService } from '../perfil/perfil.service';
 import { IPermisoModulo } from './permisos-perfil.model';
 import { PermisosPerfilService } from './permisos-perfil.service';
+import { AccountService } from 'app/core/auth/account.service';
 
 @Component({
   selector: 'jhi-permisos-perfil',
@@ -21,6 +22,7 @@ export class PermisosPerfilComponent implements OnInit {
 
   private readonly perfilService = inject(PerfilService);
   private readonly permisosService = inject(PermisosPerfilService);
+  private readonly accountService = inject(AccountService);
 
   ngOnInit(): void {
     this.perfilService.getAll().subscribe(p => this.perfiles.set(p));
@@ -34,7 +36,18 @@ export class PermisosPerfilComponent implements OnInit {
     this.isLoading = true;
     this.permisosService.getViewByPerfil(this.selectedPerfilId).subscribe({
       next: data => {
-        this.permisos.set(data);
+        const isUserAdmin = this.accountService.hasAnyAuthority('ROLE_ADMIN');
+        // Solo mostramos módulos de admin si el usuario que está gestionando es admin
+        const filteredData = isUserAdmin 
+          ? data 
+          : data.filter(p => 
+              !p.strNombreModulo.toLowerCase().includes('usuarios') && 
+              !p.strNombreModulo.toLowerCase().includes('perfil') &&
+              !p.strNombreModulo.toLowerCase().includes('módulo') &&
+              !p.strNombreModulo.toLowerCase().includes('permiso')
+            );
+        
+        this.permisos.set(filteredData);
         this.isLoading = false;
         this.savedOk = false;
       },
