@@ -1,108 +1,138 @@
-@if (account !== null) {
-<!-- Hero Section Premium -->
-<div class="dashboard-hero p-5 mb-4 rounded-4 shadow-sm border-0 position-relative overflow-hidden">
-  <div class="hero-content position-relative" style="z-index: 2;">
-    <div class="d-flex align-items-center justify-content-center mb-3">
-      <div class="greeting-badge px-3 py-1 rounded-pill small fw-bold mb-2">
-        <fa-icon [icon]="getGreeting() === 'Buenos días' ? 'sun' : 'moon'" class="me-1"></fa-icon>
-        {{ getGreeting() }}
+<div class="premium-landing-wrapper">
+
+  @if (account) {
+    <!-- Vista cuando ya está logueado (Dashboard) -->
+    <div class="dashboard-greeting-container p-5 text-center">
+      <div class="premium-card d-inline-block p-5">
+        <h1 class="display-4 fw-bold text-slate-900 mb-3">
+          {{ getGreeting() }}, {{ getDisplayName() }}!
+        </h1>
+        <p class="lead text-slate-500 mb-4">Bienvenido de nuevo al panel administrativo.</p>
+        <button class="btn btn-primary-premium btn-lg px-5" routerLink="/dashboard/inicio">
+          Ir al Panel de Control
+        </button>
       </div>
     </div>
-    <h1 class="display-5 fw-bold text-slate-900 mb-2">¡Bienvenido al Sistema!</h1>
-    <p class="fs-4 text-slate-600 mb-0">Hola de nuevo, <span class="text-primary fw-600">{{ getDisplayName() }}</span>
-    </p>
-  </div>
-  <!-- Decoración de fondo -->
-  <div class="hero-decorative-circle-1"></div>
-  <div class="hero-decorative-circle-2"></div>
+  } @else {
+    <!-- Vista de Landing con Login y Registro -->
+    <div class="row g-0 min-vh-100">
+      
+      <!-- Lado del Carrusel (Hero) -->
+      <div class="col-lg-7 d-none d-lg-block position-relative">
+        <div class="hero-overlay-dark"></div>
+        
+        <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="false" [showNavigationIndicators]="true" class="h-100">
+          @for (img of images(); track img.src) {
+            <ng-template ngbSlide>
+              <div class="carousel-img-wrapper h-100">
+                <img [src]="img.src" [alt]="img.title" class="d-block w-100 h-100 object-fit-cover" />
+                <div class="carousel-caption-premium">
+                  <h2 class="display-5 fw-bold mb-2">{{ img.title }}</h2>
+                  <p class="fs-5 opacity-90">{{ img.desc }}</p>
+                </div>
+              </div>
+            </ng-template>
+          }
+        </ngb-carousel>
+
+        <!-- Branding flotante -->
+        <div class="hero-brand-float">
+          <div class="logo-box">
+             <fa-icon icon="tachometer-alt"></fa-icon>
+          </div>
+          <span class="fs-3 fw-bold ms-3">CuatriApp</span>
+        </div>
+      </div>
+
+      <!-- Lado del Formulario -->
+      <div class="col-lg-5 bg-slate-50 d-flex flex-column justify-content-center p-4 p-md-5 overflow-auto">
+        
+        <div class="login-container-mx mx-auto">
+          
+          <div class="premium-card mb-4">
+            <div class="text-center mb-4">
+              <h2 class="fw-bold text-slate-900">Bienvenido</h2>
+              <p class="text-slate-500">Ingresa tus credenciales para acceder</p>
+            </div>
+
+            @if (authenticationError) {
+              <div class="alert-premium-error mb-4">
+                <fa-icon icon="exclamation-circle" class="me-2"></fa-icon>
+                Usuario o contraseña incorrectos.
+              </div>
+            }
+
+            <form [formGroup]="loginForm" (ngSubmit)="login()">
+              <div class="mb-3">
+                <label class="form-label" for="username">Usuario</label>
+                <div class="premium-input-group">
+                  <fa-icon icon="user" class="input-icon"></fa-icon>
+                  <input type="text" id="username" formControlName="username" class="form-control" placeholder="Tu usuario" />
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label" for="password">Contraseña</label>
+                <div class="premium-input-group">
+                  <fa-icon icon="key" class="input-icon"></fa-icon>
+                  <input type="password" id="password" formControlName="password" class="form-control" placeholder="••••••••" />
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe">
+                  <label class="form-check-label text-slate-600 small" for="rememberMe">Recordarme</label>
+                </div>
+              </div>
+
+              <!-- hCaptcha Section -->
+              @if (!captchaFallo) {
+                <div class="d-flex justify-content-center mb-4 transform-scale-90">
+                  <ng-hcaptcha [siteKey]="siteKey" (verify)="onCaptchaVerify()" (expired)="onCaptchaExpired()" (error)="onCaptchaError()">
+                  </ng-hcaptcha>
+                </div>
+              }
+
+              <button type="submit" class="btn btn-primary-premium w-100" [disabled]="loginForm.invalid || ( !captchaResuelto && !captchaFallo ) || isLoadingFetch">
+                @if (isLoadingFetch) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  <span>Cargando...</span>
+                } @else {
+                  <span>Entrar al Sistema</span>
+                }
+              </button>
+            </form>
+          </div>
+
+          <!-- Registro Público -->
+          <div class="premium-card">
+            <jhi-registro-publico></jhi-registro-publico>
+          </div>
+
+        </div>
+      </div>
+      
+    </div>
+  }
+
 </div>
 
-<div class="container-fluid px-0 mb-5">
-  <div class="row g-4 align-items-stretch mb-5">
-    <!-- Sección de Resumen -->
-    <div class="col-lg-8">
-      <div class="h-100 d-flex flex-direction-column justify-content-center">
-        <h2 class="fw-bold text-slate-800 mb-3">Tu panel principal</h2>
-        <p class="lead text-slate-500 mb-0">Esta es la actividad reciente y el estado actual de tus servicios
-          empresariales.</p>
-      </div>
+<!-- Modal de Información -->
+<ng-template #infoModal let-modal>
+  <div class="modal-premium" [class.success]="modalType === 'success'" [class.error]="modalType === 'error'">
+    <div class="modal-header border-0 pb-0">
+      <h4 class="modal-title fw-bold">
+        <fa-icon [icon]="modalType === 'success' ? 'check-circle' : 'exclamation-triangle'" class="me-2"></fa-icon>
+        {{ modalTitle }}
+      </h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
-
-    <!-- Tarjeta de Nivel de Acceso Premium -->
-    <div class="col-lg-4">
-      <div class="card access-card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
-        <div class="card-body p-4 d-flex align-items-center">
-          <div class="access-icon-wrapper me-3">
-            <fa-icon icon="shield-alt" size="2x"></fa-icon>
-          </div>
-          <div>
-            <p class="text-uppercase small fw-bold text-slate-400 mb-0 tracking-wider">Nivel de Acceso</p>
-            <h3 class="fw-bold text-slate-800 mb-0">
-              {{ account.authorities.includes('ROLE_ADMIN') ? 'Administrador' : 'Usuario' }}
-            </h3>
-          </div>
-        </div>
-        <div class="access-card-glow"></div>
-      </div>
+    <div class="modal-body py-4">
+      <p class="fs-5 text-slate-600">{{ modalMessage }}</p>
+    </div>
+    <div class="modal-footer border-0">
+      <button type="button" class="btn btn-slate-200" (click)="modal.close()">Cerrar</button>
     </div>
   </div>
-
-  <!-- Grid de Funcionalidades -->
-  <div class="row g-4">
-    <div class="col-md-4">
-      <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
-        <div class="card-body p-4">
-          <div class="stat-icon-box blue mb-4">
-            <fa-icon icon="chart-line" size="lg"></fa-icon>
-          </div>
-          <h4 class="fw-bold text-slate-800">Estadísticas</h4>
-          <div class="d-flex align-items-baseline mb-2">
-            <span class="fs-3 fw-bold text-primary">+24%</span>
-            <span class="text-success small ms-2"><fa-icon icon="arrow-up"></fa-icon> Crecimiento</span>
-          </div>
-          <p class="text-slate-500 small mb-0">Rendimiento optimizado este mes.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
-        <div class="card-body p-4">
-          <div class="stat-icon-box emerald mb-4">
-            <fa-icon icon="user-tie" size="lg"></fa-icon>
-          </div>
-          <h4 class="fw-bold text-slate-800">Candidatos</h4>
-          <div class="d-flex align-items-baseline mb-2">
-            <span class="fs-3 fw-bold text-emerald">42</span>
-            <span class="text-emerald small ms-2">Activos</span>
-          </div>
-          <p class="text-slate-500 small mb-0">Nuevos registros procesados.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
-        <div class="card-body p-4">
-          <div class="stat-icon-box violet mb-4">
-            <fa-icon icon="server" size="lg"></fa-icon>
-          </div>
-          <h4 class="fw-bold text-slate-800">Sistema</h4>
-          <div class="d-flex align-items-center mb-2">
-            <span class="status-indicator online"></span>
-            <span class="fs-5 fw-bold text-slate-700 ms-2">Óptimo</span>
-          </div>
-          <p class="text-slate-500 small mb-0">Todos los servicios en línea.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-}
-
-@if (account === null) {
-  <div class="redirecting-container d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
-    <div class="spinner-border text-primary mb-3" role="status"></div>
-    <p class="text-slate-500">Redirigiendo al inicio de sesión...</p>
-  </div>
-}
+</ng-template>

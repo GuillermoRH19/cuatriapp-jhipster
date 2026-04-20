@@ -1,172 +1,188 @@
-// ─── Variables de Diseño ──────────────────────────────────────────────────
+$primary: #4f46e5;
+$primary-dark: #3730a3;
 $slate-50: #f8fafc;
 $slate-100: #f1f5f9;
 $slate-200: #e2e8f0;
+$slate-300: #cbd5e1;
 $slate-400: #94a3b8;
 $slate-500: #64748b;
 $slate-600: #475569;
 $slate-700: #334155;
 $slate-800: #1e293b;
 $slate-900: #0f172a;
-
-$primary: #4f46e5;
-$primary-light: #eef2ff;
-$emerald: #10b981;
-$emerald-light: #ecfdf5;
-$violet: #8b5cf6;
-$violet-light: #f5f3ff;
-
 $transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-// ─── Estilos Generales ─────────────────────────────────────────────────────
-.text-slate-400 { color: $slate-400; }
-.text-slate-500 { color: $slate-500; }
-.text-slate-600 { color: $slate-600; }
-.text-slate-700 { color: $slate-700; }
-.text-slate-800 { color: $slate-800; }
-.text-slate-900 { color: $slate-900; }
-.text-emerald { color: $emerald; }
-.fw-600 { font-weight: 600; }
-.tracking-wider { letter-spacing: 0.05em; }
+.premium-landing-wrapper {
+  overflow-x: hidden;
+}
 
-// ─── Hero Dashboard ────────────────────────────────────────────────────────
-.dashboard-hero {
+// ─── LADO IZQUIERDO (HERO) ───────────────────────────────────────────────
+.hero-overlay-dark {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba($slate-900, 0.8), rgba($primary-dark, 0.4));
+  z-index: 10;
+}
+
+.carousel-img-wrapper {
+  position: relative;
+  
+  img {
+    filter: brightness(0.8);
+  }
+}
+
+.carousel-caption-premium {
+  position: absolute;
+  bottom: 15%;
+  left: 10%;
+  right: 10%;
+  z-index: 20;
+  color: white;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.hero-brand-float {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  color: white;
+  
+  .logo-box {
+    width: 60px;
+    height: 60px;
+    background: white;
+    color: $primary;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+}
+
+// ─── LADO DERECHO (FORMULARIO) ───────────────────────────────────────────
+.bg-slate-50 {
+  background-color: $slate-50;
+}
+
+.login-container-mx {
+  width: 100%;
+  max-width: 440px;
+}
+
+.premium-card {
   background: white;
+  border-radius: 24px;
+  padding: 35px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border: 1px solid $slate-200;
-  text-align: center;
-  z-index: 1;
+  transition: all $transition;
   
-  .greeting-badge {
-    background: $primary-light;
-    color: $primary;
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid rgba($primary, 0.1);
-  }
-
-  .hero-decorative-circle-1 {
-    position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba($primary, 0.05) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-
-  .hero-decorative-circle-2 {
-    position: absolute;
-    bottom: -80px;
-    left: -20px;
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba($violet, 0.04) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-}
-
-// ─── Tarjeta de Acceso ────────────────────────────────────────────────────
-.access-card {
-  position: relative;
-  background: white;
-  border: 1px solid $slate-200 !important;
-  transition: $transition;
-
-  .access-icon-wrapper {
-    width: 56px;
-    height: 56px;
-    background: $primary-light;
-    color: $primary;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .access-card-glow {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100%;
-    background: linear-gradient(90deg, transparent 0%, rgba($primary, 0.02) 100%);
-    pointer-events: none;
-  }
-
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06) !important;
-    border-color: rgba($primary, 0.3) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 }
 
-// ─── Tarjetas de Estadísticas ─────────────────────────────────────────────
-.stat-card {
-  background: white;
-  border: 1px solid $slate-200 !important;
-  transition: $transition;
+.form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: $slate-700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
 
-  .stat-icon-box {
-    width: 48px;
-    height: 48px;
+.premium-input-group {
+  position: relative;
+  
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $slate-400;
+  }
+  
+  .form-control {
+    padding-left: 48px;
+    height: 52px;
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 1px solid $slate-200;
+    transition: all 0.2s;
     
-    &.blue { background: $primary-light; color: $primary; }
-    &.emerald { background: $emerald-light; color: $emerald; }
-    &.violet { background: $violet-light; color: $violet; }
-  }
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06) !important;
-  }
-}
-
-// ─── Indicador de Estado ──────────────────────────────────────────────────
-.status-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  position: relative;
-  
-  &.online {
-    background: $emerald;
-    box-shadow: 0 0 0 4px rgba($emerald, 0.15);
-    
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: $emerald;
-      animation: pulse 2s infinite;
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba($primary, 0.1);
     }
   }
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(2.5); opacity: 0; }
+.btn-primary-premium {
+  background: linear-gradient(135deg, $primary, $primary-dark);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  height: 54px;
+  font-weight: 600;
+  box-shadow: 0 10px 15px -3px rgba($primary, 0.3);
+  transition: all $transition;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba($primary, 0.4);
+  }
+  
+  &:active { transform: translateY(0); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
-// ─── Estilos Existentes (Carrusel) ────────────────────────────────────────
-.carousel-img-fit {
-  height: 500px;
-  object-fit: cover;
-  object-position: center;
+.alert-premium-error {
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
 }
 
-.upload-btn {
-  width: 60px;
-  height: 60px;
-  transition: transform 0.2s;
-  &:hover { transform: scale(1.1); }
+.transform-scale-90 {
+  transform: scale(0.9);
 }
 
-.transition-btn {
-  transition: all 0.3s ease;
-  &:hover:not(:disabled) { transform: translateY(-2px); }
+// ─── MODALES ─────────────────────────────────────────────────────────────
+.modal-premium {
+  &.success .modal-title { color: #10b981; }
+  &.error .modal-title { color: #ef4444; }
+  
+  .btn-slate-200 {
+    background: $slate-100;
+    color: $slate-700;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    
+    &:hover { background: $slate-200; }
+  }
+}
+
+// Interacción con RegistroPublicoComponent (especial)
+:host ::ng-deep {
+  jhi-registro-publico {
+    .card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+    .card-body { padding: 0 !important; }
+    .card-title { font-size: 1.5rem !important; font-weight: 700 !important; color: $slate-900; }
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      border: none !important;
+      border-radius: 12px !important;
+      height: 52px !important;
+      font-weight: 600 !important;
+    }
+  }
 }

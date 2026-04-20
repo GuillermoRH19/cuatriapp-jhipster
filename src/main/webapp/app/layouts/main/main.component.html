@@ -1,5 +1,4 @@
-
-@if (router.url !== '/login') {
+@if (account() && router.url !== '/login') {
   <div>
     <router-outlet name="navbar" />
   </div>
@@ -7,21 +6,14 @@
 
 <div class="container-fluid p-0">
   @if (!isHeroRoute()) {
-    <div class="px-4 pt-3">
-      <jhi-breadcrumb />
-    </div>
-    <div class="px-4 pb-4">
-      <div class="card jh-card shadow-sm border-0 rounded-4">
-        <router-outlet />
-      </div>
-    </div>
-  } @else {
-    <router-outlet />
+    <jhi-page-ribbon />
   }
 
+  <div>
+    <router-outlet />
+  </div>
+
   @if (!isHeroRoute()) {
-    <div class="px-4">
-      <jhi-footer />
-    </div>
+    <jhi-footer />
   }
 </div>

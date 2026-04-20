@@ -10,13 +10,14 @@ import SharedModule from 'app/shared/shared.module';
 import { ImageService } from './image.service';
 import { NgHcaptchaModule, CAPTCHA_CONFIG } from 'ng-hcaptcha';
 import { NgbCarouselModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RegistroPublicoComponent } from 'app/login/registro-publico/registro-publico.component';
 
 @Component({
   standalone: true,
   selector: 'jhi-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
-  imports: [SharedModule, RouterModule, NgHcaptchaModule, NgbCarouselModule, ReactiveFormsModule],
+  imports: [SharedModule, RouterModule, NgHcaptchaModule, NgbCarouselModule, ReactiveFormsModule, RegistroPublicoComponent],
   providers: [
     {
       provide: CAPTCHA_CONFIG,
@@ -72,11 +73,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => {
         this.account = account;
-        if (account === null) {
-          this.router.navigate(['/login'], { replaceUrl: true });
-        } else {
-          this.router.navigate(['/dashboard/inicio'], { replaceUrl: true });
-        }
       });
 
     this.cargarImagenesBackend();
@@ -94,8 +90,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
     });
   }
-
-  // --- MÉTODOS PÚBLICOS (Deben ir antes de los privados) ---
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -135,8 +129,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onCaptchaError(): void {
-    // Si hCaptcha no puede cargar (red, dominio no registrado, etc.)
-    // dejamos pasar al usuario — la seguridad real está en el backend.
     this.captchaFallo = true;
     this.captchaResuelto = true;
   }
@@ -210,8 +202,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  // --- MÉTODOS PRIVADOS ---
-
   private mostrarModal(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
     this.modalTitle = titulo;
     this.modalMessage = mensaje;
@@ -219,7 +209,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.modalService.open(this.infoModal, { centered: true });
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

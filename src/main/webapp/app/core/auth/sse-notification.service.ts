@@ -32,7 +32,7 @@ export class SseNotificationService {
         // eslint-disable-next-line no-console
         console.warn('Usuario eliminado por el admin. Cerrando sesión.');
         this.loginService.logout();
-        this.router.navigate(['/login']);
+        // Ya no navegamos forzadamente; el cambio de estado de cuenta ocultará las barras
       });
     });
 
@@ -41,7 +41,7 @@ export class SseNotificationService {
         // eslint-disable-next-line no-console
         console.warn('Usuario desactivado por el admin. Cerrando sesión.');
         this.loginService.logout();
-        this.router.navigate(['/login']);
+        // Ya no navegamos forzadamente; el cambio de estado de cuenta ocultará las barras
       });
     });
 
@@ -53,7 +53,6 @@ export class SseNotificationService {
             // eslint-disable-next-line no-console
             console.log('Permisos actualizados por el admin. Recargando perfil.');
             this.permissionService.loadPermissions(account.perfilId);
-            // Pequeño retardo para asegurar que la re-carga finaliza antes de recargar la GUI sutilmente
             setTimeout(() => {
               window.location.reload();
             }, 500);
