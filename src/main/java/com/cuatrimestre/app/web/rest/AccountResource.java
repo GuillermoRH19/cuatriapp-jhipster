@@ -88,12 +88,20 @@ public class AccountResource {
 
     @PostMapping("/account")
     public void saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
-        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        if (existingUser.isPresent() && (!existingUser.orElseThrow().getLogin().equalsIgnoreCase(userLogin))) throw new EmailAlreadyUsedException();
-        Optional<User> user = userRepository.findOneByLogin(userLogin);
-        if (!user.isPresent()) throw new AccountResourceException("User could not be found");
-        userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getLangKey(), userDTO.getImageUrl());
+        try {
+            String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"));
+            Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+            if (existingUser.isPresent() && (!existingUser.orElseThrow().getLogin().equalsIgnoreCase(userLogin))) throw new EmailAlreadyUsedException();
+            
+            LOG.debug("💾 Intentando guardar cuenta para: {}. URL de imagen presente: {}", userLogin, userDTO.getImageUrl() != null);
+            
+            userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getLangKey(), userDTO.getImageUrl());
+            
+            LOG.info("✅ Cuenta actualizada con éxito para: {}", userLogin);
+        } catch (Exception e) {
+            LOG.error("❌ Error al guardar /api/account: " + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @PostMapping(path = "/account/change-password")

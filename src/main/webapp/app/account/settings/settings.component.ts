@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import SharedModule from 'app/shared/shared.module';
@@ -37,6 +38,7 @@ export default class SettingsComponent implements OnInit {
   });
 
   private readonly accountService = inject(AccountService);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.accountService.identity().subscribe({
@@ -66,7 +68,15 @@ export default class SettingsComponent implements OnInit {
     this.accountService.save(account).subscribe({
       next: () => {
         this.success.set(true);
-        this.accountService.authenticate(account);
+        
+        // Forzar al servicio de cuenta a recargar la información real desde el servidor
+        // Esto refrescará la imagen en el Navbar y en todo el sistema
+        this.accountService.identity(true).subscribe(() => {
+          // Esperamos 1.5 segundos para que el usuario vea el mensaje de éxito antes de redirigir
+          setTimeout(() => {
+            this.router.navigate(['/dashboard/inicio']);
+          }, 1500);
+        });
       },
       error: (err) => {
         console.error('Error al guardar perfil:', err);
