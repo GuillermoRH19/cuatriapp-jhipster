@@ -16,7 +16,13 @@
 
     <!-- User card -->
     <div class="sidebar-user">
-      <div class="sidebar-avatar">{{ getUserInitials() }}</div>
+      <div class="sidebar-avatar-container">
+        @if (currentUser?.imageUrl) {
+          <img [src]="currentUser.imageUrl" class="sidebar-avatar-img" alt="Avatar">
+        } @else {
+          <div class="sidebar-avatar">{{ getUserInitials() }}</div>
+        }
+      </div>
       <div class="sidebar-user-info">
         <span class="sidebar-user-name">{{ currentUser?.login || 'Usuario' }}</span>
         <span class="sidebar-user-role">{{ isAdmin() ? 'Administrador' : 'Usuario' }}</span>
@@ -96,7 +102,13 @@
         <!-- Menú de usuario -->
         <div class="user-menu-wrapper">
           <button class="user-trigger" (click)="toggleUserMenu()">
-            <div class="topbar-avatar">{{ getUserInitials() }}</div>
+            <div class="topbar-avatar-container">
+              @if (currentUser?.imageUrl) {
+                <img [src]="currentUser.imageUrl" class="topbar-avatar-img" alt="Avatar">
+              } @else {
+                <div class="topbar-avatar">{{ getUserInitials() }}</div>
+              }
+            </div>
             <span class="user-trigger-name">{{ currentUser?.login || 'Usuario' }}</span>
             <fa-icon [icon]="showUserMenu ? 'chevron-down' : 'chevron-right'" class="user-trigger-caret"></fa-icon>
           </button>
@@ -104,7 +116,7 @@
           @if (showUserMenu) {
             <div class="user-dropdown">
               <div class="user-dropdown-header">
-                <strong>{{ currentUser?.firstName || currentUser?.login }}</strong>
+                <strong>{{ (currentUser?.firstName && currentUser?.lastName) ? (currentUser.firstName + ' ' + currentUser.lastName) : (currentUser?.firstName || currentUser?.login) }}</strong>
                 <span>{{ currentUser?.email }}</span>
               </div>
               <div class="user-dropdown-divider"></div>

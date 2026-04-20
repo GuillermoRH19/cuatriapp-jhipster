@@ -60,9 +60,11 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((menus: Menu[]) => (this.menuItems = menus));
 
-    this.accountService.identity().subscribe((user: any) => {
-      this.currentUser = user;
-    });
+    this.accountService.getAuthenticationState()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user: any) => {
+        this.currentUser = user;
+      });
 
     this.router.events
       .pipe(

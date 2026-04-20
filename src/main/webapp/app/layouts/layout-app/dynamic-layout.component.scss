@@ -99,6 +99,15 @@ $transition: 0.22s ease;
   font-size: 14px;
   color: #fff;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar-avatar-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .sidebar-user-info {
@@ -344,6 +353,15 @@ $transition: 0.22s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.topbar-avatar-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .user-trigger-name {
