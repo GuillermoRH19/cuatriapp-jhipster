@@ -10,8 +10,8 @@
         <fa-icon icon="search" class="search-icon"></fa-icon>
         <input
           type="text"
-          [(ngModel)]="searchTerm"
-          (keyup.enter)="onSearch()"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)"
           placeholder="Buscar por nombre o email..."
           class="search-input"
         />

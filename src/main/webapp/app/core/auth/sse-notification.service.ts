@@ -33,6 +33,14 @@ export class SseNotificationService {
       });
     });
 
+    this.eventSource.addEventListener('USER_DEACTIVATED', (event: any) => {
+      this.zone.run(() => {
+        // eslint-disable-next-line no-console
+        console.warn('Usuario desactivado por el admin. Cerrando sesión.');
+        this.loginService.logout();
+      });
+    });
+
     this.eventSource.addEventListener('PERMISSIONS_UPDATED', (event: any) => {
       this.zone.run(() => {
         const affectedPerfilId = parseInt(event.data, 10);

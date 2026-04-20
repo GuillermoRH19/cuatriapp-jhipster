@@ -1,155 +1,171 @@
-/* 1. CONTENEDOR DE LA PÁGINA */
+$primary: #4f46e5;
+$primary-hover: #4338ca;
+$slate-50: #f8fafc;
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-300: #cbd5e1;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-700: #334155;
+$slate-800: #1e293b;
+$slate-900: #0f172a;
+$rose: #f43f5e;
+$emerald: #10b981;
+$transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
 :host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 20px;
+  background: radial-gradient(circle at top left, rgba($primary, 0.05), transparent),
+              radial-gradient(circle at bottom right, rgba($primary, 0.05), transparent),
+              $slate-50;
+  padding: 40px 20px;
 }
 
-/* 2. TARJETA DE LOGIN */
-.login-container {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 450px;
-}
-
-/* 3. MODAL BACKDROP (FONDO OSCURO) */
-.modal-backdrop-custom {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* 4. MODAL CONTENT (TARJETA BLANCA FLOTANTE) */
-.modal-content-custom {
-  background: white;
-  padding: 40px;
-  border-radius: 20px;
-  text-align: center;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popUp {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* 5. ANIMACIÓN DEL CHECK (CÍRCULO VERDE) */
-.success-checkmark {
-  width: 80px;
-  height: 115px;
+.login-page-wrapper {
+  max-width: 1100px;
   margin: 0 auto;
-  
-  .check-icon {
-    width: 80px;
-    height: 80px;
-    position: relative;
-    border-radius: 50%;
-    box-sizing: content-box;
-    border: 4px solid #4CAF50;
-    
-    &::before {
-      top: 3px;
-      left: -2px;
-      width: 30px;
-      transform-origin: 100% 50%;
-      border-radius: 100px 0 0 100px;
-    }
-    
-    &::after {
-      top: 0;
-      left: 30px;
-      width: 60px;
-      transform-origin: 0 50%;
-      border-radius: 0 100px 100px 0;
-      animation: rotate-circle 4.25s ease-in;
-    }
-    
-    &::before, &::after {
-      content: '';
-      height: 100px;
-      position: absolute;
-      background: #FFFFFF; /* Debe coincidir con el fondo del modal */
-      transform: rotate(-45deg);
-    }
-    
-    .icon-line {
-      height: 5px;
-      background-color: #4CAF50;
-      display: block;
-      border-radius: 2px;
-      position: absolute;
-      z-index: 10;
-      
-      &.line-tip {
-        top: 46px;
-        left: 14px;
-        width: 25px;
-        transform: rotate(45deg);
-        animation: icon-line-tip 0.75s;
-      }
-      
-      &.line-long {
-        top: 38px;
-        right: 8px;
-        width: 47px;
-        transform: rotate(-45deg);
-        animation: icon-line-long 0.75s;
-      }
-    }
-    
-    .icon-circle {
-      top: -4px;
-      left: -4px;
-      z-index: 10;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      position: absolute;
-      box-sizing: content-box;
-      border: 4px solid rgba(76, 175, 80, .5);
-    }
-    
-    .icon-fix {
-      top: 8px;
-      width: 5px;
-      height: 85px;
-      position: absolute;
-      left: 28px;
-      transform: rotate(-45deg);
-      z-index: 1;
-      background-color: #FFFFFF;
-    }
+}
+
+.premium-card {
+  background: white;
+  border: 1px solid $slate-200;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  transition: transform $transition;
+
+  &:hover {
+    transform: translateY(-4px);
   }
 }
 
-@keyframes icon-line-tip {
-  0% { width: 0; left: 1px; top: 19px; }
-  54% { width: 0; left: 1px; top: 19px; }
-  70% { width: 50px; left: -8px; top: 37px; }
-  84% { width: 17px; left: 21px; top: 48px; }
-  100% { width: 25px; left: 14px; top: 46px; }
+.login-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: $slate-900;
+  margin-bottom: 8px;
 }
 
-@keyframes icon-line-long {
-  0% { width: 0; right: 46px; top: 54px; }
-  65% { width: 0; right: 46px; top: 54px; }
-  84% { width: 55px; right: 0px; top: 35px; }
-  100% { width: 47px; right: 8px; top: 38px; }
+.login-subtitle {
+  color: $slate-500;
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: $slate-700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  border: 1px solid $slate-200;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  transition: all $transition;
+  background: $slate-50;
+
+  &:focus {
+    background: white;
+    border-color: $primary;
+    box-shadow: 0 0 0 4px rgba($primary, 0.1);
+    outline: none;
+  }
+}
+
+.form-check-input {
+  cursor: pointer;
+  width: 1.2em;
+  height: 1.2em;
+  margin-top: 0.15em;
+  
+  &:checked {
+    background-color: $primary;
+    border-color: $primary;
+  }
+}
+
+.btn-primary-premium {
+  background: linear-gradient(135deg, $primary, $primary-hover);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-weight: 600;
+  color: white;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba($primary, 0.25);
+  transition: all $transition;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba($primary, 0.35);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.error-alert {
+  background: rgba($rose, 0.05);
+  border: 1px solid rgba($rose, 0.2);
+  color: $rose;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// ─── Estilos para el componente de registro (si se heredan o aplican) ────────
+:host ::ng-deep {
+  jhi-registro-publico {
+    .card {
+      @extend .premium-card;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    
+    .card-title {
+      @extend .login-title;
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, $emerald, #059669);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba($emerald, 0.2);
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba($emerald, 0.3);
+      }
+    }
+    
+    .form-control, .form-select {
+      @extend .form-control;
+    }
+    
+    .form-label {
+      @extend .form-label;
+    }
+  }
 }

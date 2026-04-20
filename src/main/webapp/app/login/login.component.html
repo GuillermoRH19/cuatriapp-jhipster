@@ -1,42 +1,59 @@
-<div class="container mt-5">
-  <div class="row align-items-start">
+<div class="login-page-wrapper">
+  <div class="row g-4 justify-content-center">
     
-    <div class="col-md-5 mb-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
-          
-          <div class="alert alert-danger" *ngIf="authenticationError">
-            <strong>¡Error!</strong> Usuario o contraseña incorrectos.
+    <!-- Lado de Inicia Sesión -->
+    <div class="col-lg-5">
+      <div class="premium-card">
+        <div class="text-center text-lg-start">
+          <h2 class="login-title">Bienvenido</h2>
+          <p class="login-subtitle">Ingresa tus credenciales para acceder al panel administrativo.</p>
+        </div>
+        
+        @if (authenticationError) {
+          <div class="error-alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span><strong>¡Error!</strong> Usuario o contraseña incorrectos.</span>
+          </div>
+        }
+
+        <form (ngSubmit)="login()" [formGroup]="loginForm" class="mt-4">
+          <div class="mb-4">
+            <label class="form-label" for="username">Usuario</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="username" formControlName="username" placeholder="Tu nombre de usuario" #username>
+            </div>
           </div>
 
-          <form (ngSubmit)="login()" [formGroup]="loginForm">
-            <div class="mb-3">
-              <label class="form-label" for="username">Usuario Administrador</label>
-              <input type="text" class="form-control" id="username" formControlName="username" placeholder="Ingrese su usuario" #username>
-            </div>
+          <div class="mb-4">
+            <label class="form-label" for="password">Contraseña</label>
+            <input type="password" class="form-control" id="password" formControlName="password" placeholder="••••••••">
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="password">Contraseña</label>
-              <input type="password" class="form-control" id="password" formControlName="password" placeholder="Ingrese su contraseña">
-            </div>
-
-            <div class="mb-3 form-check">
+          <div class="mb-4 d-flex justify-content-between align-items-center">
+            <div class="form-check">
               <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe">
-              <label class="form-check-label" for="rememberMe">Mantener sesión iniciada</label>
+              <label class="form-check-label ms-2 small text-slate-600" for="rememberMe">Recordarme</label>
             </div>
+            <!-- Si existiera recuperación de contraseña se pondría aquí -->
+          </div>
 
-            <button type="submit" class="btn btn-primary w-100 btn-lg" [disabled]="loginForm.invalid || isLoadingFetch">
-              <span *ngIf="isLoadingFetch" class="spinner-border spinner-border-sm me-2"></span>
-              {{ isLoadingFetch ? 'Verificando...' : 'Entrar' }}
-            </button>
-          </form>
-        </div>
+          <button type="submit" class="btn btn-primary-premium w-100 shadow-sm" [disabled]="loginForm.invalid || isLoadingFetch">
+            @if (isLoadingFetch) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              <span>Validando...</span>
+            } @else {
+              <span>Acceder al Sistema</span>
+            }
+          </button>
+        </form>
       </div>
     </div>
 
-    <div class="col-md-7">
-      <jhi-registro-publico></jhi-registro-publico>
+    <!-- Lado de Postulación (Registro Público) -->
+    <div class="col-lg-7">
+      <div class="premium-card h-100">
+        <jhi-registro-publico></jhi-registro-publico>
+      </div>
     </div>
 
   </div>

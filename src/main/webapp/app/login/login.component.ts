@@ -15,6 +15,7 @@ import { RegistroPublicoComponent } from './registro-publico/registro-publico.co
   // 👇 AGREGAMOS RegistroPublicoComponent AQUÍ
   imports: [CommonModule, ReactiveFormsModule, RouterModule, RegistroPublicoComponent],
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
 export default class LoginComponent implements OnInit, AfterViewInit {
   @ViewChild('username', { static: false }) username!: ElementRef;

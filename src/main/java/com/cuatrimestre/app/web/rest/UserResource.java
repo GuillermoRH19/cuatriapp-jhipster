@@ -117,7 +117,14 @@ public class UserResource {
         if (existingUser.isPresent() && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
+        Optional<User> userBeforeUpdate = userRepository.findById(userDTO.getId());
+        boolean wasActive = userBeforeUpdate.map(User::isActivated).orElse(false);
+
         Optional<AdminUserDTO> updatedUser = userService.updateUser(userDTO);
+
+        if (wasActive && !userDTO.isActivated()) {
+            sseNotificationService.notifyUserDeactivated(userDTO.getLogin());
+        }
 
         return ResponseUtil.wrapOrNotFound(
             updatedUser,

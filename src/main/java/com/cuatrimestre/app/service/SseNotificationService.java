@@ -42,6 +42,19 @@ public class SseNotificationService {
         }
     }
 
+    public void notifyUserDeactivated(String login) {
+        SseEmitter emitter = emitters.get(login);
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event().name("USER_DEACTIVATED").data("DEACTIVATED"));
+                log.debug("Notified user {} of deactivation", login);
+                emitter.complete();
+            } catch (IOException e) {
+                emitters.remove(login);
+            }
+        }
+    }
+
     public void notifyPermissionsUpdated(String login) {
         SseEmitter emitter = emitters.get(login);
         if (emitter != null) {

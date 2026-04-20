@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { combineLatest } from 'rxjs';
+import { Subject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import SharedModule from 'app/shared/shared.module';
@@ -30,6 +30,8 @@ export default class UserManagementComponent implements OnInit {
   page!: number;
   searchTerm = signal('');
   sortState = sortStateSignal({});
+  
+  private searchSubject = new Subject<string>();
 
   private readonly userService = inject(UserManagementService);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -39,6 +41,19 @@ export default class UserManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.handleNavigation();
+    this.setupSearch();
+  }
+
+  private setupSearch(): void {
+    this.searchSubject.pipe(debounceTime(400), distinctUntilChanged()).subscribe(value => {
+      this.searchTerm.set(value);
+      this.page = 1;
+      this.loadAll();
+    });
+  }
+
+  onSearchChange(value: string): void {
+    this.searchSubject.next(value);
   }
 
   onSearch(): void {
