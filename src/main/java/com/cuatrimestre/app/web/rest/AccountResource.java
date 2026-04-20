@@ -71,14 +71,19 @@ public class AccountResource {
 
     @GetMapping("/account")
     public AdminUserDTO getAccount() {
-        return userService.getUserWithAuthorities()
-            .map(user -> {
-                if (!user.isActivated()) {
-                    throw new AccountResourceException("User account is suspended");
-                }
-                return new AdminUserDTO(user);
-            })
-            .orElseThrow(() -> new AccountResourceException("User could not be found"));
+        try {
+            return userService.getUserWithAuthorities()
+                .map(user -> {
+                    if (!user.isActivated()) {
+                        throw new AccountResourceException("User account is suspended");
+                    }
+                    return new AdminUserDTO(user);
+                })
+                .orElseThrow(() -> new AccountResourceException("User could not be found"));
+        } catch (Exception e) {
+            LOG.error("❌ Error en GET /api/account: " + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @PostMapping("/account")

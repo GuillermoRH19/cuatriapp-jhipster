@@ -1,41 +1,40 @@
 <div>
   <div class="d-flex justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-9">
       @if (settingsForm.value.login) {
-        <h2>
-          User settings for [<strong>{{ settingsForm.value.login }}</strong
-          >]
-        </h2>
+        <h2 class="mb-4">Configuración de Usuario [<strong>{{ settingsForm.value.login }}</strong>]</h2>
       }
 
       @if (success()) {
-        <div class="alert alert-success"><strong>Settings saved!</strong></div>
+        <div class="alert alert-success shadow-sm rounded-3">
+          <fa-icon icon="check-circle" class="me-2"></fa-icon><strong>¡Cambios guardados con éxito!</strong>
+        </div>
       }
 
       <jhi-alert-error />
 
       @if (settingsForm.value.login) {
-        <form name="form" (ngSubmit)="save()" [formGroup]="settingsForm" novalidate>
-
-          <!-- Foto de perfil Centralizada -->
-          <div class="mb-4 text-center">
+        <form name="form" (ngSubmit)="save()" [formGroup]="settingsForm" novalidate class="bg-white p-4 rounded shadow-sm border">
+          
+          <!-- Foto de Perfil Unificada -->
+          <div class="mb-5 text-center">
             <div class="d-inline-block position-relative">
               @if (settingsForm.value.imageUrl) {
                 <img
                   [src]="settingsForm.value.imageUrl"
                   alt="Foto de perfil"
                   class="rounded-circle shadow-sm"
-                  style="width:120px;height:120px;object-fit:cover;border:4px solid #fff;"
+                  style="width:140px;height:140px;object-fit:cover;border:5px solid #f8f9fa;"
                 />
               } @else {
                 <div class="rounded-circle bg-light text-muted d-inline-flex align-items-center justify-content-center shadow-sm"
-                     style="width:120px;height:120px;font-size:3rem;border:4px solid #fff;">
+                     style="width:140px;height:140px;font-size:4rem;border:5px solid #f8f9fa;">
                   <fa-icon icon="user"></fa-icon>
                 </div>
               }
-              <label class="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 shadow" 
-                     for="profileFile" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                <fa-icon icon="camera"></fa-icon>
+              <label class="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 shadow d-flex align-items-center justify-content-center" 
+                     for="profileFile" style="width: 40px; height: 40px; cursor: pointer;">
+                <fa-icon icon="camera" style="font-size: 1.2rem;"></fa-icon>
                 <input
                   type="file"
                   id="profileFile"
@@ -45,7 +44,7 @@
                 />
               </label>
             </div>
-            <div class="mt-2 text-muted small">Haz clic en la cámara para cambiar tu foto</div>
+            <div class="mt-3 text-muted small fw-bold">Presiona el botón de cámara para actualizar tu foto</div>
           </div>
 
           <div class="row">
@@ -53,51 +52,65 @@
               <label class="form-label fw-bold" for="firstName">Nombre</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-lg"
                 id="firstName"
                 name="firstName"
                 placeholder="Tu nombre"
                 formControlName="firstName"
                 data-cy="firstname"
               />
-              <!-- Validaciones omitidas por brevedad pero se mantienen en el DOM -->
+              @let firstNameRef = settingsForm.get('firstName')!;
+              @if (firstNameRef.invalid && (firstNameRef.dirty || firstNameRef.touched)) {
+                <div class="text-danger small mt-1">
+                  @if (firstNameRef?.errors?.required) { <span>El nombre es obligatorio.</span> }
+                  @if (firstNameRef?.errors?.minlength) { <span>Debe tener al menos 1 caracter.</span> }
+                  @if (firstNameRef?.errors?.maxlength) { <span>No puede exceder los 50 caracteres.</span> }
+                </div>
+              }
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label fw-bold" for="lastName">Apellidos</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-lg"
                 id="lastName"
                 name="lastName"
                 placeholder="Tus apellidos"
                 formControlName="lastName"
                 data-cy="lastname"
               />
+              @let lastNameRef = settingsForm.get('lastName')!;
+              @if (lastNameRef.invalid && (lastNameRef.dirty || lastNameRef.touched)) {
+                <div class="text-danger small mt-1">
+                  @if (lastNameRef?.errors?.required) { <span>Los apellidos son obligatorios.</span> }
+                  @if (lastNameRef?.errors?.minlength) { <span>Debe tener al menos 1 caracter.</span> }
+                  @if (lastNameRef?.errors?.maxlength) { <span>No puede exceder los 50 caracteres.</span> }
+                </div>
+              }
             </div>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-4">
             <label class="form-label fw-bold" for="email">Correo Electrónico</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light"><fa-icon icon="envelope"></fa-icon></span>
+            <div class="input-group input-group-lg">
+              <span class="input-group-text bg-light border-end-0"><fa-icon icon="envelope"></fa-icon></span>
               <input
                 type="email"
-                class="form-control bg-light"
+                class="form-control bg-light border-start-0"
                 id="email"
                 name="email"
                 formControlName="email"
                 readonly
                 data-cy="email"
-                title="El correo no puede ser modificado"
               />
             </div>
-            <small class="text-muted">El correo electrónico está vinculado a tu cuenta y no puede editarse.</small>
+            <small class="text-primary"><fa-icon icon="info-circle" class="me-1"></fa-icon>Este campo está protegido y no puede modificarse.</small>
           </div>
 
-          <div class="d-grid gap-2 mt-4">
-            <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-primary btn-lg shadow-sm" data-cy="submit">
-              <fa-icon icon="save" class="me-2"></fa-icon> Guardar Cambios
+          <div class="d-grid gap-2 mt-5">
+            <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-primary btn-lg fw-bold shadow transition-all">
+              <fa-icon icon="save" class="me-2"></fa-icon> Guardar Cambios de Perfil
             </button>
           </div>
         </form>

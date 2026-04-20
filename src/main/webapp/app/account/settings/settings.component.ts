@@ -39,10 +39,15 @@ export default class SettingsComponent implements OnInit {
   private readonly accountService = inject(AccountService);
 
   ngOnInit(): void {
-    this.accountService.identity().subscribe(account => {
-      if (account) {
-        this.settingsForm.patchValue(account);
-        this.settingsForm.get('email')?.disable(); // Bloquear cambio de correo
+    this.accountService.identity().subscribe({
+      next: (account) => {
+        if (account) {
+          this.settingsForm.patchValue(account);
+          this.settingsForm.get('email')?.disable();
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar identidad:', err);
       }
     });
   }
@@ -51,13 +56,20 @@ export default class SettingsComponent implements OnInit {
     this.success.set(false);
 
     const account = this.settingsForm.getRawValue();
+    
+    // Asegurar que login y email estén presentes
+    if (!account.login || !account.email) {
+      console.warn('Login o Email ausentes en el formulario. Abortando guardado.');
+      return;
+    }
+
     this.accountService.save(account).subscribe({
       next: () => {
         this.success.set(true);
         this.accountService.authenticate(account);
       },
-      error: () => {
-        // Manejar error si es necesario
+      error: (err) => {
+        console.error('Error al guardar perfil:', err);
       }
     });
   }
