@@ -36,18 +36,7 @@ export class PermisosPerfilComponent implements OnInit {
     this.isLoading = true;
     this.permisosService.getViewByPerfil(this.selectedPerfilId).subscribe({
       next: data => {
-        const isUserAdmin = this.accountService.hasAnyAuthority('ROLE_ADMIN');
-        // Solo mostramos módulos de admin si el usuario que está gestionando es admin
-        const filteredData = isUserAdmin 
-          ? data 
-          : data.filter(p => 
-              !p.strNombreModulo.toLowerCase().includes('usuarios') && 
-              !p.strNombreModulo.toLowerCase().includes('perfil') &&
-              !p.strNombreModulo.toLowerCase().includes('módulo') &&
-              !p.strNombreModulo.toLowerCase().includes('permiso')
-            );
-        
-        this.permisos.set(filteredData);
+        this.permisos.set(data);
         this.isLoading = false;
         this.savedOk = false;
       },
