@@ -38,23 +38,11 @@ export default class SettingsComponent implements OnInit {
 
   private readonly accountService = inject(AccountService);
 
-  onImageSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (!input.files?.length) return;
-    const file = input.files[0];
-    if (!file.type.startsWith('image/')) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.settingsForm.patchValue({ imageUrl: reader.result as string });
-    };
-    reader.readAsDataURL(file);
-  }
-
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {
       if (account) {
         this.settingsForm.patchValue(account);
+        this.settingsForm.get('email')?.disable(); // Bloquear cambio de correo
       }
     });
   }
@@ -63,10 +51,14 @@ export default class SettingsComponent implements OnInit {
     this.success.set(false);
 
     const account = this.settingsForm.getRawValue();
-    this.accountService.save(account).subscribe(() => {
-      this.success.set(true);
-
-      this.accountService.authenticate(account);
+    this.accountService.save(account).subscribe({
+      next: () => {
+        this.success.set(true);
+        this.accountService.authenticate(account);
+      },
+      error: () => {
+        // Manejar error si es necesario
+      }
     });
   }
 
@@ -74,6 +66,13 @@ export default class SettingsComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
+      
+      // Validación básica de tamaño (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Máximo 5MB.');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = () => {
         this.settingsForm.patchValue({

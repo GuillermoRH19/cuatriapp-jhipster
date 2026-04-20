@@ -78,6 +78,8 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern("/content/**")).permitAll()
                     .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
                     
+                    .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/images")).permitAll()
+                    .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/images")).permitAll()
                     .requestMatchers(antMatcher(HttpMethod.POST, "/api/candidatos")).permitAll()
 
                     .requestMatchers(mvc.pattern("/api/authenticate")).permitAll()
