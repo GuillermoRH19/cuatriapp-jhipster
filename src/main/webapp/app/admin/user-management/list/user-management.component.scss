@@ -1,0 +1,226 @@
+// ─── Variables de Diseño (Basadas en Dashboard) ──────────────────────────────
+$slate-50: #f8fafc;
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-700: #334155;
+$slate-800: #1e293b;
+$slate-900: #0f172a;
+
+$primary: #4f46e5;
+$primary-light: #eef2ff;
+$emerald: #10b981;
+$emerald-light: #ecfdf5;
+$rose: #f43f5e;
+$rose-light: #fff1f2;
+$amber: #f59e0b;
+$amber-light: #fffbeb;
+
+$transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ─── Contenedor Premium ──────────────────────────────────────────────────────
+.premium-table-container {
+  background: white;
+  border: 1px solid $slate-200;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+// ─── Tabla Estilizada ───────────────────────────────────────────────────────
+.premium-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  thead th {
+    background: $slate-50;
+    padding: 16px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $slate-500;
+    border-bottom: 1px solid $slate-200;
+    white-space: nowrap;
+    
+    &:hover {
+      color: $primary;
+    }
+    
+    fa-icon {
+      font-size: 10px;
+      margin-left: 4px;
+      opacity: 0.5;
+    }
+  }
+
+  tbody tr {
+    transition: background $transition;
+    
+    &:hover {
+      background: rgba($primary, 0.02);
+    }
+    
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  td {
+    padding: 14px 20px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: $slate-700;
+    border-bottom: 1px solid $slate-100;
+  }
+}
+
+// ─── Avatares de Usuario ─────────────────────────────────────────────────────
+.user-avatar-cell {
+  width: 40px;
+  padding-right: 0 !important;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: $primary-light;
+  color: $primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.user-main-info {
+  display: flex;
+  flex-direction: column;
+  .user-login { font-weight: 600; color: $slate-900; }
+  .user-email { font-size: 12px; color: $slate-500; }
+}
+
+// ─── Badges de Estado Soft ──────────────────────────────────────────────────
+.soft-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  gap: 5px;
+  
+  &.active {
+    background: $emerald-light;
+    color: $emerald;
+  }
+  
+  &.inactive {
+    background: $rose-light;
+    color: $rose;
+  }
+  
+  &.role-badge {
+    background: $slate-100;
+    color: $slate-600;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    border: 1px solid rgba($slate-400, 0.1);
+  }
+}
+
+// ─── Botones de Acción Premium ──────────────────────────────────────────────
+.action-group {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid $slate-200;
+  color: $slate-600;
+  transition: all $transition;
+  padding: 0;
+  
+  &:hover {
+    background: $slate-50;
+    border-color: $slate-400;
+    color: $slate-900;
+    transform: translateY(-2px);
+  }
+  
+  &.btn-view:hover { border-color: $primary; color: $primary; background: $primary-light; }
+  &.btn-edit:hover { border-color: $amber; color: $amber; background: $amber-light; }
+  &.btn-delete:hover { border-color: $rose; color: $rose; background: $rose-light; }
+  
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+// ─── Herramientas de Cabecera ───────────────────────────────────────────────
+.table-header-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: $slate-900;
+    margin: 0;
+  }
+}
+
+.btn-primary-premium {
+  background: $primary;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: $transition;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover {
+    background: darken($primary, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($primary, 0.25);
+  }
+}
+
+.btn-secondary-premium {
+  background: white;
+  color: $slate-700;
+  border: 1px solid $slate-200;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: $transition;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover {
+    background: $slate-50;
+    border-color: $slate-400;
+  }
+}
