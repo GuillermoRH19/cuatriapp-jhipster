@@ -35,5 +35,9 @@ export default class MainComponent implements OnInit {
       }
     });
   }
+
+  isHeroRoute(): boolean {
+    return this.router.url === '/' || this.router.url === '/dashboard/inicio' || this.router.url === '/dashboard';
+  }
 }
 

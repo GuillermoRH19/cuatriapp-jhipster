@@ -3,13 +3,23 @@
   <router-outlet name="navbar" />
 </div>
 
-<div class="container-fluid">
-  <div class="pt-3">
-    <jhi-breadcrumb />
-  </div>
-  <div class="card jh-card">
+<div class="container-fluid p-0">
+  @if (!isHeroRoute()) {
+    <div class="px-4 pt-3">
+      <jhi-breadcrumb />
+    </div>
+    <div class="px-4 pb-4">
+      <div class="card jh-card shadow-sm border-0 rounded-4">
+        <router-outlet />
+      </div>
+    </div>
+  } @else {
     <router-outlet />
-  </div>
+  }
 
-  <jhi-footer />
+  @if (!isHeroRoute()) {
+    <div class="px-4">
+      <jhi-footer />
+    </div>
+  }
 </div>
