@@ -35,4 +35,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPerfilId(Integer perfilId);
 
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
+
+    Page<User> findAllByLoginContainingIgnoreCaseOrEmailContainingIgnoreCase(String login, String email, Pageable pageable);
 }

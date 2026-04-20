@@ -13,6 +13,7 @@ export interface IUser {
   lastModifiedDate?: Date;
   perfilId?: number | null;
   password?: string | null;
+  imageUrl?: string | null;
 }
 
 export class User implements IUser {
@@ -31,5 +32,6 @@ export class User implements IUser {
     public lastModifiedDate?: Date,
     public perfilId?: number | null,
     public password?: string | null,
+    public imageUrl?: string | null,
   ) {}
 }

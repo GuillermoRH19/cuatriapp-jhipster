@@ -283,7 +283,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
+    public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable, String query) {
+        if (query != null && !query.isBlank()) {
+            return userRepository.findAllByLoginContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query, pageable).map(AdminUserDTO::new);
+        }
         return userRepository.findAll(pageable).map(AdminUserDTO::new);
     }
 

@@ -130,13 +130,16 @@ public class UserResource {
      */
     @GetMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<AdminUserDTO>> getAllUsers(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        LOG.debug("REST request to get all User for an admin");
+    public ResponseEntity<List<AdminUserDTO>> getAllUsers(
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(name = "query", required = false) String query
+    ) {
+        LOG.debug("REST request to get all User for an admin with query: {}", query);
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }
 
-        final Page<AdminUserDTO> page = userService.getAllManagedUsers(pageable);
+        final Page<AdminUserDTO> page = userService.getAllManagedUsers(pageable, query);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

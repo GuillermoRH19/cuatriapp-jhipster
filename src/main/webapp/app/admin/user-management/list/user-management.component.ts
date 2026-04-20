@@ -5,6 +5,7 @@ import { combineLatest } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import SharedModule from 'app/shared/shared.module';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortByDirective, SortDirective, SortService, SortState, sortStateSignal } from 'app/shared/sort';
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { SORT } from 'app/config/navigation.constants';
@@ -18,7 +19,7 @@ import UserManagementDeleteDialogComponent from '../delete/user-management-delet
   selector: 'jhi-user-mgmt',
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.scss'],
-  imports: [RouterModule, SharedModule, SortDirective, SortByDirective, ItemCountComponent],
+  imports: [RouterModule, SharedModule, SortDirective, SortByDirective, ItemCountComponent, FormsModule, ReactiveFormsModule],
 })
 export default class UserManagementComponent implements OnInit {
   currentAccount = inject(AccountService).trackCurrentAccount();
@@ -27,6 +28,7 @@ export default class UserManagementComponent implements OnInit {
   totalItems = signal(0);
   itemsPerPage = 5;
   page!: number;
+  searchTerm = signal('');
   sortState = sortStateSignal({});
 
   private readonly userService = inject(UserManagementService);
@@ -37,6 +39,11 @@ export default class UserManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.handleNavigation();
+  }
+
+  onSearch(): void {
+    this.page = 1;
+    this.loadAll();
   }
 
   setActive(user: User, isActivated: boolean): void {
@@ -65,6 +72,7 @@ export default class UserManagementComponent implements OnInit {
         page: this.page - 1,
         size: this.itemsPerPage,
         sort: this.sortService.buildSortParam(this.sortState(), 'id'),
+        query: this.searchTerm(),
       })
       .subscribe({
         next: (res: HttpResponse<User[]>) => {

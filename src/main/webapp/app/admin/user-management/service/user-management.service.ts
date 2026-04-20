@@ -26,7 +26,7 @@ export class UserManagementService {
     return this.http.get<IUser>(`${this.resourceUrl}/${login}`);
   }
 
-  query(req?: Pagination): Observable<HttpResponse<IUser[]>> {
+  query(req?: Pagination & { query?: string }): Observable<HttpResponse<IUser[]>> {
     const options = createRequestOption(req);
     return this.http.get<IUser[]>(this.resourceUrl, { params: options, observe: 'response' });
   }

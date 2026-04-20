@@ -5,6 +5,23 @@
     </h2>
 
     <div class="d-flex gap-2">
+      <!-- Barra de Búsqueda Premium -->
+      <div class="premium-search-box shadow-sm me-2">
+        <fa-icon icon="search" class="search-icon"></fa-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+          placeholder="Buscar por nombre o email..."
+          class="search-input"
+        />
+        @if (searchTerm()) {
+          <button class="clear-btn" (click)="searchTerm.set(''); onSearch()">
+            <fa-icon icon="times"></fa-icon>
+          </button>
+        }
+      </div>
+
       <button class="btn-secondary-premium shadow-sm" (click)="loadAll()" [disabled]="isLoading()">
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined"></fa-icon>
         <span>Actualizar</span>
@@ -25,9 +42,6 @@
         <table class="premium-table" aria-describedby="user-management-page-heading">
           <thead>
             <tr jhiSort [(sortState)]="sortState" (sortChange)="transition($event)">
-              <th scope="col" jhiSortBy="id">
-                <span>ID</span> @if (sortState().predicate === 'id') { <fa-icon [icon]="sortState().order === 'asc' ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
-              </th>
               <th scope="col" class="user-avatar-cell"></th>
               <th scope="col" jhiSortBy="login">
                 <span>Usuario / Email</span> @if (sortState().predicate === 'login') { <fa-icon [icon]="sortState().order === 'asc' ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
@@ -43,13 +57,14 @@
           <tbody>
             @for (user of users(); track trackIdentity(user)) {
               <tr>
-                <td>
-                  <a [routerLink]="['./', user.login, 'view']" class="text-primary fw-bold text-decoration-none">{{ user.id }}</a>
-                </td>
                 <td class="user-avatar-cell">
-                  <div class="avatar-circle">
-                    {{ (user.firstName?.charAt(0) || user.login?.charAt(0) || 'U').toUpperCase() }}
-                  </div>
+                  @if (user.imageUrl) {
+                    <img [src]="user.imageUrl" class="avatar-img-premium" alt="Avatar" />
+                  } @else {
+                    <div class="avatar-circle">
+                      {{ (user.firstName?.charAt(0) || user.login?.charAt(0) || 'U').toUpperCase() }}
+                    </div>
+                  }
                 </td>
                 <td>
                   <div class="user-main-info">

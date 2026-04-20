@@ -81,20 +81,78 @@ $transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 // ─── Avatares de Usuario ─────────────────────────────────────────────────────
 .user-avatar-cell {
   width: 40px;
-  padding-right: 0 !important;
 }
 
-.avatar-circle {
+.avatar-circle, .avatar-img-premium {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: $primary-light;
-  color: $primary;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 14px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.avatar-circle {
+  background: $primary-light;
+  color: $primary;
+}
+
+.avatar-img-premium {
+  border: 1px solid $slate-200;
+}
+
+// ─── Buscador Premium ────────────────────────────────────────────────────────
+.premium-search-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid $slate-200;
+  border-radius: 12px;
+  padding: 0 12px;
+  height: 42px;
+  width: 300px;
+  transition: all $transition;
+
+  &:focus-within {
+    border-color: $primary;
+    box-shadow: 0 0 0 4px rgba($primary, 0.1);
+    width: 350px;
+  }
+
+  .search-icon {
+    color: $slate-400;
+    margin-right: 10px;
+  }
+
+  .search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 14px;
+    color: $slate-700;
+
+    &::placeholder {
+      color: $slate-400;
+    }
+  }
+
+  .clear-btn {
+    background: transparent;
+    border: none;
+    color: $slate-400;
+    padding: 2px 6px;
+    border-radius: 6px;
+    
+    &:hover {
+      color: $rose;
+      background: $rose-light;
+    }
+  }
 }
 
 .user-main-info {
