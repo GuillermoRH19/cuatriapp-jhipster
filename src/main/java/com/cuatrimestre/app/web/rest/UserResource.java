@@ -65,10 +65,13 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private final com.cuatrimestre.app.service.SseNotificationService sseNotificationService;
+
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, com.cuatrimestre.app.service.SseNotificationService sseNotificationService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.sseNotificationService = sseNotificationService;
     }
 
     /**
@@ -160,6 +163,7 @@ public class UserResource {
     public ResponseEntity<Void> deleteUser(@PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         LOG.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
+        sseNotificationService.notifyUserDeleted(login);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
             .build();

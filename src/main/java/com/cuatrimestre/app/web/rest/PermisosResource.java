@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cuatrimestre.app.service.PermisosService;
+import com.cuatrimestre.app.service.SseNotificationService;
 
 /**
  * REST controller para gestionar Permisos de Perfiles.
@@ -27,9 +28,11 @@ public class PermisosResource {
     private static final Logger log = LoggerFactory.getLogger(PermisosResource.class);
 
     private final PermisosService permisosService;
+    private final SseNotificationService sseNotificationService;
 
-    public PermisosResource(PermisosService permisosService) {
+    public PermisosResource(PermisosService permisosService, SseNotificationService sseNotificationService) {
         this.permisosService = permisosService;
+        this.sseNotificationService = sseNotificationService;
     }
 
     @GetMapping("/{id}")
@@ -74,6 +77,10 @@ public class PermisosResource {
                 if ((Boolean) resultado.get("success")) {
                     successCount++;
                 }
+            }
+
+            if (successCount > 0) {
+                sseNotificationService.notifyAllByPerfilId(idPerfil);
             }
 
             log.debug("Bulk update: {} de {} permisos actualizados", successCount, listaPermisos.size());

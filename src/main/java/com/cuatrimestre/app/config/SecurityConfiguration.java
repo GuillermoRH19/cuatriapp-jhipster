@@ -95,7 +95,11 @@ public class SecurityConfiguration {
                     .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                     .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
             )
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+            .oauth2ResourceServer(oauth2 -> {
+                org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver bearerTokenResolver = new org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver();
+                bearerTokenResolver.setAllowUriQueryParameter(true);
+                oauth2.bearerTokenResolver(bearerTokenResolver).jwt(withDefaults());
+            });
             
         return http.build();
     }
