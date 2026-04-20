@@ -3,9 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import dayjs from 'dayjs/esm';
 
-// 👇 IMPORTANTE: Ajusta estas rutas dependiendo de dónde guardes este archivo
 import { CandidatoService } from 'app/entities/candidato/service/candidato.service';
 import { ICandidato } from 'app/entities/candidato/candidato.model';
+
+// Validador de edad
+function mayorDeEdadValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  const fechaNacimiento = dayjs(control.value as string);
+  const hoy = dayjs();
+  const edad = hoy.diff(fechaNacimiento, 'year');
+  return edad < 18 ? { menorDeEdad: true } : null;
+}
 
 @Component({
   selector: 'jhi-registro-publico',
@@ -25,24 +33,20 @@ export class RegistroPublicoComponent {
     salario: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(0), Validators.max(15000)] }),
   });
 
-  protected candidatoService = inject(CandidatoService);
+  private readonly candidatoService: CandidatoService = inject(CandidatoService);
 
   save(): void {
-    // 1. Validar específicamente si el salario se pasa de 15,000 para lanzar la alerta
     if (this.editForm.get('salario')?.hasError('max')) {
       alert('⚠️ No puedes postularte con un salario mayor a $15,000. Por favor, ajusta la cantidad.');
-      return; // Detiene el guardado
+      return;
     }
 
-    this.isSaving = true;
-
-    // 2. Validar si hay otros campos vacíos o incorrectos
     if (this.editForm.invalid) {
-      this.isSaving = false;
       this.editForm.markAllAsTouched();
       return;
     }
 
+    this.isSaving = true;
     const candidato = this.createFromForm();
 
     this.candidatoService.create(candidato).subscribe({
@@ -50,7 +54,6 @@ export class RegistroPublicoComponent {
         this.isSaving = false;
         this.successMessage = true;
         this.editForm.reset();
-        // Oculta el mensaje después de 5 segundos
         setTimeout(() => (this.successMessage = false), 5000);
       },
       error: () => {
@@ -60,7 +63,7 @@ export class RegistroPublicoComponent {
     });
   }
 
-  protected createFromForm(): ICandidato {
+  private createFromForm(): ICandidato {
     const rawValue = this.editForm.getRawValue();
     return {
       nombre: rawValue.nombre,
@@ -70,13 +73,4 @@ export class RegistroPublicoComponent {
       fechaNacimiento: rawValue.fechaNacimiento ? dayjs(rawValue.fechaNacimiento) : null,
     } as ICandidato;
   }
-}
-
-// Validador de edad
-function mayorDeEdadValidator(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) return null;
-  const fechaNacimiento = dayjs(control.value);
-  const hoy = dayjs();
-  const edad = hoy.diff(fechaNacimiento, 'year');
-  return edad < 18 ? { menorDeEdad: true } : null;
 }

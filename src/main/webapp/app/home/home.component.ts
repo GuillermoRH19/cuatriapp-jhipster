@@ -73,9 +73,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(account => {
         this.account = account;
         if (account === null) {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/login'], { replaceUrl: true });
         } else {
-          this.router.navigate(['/dashboard/inicio']);
+          this.router.navigate(['/dashboard/inicio'], { replaceUrl: true });
         }
       });
 
