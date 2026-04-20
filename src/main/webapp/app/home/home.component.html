@@ -154,38 +154,89 @@
           <div class="mb-3">
              <span style="font-size: 3rem;"></span>
           </div>
-          <h3 class="card-title mb-2">Acceso Seguro</h3>
-          <p class="text-muted small mb-4">Verifica tu identidad para continuar</p>
+          <h3 class="card-title mb-2">Ingresar al Sistema</h3>
+          <p class="text-muted small mb-4">Ingresa tus credenciales y verifica el captcha</p>
 
-          @if (!captchaFallo) {
-            <div class="d-flex justify-content-center mb-3">
-              <ng-hcaptcha
-                [siteKey]="siteKey"
-                (verify)="onCaptchaVerify()"
-                (expired)="onCaptchaExpired()"
-                (error)="onCaptchaError()">
-              </ng-hcaptcha>
-            </div>
-          } @else {
-            <div class="alert alert-warning py-2 px-3 small mb-3 text-start rounded-3">
-              <fa-icon icon="lock" class="me-1"></fa-icon>
-              El captcha no pudo cargarse. Puedes continuar de todas formas.
+          @if (authenticationError) {
+            <div class="alert alert-danger py-2 px-3 small mb-3 text-start rounded-3">
+              <fa-icon icon="exclamation-circle" class="me-1"></fa-icon>
+              Usuario o contraseña incorrectos.
             </div>
           }
 
-          <button
-            class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm transition-btn"
-            [disabled]="!captchaResuelto"
-            (click)="login()">
-            @if (!captchaResuelto) {
-              <span>Resuelve el Captcha</span>
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="mb-3 text-start">
+              <label class="form-label small fw-bold" for="username">Usuario</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><fa-icon icon="user"></fa-icon></span>
+                <input
+                  type="text"
+                  class="form-control bg-light border-start-0"
+                  id="username"
+                  formControlName="username"
+                  placeholder="Tu usuario"
+                  [class.is-invalid]="loginForm.get('username')!.invalid && loginForm.get('username')!.touched"
+                />
+              </div>
+            </div>
+
+            <div class="mb-3 text-start">
+              <label class="form-label small fw-bold" for="password">Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><fa-icon icon="lock"></fa-icon></span>
+                <input
+                  type="password"
+                  class="form-control bg-light border-start-0"
+                  id="password"
+                  formControlName="password"
+                  placeholder="Tu contraseña"
+                  [class.is-invalid]="loginForm.get('password')!.invalid && loginForm.get('password')!.touched"
+                />
+              </div>
+            </div>
+
+            <div class="mb-3 form-check text-start">
+              <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe">
+              <label class="form-check-label small text-muted" for="rememberMe">Recordarme en este equipo</label>
+            </div>
+
+            @if (!captchaFallo) {
+              <div class="d-flex justify-content-center mb-3 scale-captcha">
+                <ng-hcaptcha
+                  [siteKey]="siteKey"
+                  (verify)="onCaptchaVerify()"
+                  (expired)="onCaptchaExpired()"
+                  (error)="onCaptchaError()">
+                </ng-hcaptcha>
+              </div>
             } @else {
-              <fa-icon icon="sign-in-alt" class="me-2"></fa-icon>
-              <span>Iniciar Sesión</span>
+              <div class="alert alert-warning py-2 px-3 small mb-3 text-start rounded-3">
+                <fa-icon icon="info-circle" class="me-1"></fa-icon>
+                Validación de seguridad alternativa activa.
+              </div>
             }
-          </button>
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm transition-btn"
+              [disabled]="loginForm.invalid || !captchaResuelto || isLoadingFetch">
+              @if (isLoadingFetch) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                <span>Iniciando...</span>
+              } @else if (!captchaResuelto && !captchaFallo) {
+                <span>Resuelve el Captcha</span>
+              } @else {
+                <fa-icon icon="sign-in-alt" class="me-2"></fa-icon>
+                <span>Acceder</span>
+              }
+            </button>
+          </form>
         </div>
       </div>
+
+      <style>
+        .scale-captcha { transform: scale(0.9); transform-origin: center; }
+      </style>
 
       <div class="card shadow-sm border-0 rounded-4 bg-light">
         <div class="card-body p-4">

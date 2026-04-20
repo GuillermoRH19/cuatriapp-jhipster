@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, inject, signal, ViewChild, TemplateRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
+import { LoginService } from 'app/login/login.service';
 import SharedModule from 'app/shared/shared.module';
 import { ImageService } from './image.service';
 import { NgHcaptchaModule, CAPTCHA_CONFIG } from 'ng-hcaptcha';
@@ -14,7 +16,7 @@ import { NgbCarouselModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   selector: 'jhi-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
-  imports: [SharedModule, RouterModule, NgHcaptchaModule, NgbCarouselModule],
+  imports: [SharedModule, RouterModule, NgHcaptchaModule, NgbCarouselModule, ReactiveFormsModule],
   providers: [
     {
       provide: CAPTCHA_CONFIG,
@@ -28,7 +30,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   captchaResuelto = false;
   captchaFallo = false;
+  authenticationError = false;
+  isLoadingFetch = false;
   siteKey = '3b506e74-8bbc-4b56-a81c-4b3e5afe1f90';
+
+  loginForm = new FormGroup({
+    username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    rememberMe: new FormControl(false, { nonNullable: true }),
+  });
 
   // Configuración del Modal
   modalTitle = '';
@@ -51,6 +61,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
   private readonly accountService = inject(AccountService);
+  private readonly loginService = inject(LoginService);
   private readonly router = inject(Router);
   private readonly imageService = inject(ImageService);
   private readonly modalService = inject(NgbModal);
@@ -129,7 +140,35 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
-    this.router.navigate(['/login']);
+    this.authenticationError = false;
+    
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.captchaResuelto) {
+      return;
+    }
+
+    this.isLoadingFetch = true;
+    const { username, password, rememberMe } = this.loginForm.getRawValue();
+
+    this.loginService.login({ username, password, rememberMe }).subscribe({
+      next: account => {
+        this.isLoadingFetch = false;
+        if (account !== null) {
+          this.authenticationError = false;
+          this.router.navigate(['/dashboard/inicio']);
+        } else {
+          this.authenticationError = true;
+        }
+      },
+      error: () => {
+        this.authenticationError = true;
+        this.isLoadingFetch = false;
+      },
+    });
   }
 
   abrirNuevaPestana(): void {
