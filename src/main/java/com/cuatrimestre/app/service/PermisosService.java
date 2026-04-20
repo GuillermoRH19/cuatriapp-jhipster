@@ -13,21 +13,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cuatrimestre.app.domain.Menu;
 import com.cuatrimestre.app.domain.Modulo;
 import com.cuatrimestre.app.domain.Perfil;
 import com.cuatrimestre.app.domain.PermisosPerfil;
+import com.cuatrimestre.app.repository.MenuRepository;
 import com.cuatrimestre.app.repository.ModuloRepository;
 import com.cuatrimestre.app.repository.PerfilRepository;
 import com.cuatrimestre.app.repository.PermisosPerfilRepository;
 
 /**
  * Servicio para gestionar Permisos de Perfiles.
- * Traducción directa de PermisosService (Python).
- * 
- * Lógica:
- * - get_permisos_by_perfil(id): Retorna permisos del perfil (admin=all, user=solo con bitConsulta=1)
- * - get_permisos_by_viewperfil(id): LEFT JOIN de todos los módulos + sus permisos
- * - update_permiso(data): UPSERT (INSERT si no existe, UPDATE si existe)
  */
 @Service
 public class PermisosService {
@@ -37,17 +33,52 @@ public class PermisosService {
     private final PermisosPerfilRepository permisosPerfilRepository;
     private final PerfilRepository perfilRepository;
     private final ModuloRepository moduloRepository;
+    private final MenuRepository menuRepository;
 
     public PermisosService(PermisosPerfilRepository permisosPerfilRepository,
                           PerfilRepository perfilRepository,
-                          ModuloRepository moduloRepository) {
+                          ModuloRepository moduloRepository,
+                          MenuRepository menuRepository) {
         this.permisosPerfilRepository = permisosPerfilRepository;
         this.perfilRepository = perfilRepository;
         this.moduloRepository = moduloRepository;
+        this.menuRepository = menuRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
+    public void asegurarModulosAdminExistentes() {
+        log.debug("PERMISOS - Verificando existencia de módulos administrativos...");
+        
+        Menu adminMenu = menuRepository.findByNombreMenu("Administración")
+            .orElseGet(() -> {
+                Menu m = new Menu();
+                m.setNombreMenu("Administración");
+                return menuRepository.save(m);
+            });
+
+        registrarModuloSiFalta("Usuarios y Roles", "/dashboard/admin/user-management", adminMenu);
+        registrarModuloSiFalta("Perfiles", "/dashboard/admin/perfil", adminMenu);
+        registrarModuloSiFalta("Módulos", "/dashboard/admin/modulo", adminMenu);
+        registrarModuloSiFalta("Permisos Perfil", "/dashboard/admin/permisos-perfil", adminMenu);
+    }
+
+    private void registrarModuloSiFalta(String nombre, String ruta, Menu menu) {
+        boolean existe = moduloRepository.findAll().stream()
+            .anyMatch(m -> m.getNombreModulo().equals(nombre) && m.getRuta().equals(ruta));
+        
+        if (!existe) {
+            Modulo m = new Modulo();
+            m.setNombreModulo(nombre);
+            m.setRuta(ruta);
+            m.setMenu(menu);
+            moduloRepository.save(m);
+            log.info("PERMISOS - Módulo registrado automáticamente: {}", nombre);
+        }
+    }
+
+    @Transactional
     public List<Map<String, Object>> getPermisosByPerfil(Integer idPerfil) {
+        asegurarModulosAdminExistentes();
         log.debug("PERMISOS - Cargando permisos para perfil ID: {}", idPerfil);
 
         Optional<Perfil> perfilOptional = perfilRepository.findById(idPerfil);
@@ -67,31 +98,17 @@ public class PermisosService {
                 permisosList.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), null, 1, 1, 1, 1, 1));
             }
         } else {
-            // Una sola query para todos los permisos del perfil
             Map<Integer, PermisosPerfil> permisosPorModulo = permisosPerfilRepository
                 .findByPerfilId(idPerfil).stream()
                 .collect(Collectors.toMap(pp -> pp.getModulo().getId(), pp -> pp));
 
-            log.info("PERMISOS - Perfil '{}': {} permisos configurados de {} módulos disponibles",
-                perfil.getNombrePerfil(), permisosPorModulo.size(), todosModulos.size());
-
-            if (permisosPorModulo.isEmpty()) {
-                log.warn("PERMISOS - Perfil '{}' (id={}) NO tiene permisos configurados en BD.",
-                    perfil.getNombrePerfil(), idPerfil);
-            }
-
             for (Modulo modulo : todosModulos) {
                 PermisosPerfil p = permisosPorModulo.get(modulo.getId());
                 if (p != null) {
-                    log.debug("PERMISOS - Módulo '{}': agregar={} editar={} eliminar={} consulta={} detalle={}",
-                        modulo.getNombreModulo(), p.getAgregar(), p.getEditar(),
-                        p.getEliminar(), p.getConsulta(), p.getDetalle());
                     permisosList.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), p.getId(),
                         bit(p.getAgregar()), bit(p.getEditar()), bit(p.getEliminar()),
                         bit(p.getConsulta()), bit(p.getDetalle())));
                 } else {
-                    log.debug("PERMISOS - Módulo '{}' sin permiso asignado para perfil '{}'",
-                        modulo.getNombreModulo(), perfil.getNombrePerfil());
                     permisosList.add(buildPermiso(modulo.getId(), modulo.getNombreModulo(), null, 0, 0, 0, 0, 0));
                 }
             }
@@ -100,8 +117,9 @@ public class PermisosService {
         return permisosList;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Map<String, Object>> getPermisosByViewPerfil(Integer idPerfil) {
+        asegurarModulosAdminExistentes();
         log.debug("PERMISOS - Vista completa de permisos para perfil ID: {}", idPerfil);
 
         Optional<Perfil> perfilOptional = perfilRepository.findById(idPerfil);
@@ -113,13 +131,9 @@ public class PermisosService {
         Perfil perfil = perfilOptional.orElseThrow();
         List<Modulo> todosModulos = moduloRepository.findAll();
 
-        // Una sola query para todos los permisos del perfil
         Map<Integer, PermisosPerfil> permisosPorModulo = permisosPerfilRepository
             .findByPerfilId(idPerfil).stream()
             .collect(Collectors.toMap(pp -> pp.getModulo().getId(), pp -> pp));
-
-        log.info("PERMISOS - ViewPerfil '{}': {} permisos en BD, {} módulos totales",
-            perfil.getNombrePerfil(), permisosPorModulo.size(), todosModulos.size());
 
         List<Map<String, Object>> resultado = new ArrayList<>();
         for (Modulo modulo : todosModulos) {
@@ -136,13 +150,6 @@ public class PermisosService {
         return resultado;
     }
 
-    /**
-     * UPSERT: Actualiza o inserta un permiso.
-     * Traducción: update_permiso()
-     * 
-     * Data debe contener:
-     * - idModulo, idPerfil, bitAgregar, bitEditar, bitEliminar, bitConsulta, bitDetalle
-     */
     @Transactional
     public Map<String, Object> updatePermiso(Map<String, Object> data) {
         try {
@@ -166,13 +173,11 @@ public class PermisosService {
                 permiso.setConsulta(consulta);
                 permiso.setDetalle(detalle);
                 permisosPerfilRepository.save(permiso);
-                log.info("PERMISOS - Actualizado permiso módulo={} perfil={}", idModulo, idPerfil);
             } else {
                 Optional<Modulo> moduloOpt = moduloRepository.findById(idModulo);
                 Optional<Perfil> perfilOpt = perfilRepository.findById(idPerfil);
 
                 if (moduloOpt.isEmpty() || perfilOpt.isEmpty()) {
-                    log.error("PERMISOS - Módulo {} o Perfil {} no encontrado al crear permiso", idModulo, idPerfil);
                     return Map.of("success", false, "msg", "Módulo o Perfil no encontrado");
                 }
 
@@ -180,16 +185,13 @@ public class PermisosService {
                     moduloOpt.orElseThrow(), perfilOpt.orElseThrow(), agregar, editar, eliminar, consulta, detalle
                 );
                 permisosPerfilRepository.save(permiso);
-                log.info("PERMISOS - Creado permiso módulo={} perfil={}", idModulo, idPerfil);
             }
 
             return Map.of("success", true, "msg", "Permiso guardado correctamente");
 
         } catch (DataIntegrityViolationException e) {
-            log.error("PERMISOS - Conflicto de integridad al guardar permiso: {}", e.getMessage());
             return Map.of("success", false, "msg", "El permiso para este módulo y perfil ya existe");
         } catch (Exception e) {
-            log.error("PERMISOS - Error al guardar permiso: {}", e.getMessage());
             return Map.of("success", false, "msg", e.getMessage());
         }
     }
@@ -206,7 +208,7 @@ public class PermisosService {
     }
 
     private Map<String, Object> buildPermiso(Integer idModulo, String nombreModulo, Integer idPermiso,
-                                              int agregar, int editar, int eliminar, int consulta, int detalle) {
+                                               int agregar, int editar, int eliminar, int consulta, int detalle) {
         Map<String, Object> perm = new HashMap<>();
         perm.put("idModulo", idModulo);
         perm.put("strNombreModulo", nombreModulo);
