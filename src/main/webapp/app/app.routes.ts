@@ -83,7 +83,7 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        data: { pageTitle: 'Administración', authorities: ['ROLE_ADMIN'] },
+        data: { pageTitle: 'Administración', authorities: ['ROLE_ADMIN', 'ROLE_USER'] },
         canActivate: [UserRouteAccessService],
         loadChildren: () => import('./admin/admin.routes'),
       },
