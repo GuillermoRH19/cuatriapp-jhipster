@@ -26,16 +26,16 @@
           <thead>
             <tr jhiSort [(sortState)]="sortState" (sortChange)="transition($event)">
               <th scope="col" jhiSortBy="id">
-                <span>ID</span> @if (sortState().predicate === 'id') { <fa-icon [icon]="sortState().ascending ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
+                <span>ID</span> @if (sortState().predicate === 'id') { <fa-icon [icon]="sortState().order === 'asc' ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
               </th>
               <th scope="col" class="user-avatar-cell"></th>
               <th scope="col" jhiSortBy="login">
-                <span>Usuario / Email</span> @if (sortState().predicate === 'login') { <fa-icon [icon]="sortState().ascending ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
+                <span>Usuario / Email</span> @if (sortState().predicate === 'login') { <fa-icon [icon]="sortState().order === 'asc' ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
               </th>
               <th scope="col"><span>Estado</span></th>
               <th scope="col"><span>Perfiles / Roles</span></th>
               <th scope="col" jhiSortBy="createdDate" class="d-none d-lg-table-cell">
-                <span>Registro</span> @if (sortState().predicate === 'createdDate') { <fa-icon [icon]="sortState().ascending ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
+                <span>Registro</span> @if (sortState().predicate === 'createdDate') { <fa-icon [icon]="sortState().order === 'asc' ? 'sort-up' : 'sort-down'"></fa-icon> } @else { <fa-icon icon="sort"></fa-icon> }
               </th>
               <th scope="col" class="text-end px-4"><span>Acciones</span></th>
             </tr>
