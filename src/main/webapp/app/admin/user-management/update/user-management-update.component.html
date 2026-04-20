@@ -11,7 +11,7 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label" for="field_login">Login</label>
+        <label class="form-label" for="field_login">Nombre de usuario</label>
         <input type="text" id="field_login" class="form-control" name="login" formControlName="login" />
 
         @let loginRef = editForm.get('login')!;
@@ -119,11 +119,12 @@
 
       <div class="mb-3">
         <label class="form-label" for="field_authority">Roles del Sistema</label>
-        <select class="form-control" id="field_authority" multiple name="authority" formControlName="authorities">
+        <select class="form-select" id="field_authority" multiple name="authority" formControlName="authorities">
           @for (authority of authorities(); track $index) {
-            <option [value]="authority">{{ authority }}</option>
+            <option [value]="authority">{{ getAuthorityLabel(authority) }}</option>
           }
         </select>
+        <div class="form-text text-muted">Manten pulsada la tecla Ctrl (o Cmd en Mac) para seleccionar varios roles.</div>
       </div>
 
       <div class="mb-3">

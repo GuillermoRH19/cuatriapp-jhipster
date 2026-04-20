@@ -93,6 +93,14 @@ export default class UserManagementComponent implements OnInit {
     });
   }
 
+  getAuthorityLabel(authority: string): string {
+    const labels: Record<string, string> = {
+      ROLE_ADMIN: 'Administrador',
+      ROLE_USER: 'Usuario',
+    };
+    return labels[authority] ?? authority.replace('ROLE_', '').toLowerCase().replace(/^\w/, c => c.toUpperCase());
+  }
+
   private onSuccess(users: User[] | null, headers: HttpHeaders): void {
     this.totalItems.set(Number(headers.get('X-Total-Count')));
     this.users.set(users);

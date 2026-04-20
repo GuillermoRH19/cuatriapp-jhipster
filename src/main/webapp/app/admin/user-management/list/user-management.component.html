@@ -23,7 +23,7 @@
         <thead>
           <tr jhiSort [(sortState)]="sortState" (sortChange)="transition($event)">
             <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
-            <th scope="col" jhiSortBy="login"><span>Login</span> <fa-icon icon="sort"></fa-icon></th>
+            <th scope="col" jhiSortBy="login"><span>Nombre de usuario</span> <fa-icon icon="sort"></fa-icon></th>
             <th scope="col" jhiSortBy="email"><span>Email</span> <fa-icon icon="sort"></fa-icon></th>
             <th scope="col"></th>
             <th scope="col"><span>Profiles</span></th>
@@ -57,7 +57,7 @@
               <td>
                 @for (authority of user.authorities; track $index) {
                   <div>
-                    <span class="badge bg-info">{{ authority }}</span>
+                    <span class="badge bg-info">{{ getAuthorityLabel(authority) }}</span>
                   </div>
                 }
               </td>

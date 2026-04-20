@@ -1,157 +1,157 @@
 @if (account !== null) {
-  <!-- Hero Section Premium -->
-  <div class="dashboard-hero p-5 mb-4 rounded-4 shadow-sm border-0 position-relative overflow-hidden">
-    <div class="hero-content position-relative" style="z-index: 2;">
-      <div class="d-flex align-items-center justify-content-center mb-3">
-        <div class="greeting-badge px-3 py-1 rounded-pill small fw-bold mb-2">
-          <fa-icon [icon]="getGreeting() === 'Buenos días' ? 'sun' : 'moon'" class="me-1"></fa-icon>
-          {{ getGreeting() }}
-        </div>
+<!-- Hero Section Premium -->
+<div class="dashboard-hero p-5 mb-4 rounded-4 shadow-sm border-0 position-relative overflow-hidden">
+  <div class="hero-content position-relative" style="z-index: 2;">
+    <div class="d-flex align-items-center justify-content-center mb-3">
+      <div class="greeting-badge px-3 py-1 rounded-pill small fw-bold mb-2">
+        <fa-icon [icon]="getGreeting() === 'Buenos días' ? 'sun' : 'moon'" class="me-1"></fa-icon>
+        {{ getGreeting() }}
       </div>
-      <h1 class="display-5 fw-bold text-slate-900 mb-2">¡Bienvenido al Sistema!</h1>
-      <p class="fs-4 text-slate-600 mb-0">Hola de nuevo, <span class="text-primary fw-600">{{ getDisplayName() }}</span></p>
     </div>
-    <!-- Decoración de fondo -->
-    <div class="hero-decorative-circle-1"></div>
-    <div class="hero-decorative-circle-2"></div>
+    <h1 class="display-5 fw-bold text-slate-900 mb-2">¡Bienvenido al Sistema!</h1>
+    <p class="fs-4 text-slate-600 mb-0">Hola de nuevo, <span class="text-primary fw-600">{{ getDisplayName() }}</span>
+    </p>
   </div>
+  <!-- Decoración de fondo -->
+  <div class="hero-decorative-circle-1"></div>
+  <div class="hero-decorative-circle-2"></div>
+</div>
 
-  <div class="container-fluid px-0 mb-5">
-    <div class="row g-4 align-items-stretch mb-5">
-      <!-- Sección de Resumen -->
-      <div class="col-lg-8">
-        <div class="h-100 d-flex flex-direction-column justify-content-center">
-          <h2 class="fw-bold text-slate-800 mb-3">Tu panel principal</h2>
-          <p class="lead text-slate-500 mb-0">Esta es la actividad reciente y el estado actual de tus servicios empresariales.</p>
-        </div>
-      </div>
-
-      <!-- Tarjeta de Nivel de Acceso Premium -->
-      <div class="col-lg-4">
-        <div class="card access-card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
-          <div class="card-body p-4 d-flex align-items-center">
-            <div class="access-icon-wrapper me-3">
-              <fa-icon icon="shield-alt" size="2x"></fa-icon>
-            </div>
-            <div>
-              <p class="text-uppercase small fw-bold text-slate-400 mb-0 tracking-wider">Nivel de Acceso</p>
-              <h3 class="fw-bold text-slate-800 mb-0">
-                {{ account.authorities.includes('ROLE_ADMIN') ? 'Administrador' : 'Usuario' }}
-              </h3>
-            </div>
-          </div>
-          <div class="access-card-glow"></div>
-        </div>
+<div class="container-fluid px-0 mb-5">
+  <div class="row g-4 align-items-stretch mb-5">
+    <!-- Sección de Resumen -->
+    <div class="col-lg-8">
+      <div class="h-100 d-flex flex-direction-column justify-content-center">
+        <h2 class="fw-bold text-slate-800 mb-3">Tu panel principal</h2>
+        <p class="lead text-slate-500 mb-0">Esta es la actividad reciente y el estado actual de tus servicios
+          empresariales.</p>
       </div>
     </div>
 
-    <!-- Grid de Funcionalidades -->
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
-          <div class="card-body p-4">
-            <div class="stat-icon-box blue mb-4">
-              <fa-icon icon="chart-line" size="lg"></fa-icon>
-            </div>
-            <h4 class="fw-bold text-slate-800">Estadísticas</h4>
-            <div class="d-flex align-items-baseline mb-2">
-              <span class="fs-3 fw-bold text-primary">+24%</span>
-              <span class="text-success small ms-2"><fa-icon icon="arrow-up"></fa-icon> Crecimiento</span>
-            </div>
-            <p class="text-slate-500 small mb-0">Rendimiento optimizado este mes.</p>
+    <!-- Tarjeta de Nivel de Acceso Premium -->
+    <div class="col-lg-4">
+      <div class="card access-card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        <div class="card-body p-4 d-flex align-items-center">
+          <div class="access-icon-wrapper me-3">
+            <fa-icon icon="shield-alt" size="2x"></fa-icon>
+          </div>
+          <div>
+            <p class="text-uppercase small fw-bold text-slate-400 mb-0 tracking-wider">Nivel de Acceso</p>
+            <h3 class="fw-bold text-slate-800 mb-0">
+              {{ account.authorities.includes('ROLE_ADMIN') ? 'Administrador' : 'Usuario' }}
+            </h3>
           </div>
         </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
-          <div class="card-body p-4">
-            <div class="stat-icon-box emerald mb-4">
-              <fa-icon icon="user-tie" size="lg"></fa-icon>
-            </div>
-            <h4 class="fw-bold text-slate-800">Candidatos</h4>
-            <div class="d-flex align-items-baseline mb-2">
-              <span class="fs-3 fw-bold text-emerald">42</span>
-              <span class="text-emerald small ms-2">Activos</span>
-            </div>
-            <p class="text-slate-500 small mb-0">Nuevos registros procesados.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
-          <div class="card-body p-4">
-            <div class="stat-icon-box violet mb-4">
-              <fa-icon icon="server" size="lg"></fa-icon>
-            </div>
-            <h4 class="fw-bold text-slate-800">Sistema</h4>
-            <div class="d-flex align-items-center mb-2">
-              <span class="status-indicator online"></span>
-              <span class="fs-5 fw-bold text-slate-700 ms-2">Óptimo</span>
-            </div>
-            <p class="text-slate-500 small mb-0">Todos los servicios en línea.</p>
-          </div>
-        </div>
+        <div class="access-card-glow"></div>
       </div>
     </div>
   </div>
+
+  <!-- Grid de Funcionalidades -->
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
+        <div class="card-body p-4">
+          <div class="stat-icon-box blue mb-4">
+            <fa-icon icon="chart-line" size="lg"></fa-icon>
+          </div>
+          <h4 class="fw-bold text-slate-800">Estadísticas</h4>
+          <div class="d-flex align-items-baseline mb-2">
+            <span class="fs-3 fw-bold text-primary">+24%</span>
+            <span class="text-success small ms-2"><fa-icon icon="arrow-up"></fa-icon> Crecimiento</span>
+          </div>
+          <p class="text-slate-500 small mb-0">Rendimiento optimizado este mes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
+        <div class="card-body p-4">
+          <div class="stat-icon-box emerald mb-4">
+            <fa-icon icon="user-tie" size="lg"></fa-icon>
+          </div>
+          <h4 class="fw-bold text-slate-800">Candidatos</h4>
+          <div class="d-flex align-items-baseline mb-2">
+            <span class="fs-3 fw-bold text-emerald">42</span>
+            <span class="text-emerald small ms-2">Activos</span>
+          </div>
+          <p class="text-slate-500 small mb-0">Nuevos registros procesados.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card stat-card border-0 shadow-sm h-100 rounded-4">
+        <div class="card-body p-4">
+          <div class="stat-icon-box violet mb-4">
+            <fa-icon icon="server" size="lg"></fa-icon>
+          </div>
+          <h4 class="fw-bold text-slate-800">Sistema</h4>
+          <div class="d-flex align-items-center mb-2">
+            <span class="status-indicator online"></span>
+            <span class="fs-5 fw-bold text-slate-700 ms-2">Óptimo</span>
+          </div>
+          <p class="text-slate-500 small mb-0">Todos los servicios en línea.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 }
 
 @if (account === null) {
 <div class="container-fluid px-4 pt-4">
   <div class="row g-4">
-    
+
     <div class="col-lg-8">
       <div class="card shadow-lg border-0 h-100 overflow-hidden rounded-4 position-relative">
-        
-        <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true" [showNavigationIndicators]="true">
-          
+
+        <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true"
+          [showNavigationIndicators]="true">
+
           @for (img of images(); track img.src) {
-            <ng-template ngbSlide>
-              <div class="picsum-img-wrapper position-relative">
-                <img [src]="img.src" [alt]="img.title" class="d-block w-100 carousel-img-fit" />
-                
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
-                  <h3 class="fw-bold">{{ img.title }}</h3>
-                  <p class="fs-5 mb-0">{{ img.desc }}</p>
-                </div>
+          <ng-template ngbSlide>
+            <div class="picsum-img-wrapper position-relative">
+              <img [src]="img.src" [alt]="img.title" class="d-block w-100 carousel-img-fit" />
+
+              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+                <h3 class="fw-bold">{{ img.title }}</h3>
+                <p class="fs-5 mb-0">{{ img.desc }}</p>
               </div>
-            </ng-template>
+            </div>
+          </ng-template>
           }
 
           @if (images().length === 0) {
-            <ng-template ngbSlide>
-              <div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height: 500px;">
-                <div class="text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-images mb-3 opacity-50" viewBox="0 0 16 16">
-                    <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-                    <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10"/>
-                  </svg>
-                  <h3>Galería Vacía</h3>
-                  <p>Sube tu primera imagen ahora.</p>
-                </div>
+          <ng-template ngbSlide>
+            <div class="d-flex align-items-center justify-content-center bg-secondary text-white"
+              style="height: 500px;">
+              <div class="text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                  class="bi bi-images mb-3 opacity-50" viewBox="0 0 16 16">
+                  <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                  <path
+                    d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10" />
+                </svg>
+                <h3>Galería Vacía</h3>
+                <p>Sube tu primera imagen ahora.</p>
               </div>
-            </ng-template>
+            </div>
+          </ng-template>
           }
 
         </ngb-carousel>
 
         <div class="position-absolute top-0 end-0 p-4" style="z-index: 1050;">
-          <input 
-            #fileInput 
-            type="file" 
-            accept="image/*" 
-            style="display: none;" 
-            (change)="onFileSelected($event)"
-          >
-          <button 
-            class="btn btn-primary btn-lg rounded-circle shadow-lg d-flex align-items-center justify-content-center upload-btn" 
-            style="width: 60px; height: 60px;"
-            (click)="fileInput.click()"
-            title="Añadir nueva imagen al carrusel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+          <input #fileInput type="file" accept="image/*" style="display: none;" (change)="onFileSelected($event)">
+          <button
+            class="btn btn-primary btn-lg rounded-circle shadow-lg d-flex align-items-center justify-content-center upload-btn"
+            style="width: 60px; height: 60px;" (click)="fileInput.click()" title="Añadir nueva imagen al carrusel">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-lg"
+              viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
             </svg>
           </button>
         </div>
@@ -160,20 +160,20 @@
     </div>
 
     <div class="col-lg-4">
-      
+
       <div class="card shadow-lg border-0 rounded-4 mb-4">
         <div class="card-body p-4 text-center">
           <div class="mb-3">
-             <span style="font-size: 3rem;"></span>
+            <span style="font-size: 3rem;"></span>
           </div>
           <h3 class="card-title mb-2">Ingresar al Sistema</h3>
           <p class="text-muted small mb-4">Ingresa tus credenciales y verifica el captcha</p>
 
           @if (authenticationError) {
-            <div class="alert alert-danger py-2 px-3 small mb-3 text-start rounded-3">
-              <fa-icon icon="exclamation-circle" class="me-1"></fa-icon>
-              Usuario o contraseña incorrectos.
-            </div>
+          <div class="alert alert-danger py-2 px-3 small mb-3 text-start rounded-3">
+            <fa-icon icon="exclamation-circle" class="me-1"></fa-icon>
+            Usuario o contraseña incorrectos.
+          </div>
           }
 
           <form [formGroup]="loginForm" (ngSubmit)="login()">
@@ -181,14 +181,9 @@
               <label class="form-label small fw-bold" for="username">Usuario</label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><fa-icon icon="user"></fa-icon></span>
-                <input
-                  type="text"
-                  class="form-control bg-light border-start-0"
-                  id="username"
-                  formControlName="username"
+                <input type="text" class="form-control bg-light border-start-0" id="username" formControlName="username"
                   placeholder="Tu usuario"
-                  [class.is-invalid]="loginForm.get('username')!.invalid && loginForm.get('username')!.touched"
-                />
+                  [class.is-invalid]="loginForm.get('username')!.invalid && loginForm.get('username')!.touched" />
               </div>
             </div>
 
@@ -196,14 +191,9 @@
               <label class="form-label small fw-bold" for="password">Contraseña</label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><fa-icon icon="lock"></fa-icon></span>
-                <input
-                  type="password"
-                  class="form-control bg-light border-start-0"
-                  id="password"
-                  formControlName="password"
-                  placeholder="Tu contraseña"
-                  [class.is-invalid]="loginForm.get('password')!.invalid && loginForm.get('password')!.touched"
-                />
+                <input type="password" class="form-control bg-light border-start-0" id="password"
+                  formControlName="password" placeholder="Tu contraseña"
+                  [class.is-invalid]="loginForm.get('password')!.invalid && loginForm.get('password')!.touched" />
               </div>
             </div>
 
@@ -213,33 +203,28 @@
             </div>
 
             @if (!captchaFallo) {
-              <div class="d-flex justify-content-center mb-3 scale-captcha">
-                <ng-hcaptcha
-                  [siteKey]="siteKey"
-                  (verify)="onCaptchaVerify()"
-                  (expired)="onCaptchaExpired()"
-                  (error)="onCaptchaError()">
-                </ng-hcaptcha>
-              </div>
+            <div class="d-flex justify-content-center mb-3 scale-captcha">
+              <ng-hcaptcha [siteKey]="siteKey" (verify)="onCaptchaVerify()" (expired)="onCaptchaExpired()"
+                (error)="onCaptchaError()">
+              </ng-hcaptcha>
+            </div>
             } @else {
-              <div class="alert alert-warning py-2 px-3 small mb-3 text-start rounded-3">
-                <fa-icon icon="info-circle" class="me-1"></fa-icon>
-                Validación de seguridad alternativa activa.
-              </div>
+            <div class="alert alert-warning py-2 px-3 small mb-3 text-start rounded-3">
+              <fa-icon icon="info-circle" class="me-1"></fa-icon>
+              Validación de seguridad alternativa activa.
+            </div>
             }
 
-            <button
-              type="submit"
-              class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm transition-btn"
+            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm transition-btn"
               [disabled]="loginForm.invalid || !captchaResuelto || isLoadingFetch">
               @if (isLoadingFetch) {
-                <span class="spinner-border spinner-border-sm me-2"></span>
-                <span>Iniciando...</span>
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              <span>Iniciando...</span>
               } @else if (!captchaResuelto && !captchaFallo) {
-                <span>Resuelve el Captcha</span>
+              <span>Resuelve el Captcha</span>
               } @else {
-                <fa-icon icon="sign-in-alt" class="me-2"></fa-icon>
-                <span>Acceder</span>
+              <fa-icon icon="sign-in-alt" class="me-2"></fa-icon>
+              <span>Acceder</span>
               }
             </button>
           </form>
@@ -247,7 +232,10 @@
       </div>
 
       <style>
-        .scale-captcha { transform: scale(0.9); transform-origin: center; }
+        .scale-captcha {
+          transform: scale(0.9);
+          transform-origin: center;
+        }
       </style>
 
       <div class="card shadow-sm border-0 rounded-4 bg-light">
@@ -256,10 +244,14 @@
             <fa-icon icon="info-circle" class="me-1"></fa-icon> ¿Por qué elegirnos?
           </h6>
           <ul class="list-unstyled mb-0 small text-muted">
-            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Gestión centralizada de candidatos</li>
-            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Control de acceso por perfiles y permisos</li>
-            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Módulos configurables por administrador</li>
-            <li><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Seguridad con JWT y captcha verificado</li>
+            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Gestión centralizada de
+              candidatos</li>
+            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Control de acceso por
+              perfiles y permisos</li>
+            <li class="mb-2"><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Módulos configurables por
+              administrador</li>
+            <li><fa-icon icon="check-circle" class="text-success me-2"></fa-icon>Seguridad con JWT y captcha verificado
+            </li>
           </ul>
         </div>
       </div>
@@ -273,9 +265,11 @@
 </div>
 
 <ng-template #infoModal let-modal>
-  <div class="modal-header" [ngClass]="{'bg-success text-white': modalType === 'success', 'bg-danger text-white': modalType === 'error'}">
+  <div class="modal-header"
+    [ngClass]="{'bg-success text-white': modalType === 'success', 'bg-danger text-white': modalType === 'error'}">
     <h4 class="modal-title">
-      <i class="fa" [ngClass]="{'fa-check-circle': modalType === 'success', 'fa-exclamation-triangle': modalType === 'error'}"></i>
+      <i class="fa"
+        [ngClass]="{'fa-check-circle': modalType === 'success', 'fa-exclamation-triangle': modalType === 'error'}"></i>
       {{ modalTitle }}
     </h4>
     <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>

@@ -83,6 +83,14 @@ export default class UserManagementUpdateComponent implements OnInit {
     }
   }
 
+  getAuthorityLabel(authority: string): string {
+    const labels: Record<string, string> = {
+      ROLE_ADMIN: 'Administrador',
+      ROLE_USER: 'Usuario',
+    };
+    return labels[authority] ?? authority.replace('ROLE_', '').toLowerCase().replace(/^\w/, c => c.toUpperCase());
+  }
+
   private onSaveSuccess(): void {
     this.isSaving.set(false);
     this.previousState();
