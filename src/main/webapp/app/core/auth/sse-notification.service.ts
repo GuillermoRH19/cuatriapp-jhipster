@@ -1,4 +1,5 @@
 import { Injectable, NgZone, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { LoginService } from 'app/login/login.service';
 import { PermissionService } from 'app/core/auth/permission.service';
@@ -15,6 +16,7 @@ export class SseNotificationService {
   private readonly permissionService = inject(PermissionService);
   private readonly accountService = inject(AccountService);
   private readonly authServerProvider = inject(AuthServerProvider);
+  private readonly router = inject(Router);
 
   startListening(): void {
     if (this.eventSource) {
@@ -30,6 +32,7 @@ export class SseNotificationService {
         // eslint-disable-next-line no-console
         console.warn('Usuario eliminado por el admin. Cerrando sesión.');
         this.loginService.logout();
+        this.router.navigate(['/login']);
       });
     });
 
@@ -38,6 +41,7 @@ export class SseNotificationService {
         // eslint-disable-next-line no-console
         console.warn('Usuario desactivado por el admin. Cerrando sesión.');
         this.loginService.logout();
+        this.router.navigate(['/login']);
       });
     });
 

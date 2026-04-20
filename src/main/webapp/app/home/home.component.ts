@@ -72,7 +72,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => {
         this.account = account;
-        if (account !== null) {
+        if (account === null) {
+          this.router.navigate(['/login']);
+        } else {
           this.router.navigate(['/dashboard/inicio']);
         }
       });

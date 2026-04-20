@@ -1,7 +1,9 @@
 
-<div>
-  <router-outlet name="navbar" />
-</div>
+@if (router.url !== '/login') {
+  <div>
+    <router-outlet name="navbar" />
+  </div>
+}
 
 <div class="container-fluid p-0">
   @if (!isHeroRoute()) {

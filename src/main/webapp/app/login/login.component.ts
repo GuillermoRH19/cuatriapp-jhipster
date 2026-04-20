@@ -7,13 +7,14 @@ import { AccountService } from 'app/core/auth/account.service';
 import { CommonModule } from '@angular/common';
 
 // 👇 IMPORTA TU NUEVO COMPONENTE (Ajusta la ruta según dónde lo creaste)
+import SharedModule from 'app/shared/shared.module';
 import { RegistroPublicoComponent } from './registro-publico/registro-publico.component';
 
 @Component({
   selector: 'jhi-login',
   standalone: true,
   // 👇 AGREGAMOS RegistroPublicoComponent AQUÍ
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, RegistroPublicoComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, RegistroPublicoComponent, SharedModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })

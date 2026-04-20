@@ -1,32 +1,63 @@
-<div class="login-page-wrapper">
-  <div class="row g-4 justify-content-center">
-    
-    <!-- Lado de Inicia Sesión -->
-    <div class="col-lg-5">
-      <div class="premium-card">
-        <div class="text-center text-lg-start">
-          <h2 class="login-title">Bienvenido</h2>
-          <p class="login-subtitle">Ingresa tus credenciales para acceder al panel administrativo.</p>
+<div class="login-auth-layout">
+  
+  <div class="login-hero-side">
+    <div class="hero-overlay"></div>
+    <div class="hero-content-float">
+      <h1 class="hero-app-name">CuatriApp</h1>
+      <p class="hero-tagline">Gestión empresarial inteligente, segura y moderna.</p>
+      
+      <div class="hero-features">
+        <div class="feature-item">
+          <fa-icon icon="check-circle"></fa-icon>
+          <span>Control total de perfiles y permisos</span>
+        </div>
+        <div class="feature-item">
+          <fa-icon icon="check-circle"></fa-icon>
+          <span>Administración centralizada de usuarios</span>
+        </div>
+        <div class="feature-item">
+          <fa-icon icon="check-circle"></fa-icon>
+          <span>Módulos dinámicos y reportes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-side">
+    <div class="login-container-premium">
+      
+      <!-- Card de Inicia Sesión -->
+      <div class="premium-card mb-4">
+        <div class="text-center mb-4">
+          <div class="login-icon-box mx-auto mb-3">
+             <fa-icon icon="lock"></fa-icon>
+          </div>
+          <h2 class="login-title">Iniciar Sesión</h2>
+          <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
         </div>
         
         @if (authenticationError) {
           <div class="error-alert">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <span><strong>¡Error!</strong> Usuario o contraseña incorrectos.</span>
+            <fa-icon icon="exclamation-triangle" class="me-2"></fa-icon>
+            <span>Usuario o contraseña incorrectos.</span>
           </div>
         }
 
-        <form (ngSubmit)="login()" [formGroup]="loginForm" class="mt-4">
-          <div class="mb-4">
+        <form (ngSubmit)="login()" [formGroup]="loginForm">
+          <div class="mb-3">
             <label class="form-label" for="username">Usuario</label>
-            <div class="input-group">
-              <input type="text" class="form-control" id="username" formControlName="username" placeholder="Tu nombre de usuario" #username>
+            <div class="premium-input-wrapper">
+              <fa-icon icon="user" class="input-icon"></fa-icon>
+              <input type="text" class="form-control" id="username" formControlName="username" placeholder="Tu usuario" #username>
             </div>
           </div>
 
           <div class="mb-4">
             <label class="form-label" for="password">Contraseña</label>
-            <input type="password" class="form-control" id="password" formControlName="password" placeholder="••••••••">
+            <div class="premium-input-wrapper">
+              <fa-icon icon="key" class="input-icon"></fa-icon>
+              <input type="password" class="form-control" id="password" formControlName="password" placeholder="••••••••">
+            </div>
           </div>
 
           <div class="mb-4 d-flex justify-content-between align-items-center">
@@ -34,27 +65,24 @@
               <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe">
               <label class="form-check-label ms-2 small text-slate-600" for="rememberMe">Recordarme</label>
             </div>
-            <!-- Si existiera recuperación de contraseña se pondría aquí -->
           </div>
 
-          <button type="submit" class="btn btn-primary-premium w-100 shadow-sm" [disabled]="loginForm.invalid || isLoadingFetch">
+          <button type="submit" class="btn btn-primary-premium w-100" [disabled]="loginForm.invalid || isLoadingFetch">
             @if (isLoadingFetch) {
               <span class="spinner-border spinner-border-sm me-2"></span>
-              <span>Validando...</span>
+              <span>Autenticando...</span>
             } @else {
-              <span>Acceder al Sistema</span>
+              <span>Entrar al Sistema</span>
             }
           </button>
         </form>
       </div>
-    </div>
 
-    <!-- Lado de Postulación (Registro Público) -->
-    <div class="col-lg-7">
-      <div class="premium-card h-100">
+      <!-- Card de Postulación (Candidatos) -->
+      <div class="premium-card registration-card">
         <jhi-registro-publico></jhi-registro-publico>
       </div>
-    </div>
 
+    </div>
   </div>
 </div>

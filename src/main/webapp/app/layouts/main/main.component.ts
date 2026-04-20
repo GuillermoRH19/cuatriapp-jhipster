@@ -17,7 +17,7 @@ import { SseNotificationService } from 'app/core/auth/sse-notification.service';
   imports: [RouterOutlet, FooterComponent, PageRibbonComponent, BreadcrumbComponent],
 })
 export default class MainComponent implements OnInit {
-  private readonly router = inject(Router);
+  public readonly router = inject(Router);
   private readonly appPageTitleStrategy = inject(AppPageTitleStrategy);
   private readonly accountService = inject(AccountService);
   private readonly sseNotificationService = inject(SseNotificationService);
@@ -37,7 +37,7 @@ export default class MainComponent implements OnInit {
   }
 
   isHeroRoute(): boolean {
-    return this.router.url === '/' || this.router.url.startsWith('/dashboard');
+    return this.router.url === '/' || this.router.url.startsWith('/dashboard') || this.router.url === '/login';
   }
 }
 

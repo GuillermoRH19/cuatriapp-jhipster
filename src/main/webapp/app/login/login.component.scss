@@ -1,171 +1,220 @@
 $primary: #4f46e5;
-$primary-hover: #4338ca;
+$primary-dark: #3730a3;
 $slate-50: #f8fafc;
 $slate-100: #f1f5f9;
 $slate-200: #e2e8f0;
-$slate-300: #cbd5e1;
 $slate-400: #94a3b8;
 $slate-500: #64748b;
 $slate-600: #475569;
 $slate-700: #334155;
-$slate-800: #1e293b;
 $slate-900: #0f172a;
-$rose: #f43f5e;
 $emerald: #10b981;
+$rose: #f43f5e;
 $transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 :host {
   display: block;
-  min-height: 100vh;
-  background: radial-gradient(circle at top left, rgba($primary, 0.05), transparent),
-              radial-gradient(circle at bottom right, rgba($primary, 0.05), transparent),
-              $slate-50;
-  padding: 40px 20px;
 }
 
-.login-page-wrapper {
-  max-width: 1100px;
-  margin: 0 auto;
+.login-auth-layout {
+  display: flex;
+  min-height: 100vh;
+  background: white;
+}
+
+// ─── LADO HERO ─────────────────────────────────────────────────────────────
+.login-hero-side {
+  flex: 1;
+  background: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1470') center/cover no-repeat;
+  position: relative;
+  display: none; // Oculto en móvil
+  
+  @media (min-width: 992px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+  }
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba($primary-dark, 0.9), rgba($primary, 0.7));
+}
+
+.hero-content-float {
+  position: relative;
+  z-index: 2;
+  color: white;
+  max-width: 500px;
+}
+
+.hero-app-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+}
+
+.hero-tagline {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.hero-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  
+  fa-icon {
+    color: #86efac; // Verde claro
+  }
+}
+
+// ─── LADO FORMULARIO ────────────────────────────────────────────────────────
+.login-form-side {
+  flex: 1;
+  background: $slate-50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow-y: auto;
+}
+
+.login-container-premium {
+  width: 100%;
+  max-width: 480px;
 }
 
 .premium-card {
   background: white;
-  border: 1px solid $slate-200;
   border-radius: 24px;
   padding: 40px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  height: 100%;
-  transition: transform $transition;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid $slate-200;
+}
 
-  &:hover {
-    transform: translateY(-4px);
-  }
+.login-icon-box {
+  width: 64px;
+  height: 64px;
+  background: rgba($primary, 0.1);
+  color: $primary;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
 }
 
 .login-title {
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  font-size: 28px;
+  font-size: 1.75rem;
   color: $slate-900;
-  margin-bottom: 8px;
 }
 
 .login-subtitle {
   color: $slate-500;
-  font-size: 14px;
-  margin-bottom: 32px;
+  font-size: 0.95rem;
 }
 
 .form-label {
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.85rem;
   color: $slate-700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   margin-bottom: 8px;
 }
 
-.form-control {
-  border: 1px solid $slate-200;
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 15px;
-  transition: all $transition;
-  background: $slate-50;
-
-  &:focus {
-    background: white;
-    border-color: $primary;
-    box-shadow: 0 0 0 4px rgba($primary, 0.1);
-    outline: none;
-  }
-}
-
-.form-check-input {
-  cursor: pointer;
-  width: 1.2em;
-  height: 1.2em;
-  margin-top: 0.15em;
+.premium-input-wrapper {
+  position: relative;
   
-  &:checked {
-    background-color: $primary;
-    border-color: $primary;
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $slate-400;
+    transition: $transition;
+  }
+  
+  .form-control {
+    padding-left: 48px;
+    height: 52px;
+    border-radius: 12px;
+    border: 1px solid $slate-200;
+    background: $slate-50;
+    font-size: 0.95rem;
+    transition: all $transition;
+    
+    &:focus {
+      background: white;
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba($primary, 0.1);
+      
+      & + .input-icon {
+        color: $primary;
+      }
+    }
   }
 }
 
 .btn-primary-premium {
-  background: linear-gradient(135deg, $primary, $primary-hover);
+  background: linear-gradient(135deg, $primary, $primary-dark);
+  color: white;
   border: none;
   border-radius: 12px;
-  padding: 14px;
+  height: 54px;
   font-weight: 600;
-  color: white;
-  font-size: 16px;
-  box-shadow: 0 4px 12px rgba($primary, 0.25);
+  font-size: 1rem;
+  box-shadow: 0 10px 15px -3px rgba($primary, 0.3);
   transition: all $transition;
-
+  
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba($primary, 0.35);
+    box-shadow: 0 20px 25px -5px rgba($primary, 0.4);
   }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
+  
+  &:active { transform: translateY(0); }
+  &:disabled { opacity: 0.7; cursor: not-allowed; }
 }
 
 .error-alert {
-  background: rgba($rose, 0.05);
-  border: 1px solid rgba($rose, 0.2);
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
   color: $rose;
-  padding: 12px 16px;
+  padding: 12px;
   border-radius: 12px;
-  font-size: 14px;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
 }
 
-// ─── Estilos para el componente de registro (si se heredan o aplican) ────────
 :host ::ng-deep {
   jhi-registro-publico {
-    .card {
-      @extend .premium-card;
-      border: none;
-      box-shadow: none;
-      padding: 0;
-    }
-    
-    .card-title {
-      @extend .login-title;
-    }
-    
+    .card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+    .card-title { font-size: 1.5rem !important; }
+    .form-control, .form-select { @extend .form-control; }
     .btn-success {
-      background: linear-gradient(135deg, $emerald, #059669);
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba($emerald, 0.2);
-      
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba($emerald, 0.3);
-      }
-    }
-    
-    .form-control, .form-select {
-      @extend .form-control;
-    }
-    
-    .form-label {
-      @extend .form-label;
+      background: linear-gradient(135deg, $emerald, #059669) !important;
+      border: none !important;
+      border-radius: 12px !important;
+      height: 54px !important;
+      font-weight: 600 !important;
+      box-shadow: 0 10px 15px -3px rgba($emerald, 0.3) !important;
+      &:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba($emerald, 0.4); }
     }
   }
 }
