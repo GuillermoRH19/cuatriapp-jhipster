@@ -39,26 +39,37 @@
           <app-sidebar-menu [menuItems]="menuItems"></app-sidebar-menu>
         }
 
-        <!-- Admin links -->
-        @if (isAdmin()) {
+        <!-- Admin links: Ahora controlados por permisos -->
+        @if (isAdmin() || permissionService.getPermissions().length > 0) {
           <p class="nav-section-label">ADMINISTRACIÓN</p>
 
-          <a routerLink="/dashboard/admin/user-management" routerLinkActive="active" class="nav-item">
-            <fa-icon icon="users" class="nav-item-icon"></fa-icon>
-            <span>Usuarios y Roles</span>
-          </a>
-          <a routerLink="/dashboard/admin/perfil" routerLinkActive="active" class="nav-item">
-            <fa-icon icon="shield-alt" class="nav-item-icon"></fa-icon>
-            <span>Perfiles</span>
-          </a>
-          <a routerLink="/dashboard/admin/modulo" routerLinkActive="active" class="nav-item">
-            <fa-icon icon="layer-group" class="nav-item-icon"></fa-icon>
-            <span>Módulos</span>
-          </a>
-          <a routerLink="/dashboard/admin/permisos-perfil" routerLinkActive="active" class="nav-item">
-            <fa-icon icon="tasks" class="nav-item-icon"></fa-icon>
-            <span>Permisos</span>
-          </a>
+          @if (permissionService.hasPermission('Usuarios y Roles', 'consulta')) {
+            <a routerLink="/dashboard/admin/user-management" routerLinkActive="active" class="nav-item">
+              <fa-icon icon="users" class="nav-item-icon"></fa-icon>
+              <span>Usuarios y Roles</span>
+            </a>
+          }
+          
+          @if (permissionService.hasPermission('Perfiles', 'consulta')) {
+            <a routerLink="/dashboard/admin/perfil" routerLinkActive="active" class="nav-item">
+              <fa-icon icon="shield-alt" class="nav-item-icon"></fa-icon>
+              <span>Perfiles</span>
+            </a>
+          }
+
+          @if (permissionService.hasPermission('Módulos', 'consulta')) {
+            <a routerLink="/dashboard/admin/modulo" routerLinkActive="active" class="nav-item">
+              <fa-icon icon="layer-group" class="nav-item-icon"></fa-icon>
+              <span>Módulos</span>
+            </a>
+          }
+
+          @if (permissionService.hasPermission('Permisos Perfil', 'consulta')) {
+            <a routerLink="/dashboard/admin/permisos-perfil" routerLinkActive="active" class="nav-item">
+              <fa-icon icon="tasks" class="nav-item-icon"></fa-icon>
+              <span>Permisos</span>
+            </a>
+          }
         }
 
       </nav>
