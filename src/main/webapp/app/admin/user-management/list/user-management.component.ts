@@ -14,6 +14,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { UserManagementService } from '../service/user-management.service';
 import { User } from '../user-management.model';
 import UserManagementDeleteDialogComponent from '../delete/user-management-delete-dialog.component';
+import { PermissionService } from 'app/core/auth/permission.service';
 
 @Component({
   selector: 'jhi-user-mgmt',
@@ -38,6 +39,16 @@ export default class UserManagementComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly sortService = inject(SortService);
   private readonly modalService = inject(NgbModal);
+  private readonly permissionService = inject(PermissionService);
+
+  get isAdmin(): boolean {
+    return this.currentAccount()?.authorities.includes('ROLE_ADMIN') ?? false;
+  }
+
+  can(accion: 'consulta' | 'agregar' | 'editar' | 'eliminar' | 'detalle'): boolean {
+    if (this.isAdmin) return true;
+    return this.permissionService.hasPermission('Usuarios y Roles', accion);
+  }
 
   ngOnInit(): void {
     this.handleNavigation();

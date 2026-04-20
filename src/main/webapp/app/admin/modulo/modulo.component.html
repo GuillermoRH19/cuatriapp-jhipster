@@ -2,9 +2,11 @@
   <h2>Gestión de Módulos</h2>
 
   <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-primary" (click)="openCreate(moduloModal)">
-      <fa-icon icon="plus"></fa-icon> Nuevo Módulo
-    </button>
+    @if (can('agregar')) {
+      <button class="btn btn-primary" (click)="openCreate(moduloModal)">
+        <fa-icon icon="plus"></fa-icon> Nuevo Módulo
+      </button>
+    }
   </div>
 
   @if (isLoading) {
@@ -27,12 +29,16 @@
               <td><span class="badge bg-info text-dark">{{ modulo.strNombreMenu }}</span></td>
               <td><code>{{ modulo.strRuta ?? '—' }}</code></td>
               <td>
-                <button class="btn btn-sm btn-warning me-1" title="Editar" (click)="openEdit(moduloModal, modulo)">
-                  <fa-icon icon="pencil-alt"></fa-icon>
-                </button>
-                <button class="btn btn-sm btn-danger" title="Eliminar" (click)="delete(modulo.id!)">
-                  <fa-icon icon="trash-alt"></fa-icon>
-                </button>
+                @if (can('editar')) {
+                  <button class="btn btn-sm btn-warning me-1" title="Editar" (click)="openEdit(moduloModal, modulo)">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                  </button>
+                }
+                @if (can('eliminar')) {
+                  <button class="btn btn-sm btn-danger" title="Eliminar" (click)="delete(modulo.id!)">
+                    <fa-icon icon="trash-alt"></fa-icon>
+                  </button>
+                }
               </td>
             </tr>
           } @empty {

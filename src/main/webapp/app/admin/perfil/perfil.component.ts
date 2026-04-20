@@ -4,6 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import SharedModule from 'app/shared/shared.module';
 import { IPerfil } from './perfil.model';
 import { PerfilService } from './perfil.service';
+import { PermissionService } from 'app/core/auth/permission.service';
+import { AccountService } from 'app/core/auth/account.service';
 
 @Component({
   selector: 'jhi-perfil',
@@ -23,6 +25,17 @@ export class PerfilComponent implements OnInit {
 
   private readonly perfilService = inject(PerfilService);
   private readonly modalService = inject(NgbModal);
+  private readonly permissionService = inject(PermissionService);
+  private readonly accountService = inject(AccountService);
+
+  get isAdmin(): boolean {
+    return this.accountService.hasAnyAuthority('ROLE_ADMIN');
+  }
+
+  can(accion: 'consulta' | 'agregar' | 'editar' | 'eliminar' | 'detalle'): boolean {
+    if (this.isAdmin) return true;
+    return this.permissionService.hasPermission('Perfiles', accion);
+  }
 
   ngOnInit(): void {
     this.load();

@@ -2,9 +2,11 @@
   <h2>Gestión de Perfiles</h2>
 
   <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-primary" (click)="openCreate(perfilModal)">
-      <fa-icon icon="plus"></fa-icon> Nuevo Perfil
-    </button>
+    @if (can('agregar')) {
+      <button class="btn btn-primary" (click)="openCreate(perfilModal)">
+        <fa-icon icon="plus"></fa-icon> Nuevo Perfil
+      </button>
+    }
   </div>
 
   @if (isLoading) {
@@ -31,12 +33,16 @@
                 }
               </td>
               <td>
-                <button class="btn btn-sm btn-warning me-1" title="Editar" (click)="openEdit(perfilModal, perfil)">
-                  <fa-icon icon="pencil-alt"></fa-icon>
-                </button>
-                <button class="btn btn-sm btn-danger" title="Eliminar" (click)="delete(perfil.id!)">
-                  <fa-icon icon="trash-alt"></fa-icon>
-                </button>
+                @if (can('editar')) {
+                  <button class="btn btn-sm btn-warning me-1" title="Editar" (click)="openEdit(perfilModal, perfil)">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                  </button>
+                }
+                @if (can('eliminar')) {
+                  <button class="btn btn-sm btn-danger" title="Eliminar" (click)="delete(perfil.id!)">
+                    <fa-icon icon="trash-alt"></fa-icon>
+                  </button>
+                }
               </td>
             </tr>
           } @empty {

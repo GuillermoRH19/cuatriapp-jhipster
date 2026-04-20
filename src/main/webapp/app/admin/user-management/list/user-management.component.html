@@ -26,10 +26,12 @@
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined"></fa-icon>
         <span>Actualizar</span>
       </button>
-      <button class="btn-primary-premium shadow-sm jh-create-entity" [routerLink]="['./new']">
-        <fa-icon icon="plus"></fa-icon>
-        <span>Nuevo Usuario</span>
-      </button>
+      @if (can('agregar')) {
+        <button class="btn-primary-premium shadow-sm jh-create-entity" [routerLink]="['./new']">
+          <fa-icon icon="plus"></fa-icon>
+          <span>Nuevo Usuario</span>
+        </button>
+      }
     </div>
   </div>
 
@@ -105,29 +107,35 @@
                 </td>
                 <td class="text-end px-4">
                   <div class="action-group">
-                    <button type="submit" [routerLink]="['./', user.login, 'view']" class="btn-action btn-view" title="Ver detalle">
-                      <fa-icon icon="eye"></fa-icon>
-                    </button>
+                    @if (can('detalle')) {
+                      <button type="submit" [routerLink]="['./', user.login, 'view']" class="btn-action btn-view" title="Ver detalle">
+                        <fa-icon icon="eye"></fa-icon>
+                      </button>
+                    }
 
-                    <button
-                      type="submit"
-                      [routerLink]="['./', user.login, 'edit']"
-                      queryParamsHandling="merge"
-                      class="btn-action btn-edit"
-                      title="Editar"
-                    >
-                      <fa-icon icon="pencil-alt"></fa-icon>
-                    </button>
+                    @if (can('editar')) {
+                      <button
+                        type="submit"
+                        [routerLink]="['./', user.login, 'edit']"
+                        queryParamsHandling="merge"
+                        class="btn-action btn-edit"
+                        title="Editar"
+                      >
+                        <fa-icon icon="pencil-alt"></fa-icon>
+                      </button>
+                    }
 
-                    <button
-                      type="button"
-                      (click)="deleteUser(user)"
-                      class="btn-action btn-delete"
-                      [disabled]="!currentAccount() || currentAccount()?.login === user.login"
-                      title="Eliminar"
-                    >
-                      <fa-icon icon="trash-alt"></fa-icon>
-                    </button>
+                    @if (can('eliminar')) {
+                      <button
+                        type="button"
+                        (click)="deleteUser(user)"
+                        class="btn-action btn-delete"
+                        [disabled]="!currentAccount() || currentAccount()?.login === user.login"
+                        title="Eliminar"
+                      >
+                        <fa-icon icon="trash-alt"></fa-icon>
+                      </button>
+                    }
                   </div>
                 </td>
               </tr>

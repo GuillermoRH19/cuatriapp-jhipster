@@ -35,20 +35,22 @@
 
   @if (permisos().length > 0) {
     <!-- Controles masivos -->
-    <div class="d-flex gap-2 mb-3 flex-wrap">
-      <span class="fw-bold me-2">Marcar todo:</span>
-      <button class="btn btn-sm btn-outline-success" (click)="toggleAll('bitConsulta', true)">✓ Consulta</button>
-      <button class="btn btn-sm btn-outline-primary" (click)="toggleAll('bitAgregar', true)">✓ Agregar</button>
-      <button class="btn btn-sm btn-outline-warning" (click)="toggleAll('bitEditar', true)">✓ Editar</button>
-      <button class="btn btn-sm btn-outline-danger" (click)="toggleAll('bitEliminar', true)">✓ Eliminar</button>
-      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitDetalle', true)">✓ Detalle</button>
-      <span class="ms-3 fw-bold me-2">Quitar todo:</span>
-      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitConsulta', false)">✗ Consulta</button>
-      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitAgregar', false)">✗ Agregar</button>
-      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitEditar', false)">✗ Editar</button>
-      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitEliminar', false)">✗ Eliminar</button>
-      <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitDetalle', false)">✗ Detalle</button>
-    </div>
+    @if (can('editar')) {
+      <div class="d-flex gap-2 mb-3 flex-wrap">
+        <span class="fw-bold me-2">Marcar todo:</span>
+        <button class="btn btn-sm btn-outline-success" (click)="toggleAll('bitConsulta', true)">✓ Consulta</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="toggleAll('bitAgregar', true)">✓ Agregar</button>
+        <button class="btn btn-sm btn-outline-warning" (click)="toggleAll('bitEditar', true)">✓ Editar</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="toggleAll('bitEliminar', true)">✓ Eliminar</button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitDetalle', true)">✓ Detalle</button>
+        <span class="ms-3 fw-bold me-2">Quitar todo:</span>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitConsulta', false)">✗ Consulta</button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitAgregar', false)">✗ Agregar</button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitEditar', false)">✗ Editar</button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitEliminar', false)">✗ Eliminar</button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleAll('bitDetalle', false)">✗ Detalle</button>
+      </div>
+    }
 
     <div class="table-responsive">
       <table class="table table-bordered table-hover align-middle">
@@ -71,6 +73,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitConsulta == 1"
+                  [disabled]="!can('editar')"
                   (change)="setPermiso(perm.idModulo, 'bitConsulta', $any($event.target).checked)"
                 />
               </td>
@@ -79,6 +82,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitAgregar == 1"
+                  [disabled]="!can('editar')"
                   (change)="setPermiso(perm.idModulo, 'bitAgregar', $any($event.target).checked)"
                 />
               </td>
@@ -87,6 +91,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitEditar == 1"
+                  [disabled]="!can('editar')"
                   (change)="setPermiso(perm.idModulo, 'bitEditar', $any($event.target).checked)"
                 />
               </td>
@@ -95,6 +100,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitEliminar == 1"
+                  [disabled]="!can('editar')"
                   (change)="setPermiso(perm.idModulo, 'bitEliminar', $any($event.target).checked)"
                 />
               </td>
@@ -103,6 +109,7 @@
                   type="checkbox"
                   class="form-check-input"
                   [checked]="perm.bitDetalle == 1"
+                  [disabled]="!can('editar')"
                   (change)="setPermiso(perm.idModulo, 'bitDetalle', $any($event.target).checked)"
                 />
               </td>
@@ -112,14 +119,16 @@
       </table>
     </div>
 
-    <div class="d-flex justify-content-end mt-3">
-      <button class="btn btn-primary btn-lg" [disabled]="isSaving" (click)="save()">
-        @if (isSaving) {
-          <span class="spinner-border spinner-border-sm me-2"></span>
-        }
-        <fa-icon icon="save"></fa-icon> Guardar Permisos
-      </button>
-    </div>
+    @if (can('editar')) {
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-primary btn-lg" [disabled]="isSaving" (click)="save()">
+          @if (isSaving) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          <fa-icon icon="save"></fa-icon> Guardar Permisos
+        </button>
+      </div>
+    }
   } @else if (selectedPerfilId !== null && !isLoading) {
     <div class="alert alert-info">No hay módulos registrados para asignar permisos.</div>
   }

@@ -120,6 +120,14 @@ export class DynamicLayoutComponent implements OnInit, OnDestroy {
     this.showUserMenu = !this.showUserMenu;
   }
 
+  hasAdminPermissions(): boolean {
+    if (this.isAdmin()) return true;
+    return this.permissionService.hasPermission('Usuarios y Roles', 'consulta') ||
+           this.permissionService.hasPermission('Perfiles', 'consulta') ||
+           this.permissionService.hasPermission('Módulos', 'consulta') ||
+           this.permissionService.hasPermission('Permisos Perfil', 'consulta');
+  }
+
   logout(): void {
     this.authServerProvider.logout().subscribe({
       complete: () => {

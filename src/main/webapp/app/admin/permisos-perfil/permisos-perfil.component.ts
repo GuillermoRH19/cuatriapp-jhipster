@@ -6,6 +6,7 @@ import { PerfilService } from '../perfil/perfil.service';
 import { IPermisoModulo } from './permisos-perfil.model';
 import { PermisosPerfilService } from './permisos-perfil.service';
 import { AccountService } from 'app/core/auth/account.service';
+import { PermissionService } from 'app/core/auth/permission.service';
 
 @Component({
   selector: 'jhi-permisos-perfil',
@@ -23,6 +24,16 @@ export class PermisosPerfilComponent implements OnInit {
   private readonly perfilService = inject(PerfilService);
   private readonly permisosService = inject(PermisosPerfilService);
   private readonly accountService = inject(AccountService);
+  private readonly permissionService = inject(PermissionService);
+
+  get isAdmin(): boolean {
+    return this.accountService.hasAnyAuthority('ROLE_ADMIN');
+  }
+
+  can(accion: 'consulta' | 'agregar' | 'editar' | 'eliminar' | 'detalle'): boolean {
+    if (this.isAdmin) return true;
+    return this.permissionService.hasPermission('Permisos Perfil', accion);
+  }
 
   ngOnInit(): void {
     this.perfilService.getAll().subscribe(p => this.perfiles.set(p));

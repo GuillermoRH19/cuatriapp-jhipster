@@ -40,7 +40,7 @@
         }
 
         <!-- Admin links: Ahora controlados por permisos -->
-        @if (isAdmin() || permissionService.getPermissions().length > 0) {
+        @if (hasAdminPermissions()) {
           <p class="nav-section-label">ADMINISTRACIÓN</p>
 
           @if (isAdmin() || permissionService.hasPermission('Usuarios y Roles', 'consulta')) {

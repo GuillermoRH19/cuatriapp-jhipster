@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, computed, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, inject, computed, signal, effect } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PermissionService } from 'app/core/auth/permission.service';
 import { AccountService } from 'app/core/auth/account.service';
@@ -20,6 +20,18 @@ export class ModuloCrudComponent implements OnInit {
   readonly permissionService = inject(PermissionService);
   private readonly accountService = inject(AccountService);
   private readonly moduloService = inject(ModuloService);
+  private readonly router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      const id = this.moduloId();
+      if (id !== 0 && this.permissionService.isLoaded() && !this.isAdmin) {
+        if (!this.can('consulta')) {
+          this.router.navigate(['/dashboard/inicio']);
+        }
+      }
+    });
+  }
 
   get isAdmin(): boolean {
     return this.accountService.hasAnyAuthority('ROLE_ADMIN');

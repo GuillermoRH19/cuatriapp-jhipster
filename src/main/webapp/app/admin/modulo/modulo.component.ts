@@ -4,6 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import SharedModule from 'app/shared/shared.module';
 import { IModulo, IMenu } from './modulo.model';
 import { ModuloService } from './modulo.service';
+import { PermissionService } from 'app/core/auth/permission.service';
+import { AccountService } from 'app/core/auth/account.service';
 
 @Component({
   selector: 'jhi-modulo',
@@ -25,6 +27,17 @@ export class ModuloComponent implements OnInit {
 
   private readonly moduloService = inject(ModuloService);
   private readonly modalService = inject(NgbModal);
+  private readonly permissionService = inject(PermissionService);
+  private readonly accountService = inject(AccountService);
+
+  get isAdmin(): boolean {
+    return this.accountService.hasAnyAuthority('ROLE_ADMIN');
+  }
+
+  can(accion: 'consulta' | 'agregar' | 'editar' | 'eliminar' | 'detalle'): boolean {
+    if (this.isAdmin) return true;
+    return this.permissionService.hasPermission('Módulos', accion);
+  }
 
   ngOnInit(): void {
     this.load();
