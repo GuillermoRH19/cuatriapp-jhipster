@@ -57,6 +57,8 @@ import {
   faArrowUp,
   faServer,
   faExclamationCircle,
+  faExclamationTriangle,
+  faKey,
   // jhipster-needle-add-icon-import
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -119,5 +121,7 @@ export const fontAwesomeIcons = [
   faArrowUp,
   faServer,
   faExclamationCircle,
+  faExclamationTriangle,
+  faKey,
   // jhipster-needle-add-icon-import
 ];
