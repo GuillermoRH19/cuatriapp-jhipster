@@ -112,10 +112,6 @@ public class PerfilService {
                     "msg", "No se puede eliminar: el perfil está asignado a uno o más usuarios");
             }
 
-            if (!perfil.orElseThrow().getPermisos().isEmpty()) {
-                return Map.of("success", false,
-                    "msg", "No se puede eliminar: el perfil está en uso (tiene permisos asignados)");
-            }
 
             perfilRepository.deleteById(idPerfil);
             return Map.of("success", true, "msg", "Perfil eliminado");

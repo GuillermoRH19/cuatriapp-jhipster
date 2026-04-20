@@ -24,7 +24,7 @@ export default class UserManagementComponent implements OnInit {
   users = signal<User[] | null>(null);
   isLoading = signal(false);
   totalItems = signal(0);
-  itemsPerPage = ITEMS_PER_PAGE;
+  itemsPerPage = 5;
   page!: number;
   sortState = sortStateSignal({});
 

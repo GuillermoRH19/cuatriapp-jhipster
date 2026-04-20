@@ -75,6 +75,10 @@ export class PerfilComponent implements OnInit {
     if (!confirm('¿Eliminar este perfil?')) return;
     this.perfilService.delete(id).subscribe({
       next: () => this.load(),
+      error: (err: any) => {
+        const msg = err.error?.msg || 'Error al eliminar el perfil';
+        alert(msg);
+      },
     });
   }
 }
